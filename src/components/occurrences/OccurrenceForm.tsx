@@ -24,6 +24,7 @@ const formSchema = z.object({
   type: z.enum(["collision", "theft", "robbery"] as const).optional(),
   date: z.string().optional(),
   description: z.string().optional(),
+  driver: z.enum(["associate", "third-party"] as const).optional(),
 
   // Informações do veículo
   licensePlate: z.string().optional(),

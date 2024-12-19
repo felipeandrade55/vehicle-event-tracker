@@ -1,5 +1,7 @@
 export type OccurrenceType = "collision" | "theft" | "robbery";
 
+export type DriverType = "associate" | "third-party";
+
 export interface OccurrenceFormData {
   // Associate information
   associateId: string;
@@ -9,6 +11,7 @@ export interface OccurrenceFormData {
   type: OccurrenceType;
   date: string;
   description?: string;
+  driver?: DriverType;
 
   // Vehicle information
   licensePlate: string;
@@ -17,21 +20,12 @@ export interface OccurrenceFormData {
 
   // Documents
   documents: {
-    driversLicense?: string; // CNH
-    vehicleRegistration?: string; // CRLV
-    eventReport?: string; // Comunicado de Evento
-    policeReport?: string; // BO
+    driversLicense?: string;
+    vehicleRegistration?: string;
+    eventReport?: string;
+    policeReport?: string;
     proofOfResidence?: string;
     vehiclePhotos?: string[];
-    tirePhotos?: string[]; // Only for associates
+    tirePhotos?: string[];
   };
-}
-
-export interface DocumentRequirement {
-  id: string;
-  name: string;
-  description: string;
-  required: boolean;
-  type: "file" | "multiple-files";
-  acceptedFormats: string[];
 }
