@@ -32,18 +32,17 @@ export function DashboardHeader() {
         description: "10 associados de exemplo foram adicionados ao sistema.",
       });
     }
-    // Force a page reload to update the data
     window.location.reload();
   };
 
   return (
-    <header className="border-b">
+    <header className="border-b bg-white">
       <div className="flex h-16 items-center px-4 gap-4">
         <div className="flex items-center flex-1">
           <img 
             src="/lovable-uploads/ancore-logo.png" 
             alt="Ancore Logo" 
-            className="h-8 mr-4"
+            className="h-8 w-auto mr-4"
           />
           <h1 className="text-xl font-semibold">Ancore Clube de Benefícios</h1>
         </div>
