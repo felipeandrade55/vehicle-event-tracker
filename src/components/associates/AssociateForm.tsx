@@ -31,6 +31,15 @@ const formSchema = z.object({
   email: z.string().email({
     message: "Email inválido",
   }),
+  address: z.object({
+    street: z.string().min(1, { message: "Rua é obrigatória" }),
+    number: z.string().min(1, { message: "Número é obrigatório" }),
+    complement: z.string().optional(),
+    neighborhood: z.string().min(1, { message: "Bairro é obrigatório" }),
+    city: z.string().min(1, { message: "Cidade é obrigatória" }),
+    state: z.string().min(2, { message: "Estado é obrigatório" }),
+    zipCode: z.string().min(8, { message: "CEP inválido" }),
+  }),
 });
 
 interface AssociateFormProps {
@@ -50,6 +59,15 @@ export function AssociateForm({ onSubmit, initialData }: AssociateFormProps) {
       cpf: "",
       phone: "",
       email: "",
+      address: {
+        street: "",
+        number: "",
+        complement: "",
+        neighborhood: "",
+        city: "",
+        state: "",
+        zipCode: "",
+      },
     },
   });
 
@@ -88,8 +106,9 @@ export function AssociateForm({ onSubmit, initialData }: AssociateFormProps) {
 
   return (
     <Tabs defaultValue="personal" className="w-full">
-      <TabsList className="grid w-full grid-cols-2">
+      <TabsList className="grid w-full grid-cols-3">
         <TabsTrigger value="personal">Dados Pessoais</TabsTrigger>
+        <TabsTrigger value="address">Endereço</TabsTrigger>
         <TabsTrigger value="vehicle">Veículos</TabsTrigger>
       </TabsList>
 
@@ -146,6 +165,116 @@ export function AssociateForm({ onSubmit, initialData }: AssociateFormProps) {
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input placeholder="email@exemplo.com" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <Button type="submit">Salvar</Button>
+          </form>
+        </Form>
+      </TabsContent>
+
+      <TabsContent value="address">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
+            <FormField
+              control={form.control}
+              name="address.street"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Rua</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Nome da rua" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="address.number"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Número</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Número" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="address.complement"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Complemento</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Complemento" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="address.neighborhood"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Bairro</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Bairro" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="address.city"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Cidade</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Cidade" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="address.state"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Estado</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Estado" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="address.zipCode"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>CEP</FormLabel>
+                  <FormControl>
+                    <Input placeholder="00000-000" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
