@@ -17,11 +17,28 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { Eye, Plus } from "lucide-react";
+import { Eye, Plus, Shield } from "lucide-react";
 import DashboardLayout from "@/components/DashboardLayout";
 import { OccurrenceFilters } from "@/components/occurrences/OccurrenceFilters";
 import { mockOccurrences, Occurrence } from "@/data/occurrenceData";
 import { format, isEqual, parseISO } from "date-fns";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
+const getStatusColor = (status: string) => {
+  switch (status.toLowerCase()) {
+    case "em análise":
+      return "bg-yellow-100 text-yellow-800";
+    case "em atendimento":
+      return "bg-blue-100 text-blue-800";
+    case "concluído":
+      return "bg-green-100 text-green-800";
+    case "cancelado":
+      return "bg-red-100 text-red-800";
+    default:
+      return "bg-gray-100 text-gray-800";
+  }
+};
 
 const OccurrenceList = () => {
   const navigate = useNavigate();
@@ -62,7 +79,6 @@ const OccurrenceList = () => {
   };
 
   const handleViewOccurrence = (occurrenceId: string) => {
-    console.log("Navigating to occurrence:", occurrenceId);
     navigate(`/occurrences/${encodeURIComponent(occurrenceId)}`);
   };
 
@@ -70,98 +86,132 @@ const OccurrenceList = () => {
 
   return (
     <DashboardLayout>
-      <div className="space-y-6">
+      <div className="space-y-6 p-6 bg-gray-50 min-h-screen">
         <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">
-            Ocorrências / Acionamentos de Proteção Veicular
-          </h1>
-          <Button onClick={() => navigate("/occurrences/new")}>
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary rounded-lg">
+              <Shield className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h1 className="text-2xl font-bold text-gray-900">
+                Ocorrências / Acionamentos
+              </h1>
+              <p className="text-sm text-gray-500">
+                Gerencie todas as ocorrências de proteção veicular
+              </p>
+            </div>
+          </div>
+          <Button 
+            onClick={() => navigate("/occurrences/new")}
+            className="shadow-lg hover:shadow-xl transition-shadow"
+          >
             <Plus className="mr-2 h-4 w-4" /> Novo Registro
           </Button>
         </div>
 
-        <OccurrenceFilters
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          date={date}
-          setDate={setDate}
-          selectedType={selectedType}
-          setSelectedType={setSelectedType}
-          selectedStatus={selectedStatus}
-          setSelectedStatus={setSelectedStatus}
-          handleClearFilters={handleClearFilters}
-        />
+        <Card>
+          <CardHeader className="pb-4">
+            <CardTitle className="text-lg font-medium">Filtros e Pesquisa</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <OccurrenceFilters
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              date={date}
+              setDate={setDate}
+              selectedType={selectedType}
+              setSelectedType={setSelectedType}
+              selectedStatus={selectedStatus}
+              setSelectedStatus={setSelectedStatus}
+              handleClearFilters={handleClearFilters}
+            />
+          </CardContent>
+        </Card>
 
-        <div className="bg-white rounded-lg shadow">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Processo</TableHead>
-                <TableHead>Data/Hora</TableHead>
-                <TableHead>Associado</TableHead>
-                <TableHead>Veículo</TableHead>
-                <TableHead>Tipo de Ocorrência</TableHead>
-                <TableHead>Localidade</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Ações</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredOccurrences.map((occurrence) => (
-                <TableRow 
-                  key={occurrence.id}
-                  className="cursor-pointer hover:bg-gray-50"
-                  onClick={() => handleViewOccurrence(occurrence.id)}
-                >
-                  <TableCell>{occurrence.id}</TableCell>
-                  <TableCell>{occurrence.date}</TableCell>
-                  <TableCell>{occurrence.associate}</TableCell>
-                  <TableCell>{occurrence.vehicle}</TableCell>
-                  <TableCell>{occurrence.type}</TableCell>
-                  <TableCell>{occurrence.location}</TableCell>
-                  <TableCell>{occurrence.status}</TableCell>
-                  <TableCell>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleViewOccurrence(occurrence.id);
-                      }}
-                      title="Visualizar detalhes"
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
+        <Card>
+          <CardContent className="p-0">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-gray-50 hover:bg-gray-50">
+                  <TableHead className="font-semibold">Processo</TableHead>
+                  <TableHead className="font-semibold">Data/Hora</TableHead>
+                  <TableHead className="font-semibold">Associado</TableHead>
+                  <TableHead className="font-semibold">Veículo</TableHead>
+                  <TableHead className="font-semibold">Tipo de Ocorrência</TableHead>
+                  <TableHead className="font-semibold">Localidade</TableHead>
+                  <TableHead className="font-semibold">Status</TableHead>
+                  <TableHead className="font-semibold">Ações</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {filteredOccurrences.map((occurrence) => (
+                  <TableRow 
+                    key={occurrence.id}
+                    className="cursor-pointer transition-colors hover:bg-gray-50"
+                    onClick={() => handleViewOccurrence(occurrence.id)}
+                  >
+                    <TableCell className="font-medium">{occurrence.id}</TableCell>
+                    <TableCell>{occurrence.date}</TableCell>
+                    <TableCell>{occurrence.associate}</TableCell>
+                    <TableCell>{occurrence.vehicle}</TableCell>
+                    <TableCell>
+                      <Badge variant="secondary" className="font-normal">
+                        {occurrence.type}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>{occurrence.location}</TableCell>
+                    <TableCell>
+                      <Badge 
+                        variant="secondary" 
+                        className={`${getStatusColor(occurrence.status)} font-normal`}
+                      >
+                        {occurrence.status}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleViewOccurrence(occurrence.id);
+                        }}
+                        className="hover:bg-gray-100"
+                        title="Visualizar detalhes"
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
 
-          <div className="p-4 border-t">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious href="#" />
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">1</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#" isActive>
-                    2
-                  </PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationLink href="#">3</PaginationLink>
-                </PaginationItem>
-                <PaginationItem>
-                  <PaginationNext href="#" />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
-          </div>
-        </div>
+            <div className="p-4 border-t">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious href="#" />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#">1</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#" isActive>
+                      2
+                    </PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationLink href="#">3</PaginationLink>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationNext href="#" />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </DashboardLayout>
   );
