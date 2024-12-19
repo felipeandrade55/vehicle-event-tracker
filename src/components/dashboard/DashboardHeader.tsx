@@ -2,7 +2,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { LogOut, User, Database } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "@/components/ui/use-toast";
 
 const testData = {
@@ -108,6 +108,12 @@ export const DashboardHeader = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [testModeActive, setTestModeActive] = useState(false);
+
+  // Check initial state on component mount
+  useEffect(() => {
+    const hasTestData = localStorage.getItem('testAssociates') !== null;
+    setTestModeActive(hasTestData);
+  }, []);
 
   const handleLogout = () => {
     logout();
