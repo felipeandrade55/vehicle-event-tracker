@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import Login from "@/pages/Login";
+import Plan from "@/pages/Plan";
 import DashboardLayout from "@/components/DashboardLayout";
 
 // Componente de proteção de rota
@@ -40,6 +41,14 @@ const App = () => {
                 <DashboardLayout>
                   <Dashboard />
                 </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/plan"
+            element={
+              <ProtectedRoute>
+                <Plan />
               </ProtectedRoute>
             }
           />
