@@ -25,6 +25,9 @@ const formSchema = z.object({
   email: z.string().email({
     message: "Email inválido",
   }),
+  planId: z.string().min(1, {
+    message: "Selecione um plano",
+  }),
   address: z.object({
     street: z.string().min(1, { message: "Rua é obrigatória" }),
     number: z.string().min(1, { message: "Número é obrigatório" }),

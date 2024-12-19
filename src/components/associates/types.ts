@@ -3,6 +3,7 @@ export interface AssociateFormData {
   cpf: string;
   phone: string;
   email: string;
+  planId: string;
   address: {
     street: string;
     number: string;

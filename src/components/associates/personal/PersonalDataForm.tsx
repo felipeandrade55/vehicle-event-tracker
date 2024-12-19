@@ -2,6 +2,7 @@ import { UseFormReturn } from "react-hook-form";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { AssociateFormData } from "../types";
+import { PlanSelector } from "./PlanSelector";
 
 interface PersonalDataFormProps {
   form: UseFormReturn<AssociateFormData>;
@@ -65,6 +66,8 @@ export function PersonalDataForm({ form }: PersonalDataFormProps) {
           </FormItem>
         )}
       />
+
+      <PlanSelector form={form} />
     </div>
   );
 }
