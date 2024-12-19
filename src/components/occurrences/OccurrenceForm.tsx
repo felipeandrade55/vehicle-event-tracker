@@ -5,7 +5,7 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
-import { OccurrenceFormData, OccurrenceType } from "./types";
+import { OccurrenceFormData } from "./types";
 import { OccurrenceTypeSelector } from "./OccurrenceTypeSelector";
 import { VehicleInfoForm } from "./VehicleInfoForm";
 import { EventDetailsForm } from "./EventDetailsForm";
@@ -94,30 +94,32 @@ export function OccurrenceForm() {
   };
 
   const onSubmit = async (data: OccurrenceFormData) => {
-    try {
-      const protocolNumber = generateProtocolNumber();
-      
-      // Log dos dados do formulário e protocolo
-      console.log("Form submitted:", { ...data, protocolNumber });
-      
-      // Exibe mensagem de sucesso com o número do protocolo
-      toast({
-        title: "Evento registrado com sucesso!",
-        description: `Seu protocolo de atendimento é: ${protocolNumber}. Você será notificado sobre o andamento do seu caso.`,
-      });
+    // Só processa o submit quando estiver na última etapa
+    if (currentStep === steps.length - 1) {
+      try {
+        const protocolNumber = generateProtocolNumber();
+        
+        console.log("Form submitted:", { ...data, protocolNumber });
+        
+        toast({
+          title: "Evento registrado com sucesso!",
+          description: `Seu protocolo de atendimento é: ${protocolNumber}. Você será notificado sobre o andamento do seu caso.`,
+        });
 
-      // Redireciona para a lista de ocorrências após 2 segundos
-      setTimeout(() => {
-        navigate('/occurrences');
-      }, 2000);
-      
-    } catch (error) {
-      // Em caso de erro, exibe mensagem de erro
-      toast({
-        title: "Erro ao registrar evento",
-        description: "Por favor, tente novamente mais tarde.",
-        variant: "destructive",
-      });
+        setTimeout(() => {
+          navigate('/occurrences');
+        }, 2000);
+        
+      } catch (error) {
+        toast({
+          title: "Erro ao registrar evento",
+          description: "Por favor, tente novamente mais tarde.",
+          variant: "destructive",
+        });
+      }
+    } else {
+      // Se não estiver na última etapa, apenas avança para a próxima
+      nextStep();
     }
   };
 
@@ -149,7 +151,7 @@ export function OccurrenceForm() {
                   </Button>
                 )}
                 {currentStep < steps.length - 1 ? (
-                  <Button type="button" onClick={nextStep} className="ml-auto">
+                  <Button type="submit" className="ml-auto">
                     Próximo
                   </Button>
                 ) : (
