@@ -8,9 +8,7 @@ import {
   MapPin, 
   AlertTriangle,
   Phone,
-  FileImage,
   History,
-  Plus
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -20,6 +18,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { AssociateCard } from "./details/AssociateCard";
 import { VehicleCard } from "./details/VehicleCard";
 import { TeamCard } from "./details/TeamCard";
+import { DocumentationCard } from "./details/DocumentationCard";
 import { OccurrenceForm } from "./OccurrenceForm";
 import { OccurrenceFormData, OccurrenceType } from "./types";
 
@@ -79,6 +78,13 @@ export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
 
   const handleEdit = () => {
     setIsEditing(true);
+  };
+
+  const handleDocumentDelete = (documentType: string, index?: number) => {
+    // Aqui você implementaria a lógica para remover o documento
+    console.log("Removendo documento:", documentType, index);
+    // Após remover, você pode atualizar o estado ou fazer uma nova requisição
+    handleRefresh();
   };
 
   const mapOccurrenceToFormData = (occurrence: any): Partial<OccurrenceFormData> => {
@@ -189,32 +195,10 @@ export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
           systemActions={occurrence.systemActions}
         />
 
-        <Card className="md:col-span-2">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <FileImage className="h-5 w-5" />
-              Documentação
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <h4 className="text-sm font-medium mb-4">Fotos / Imagens Anexadas</h4>
-                <Button variant="outline" className="w-full flex items-center gap-2">
-                  <Plus className="h-4 w-4" />
-                  Adicionar Imagens
-                </Button>
-              </div>
-              <div>
-                <h4 className="text-sm font-medium mb-4">Documentos Relacionados</h4>
-                <Button variant="outline" className="w-full flex items-center gap-2">
-                  <Plus className="h-4 w-4" />
-                  Adicionar Documentos
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <DocumentationCard
+          documents={occurrence.documents || {}}
+          onDocumentDelete={handleDocumentDelete}
+        />
       </div>
 
       <Dialog open={isEditing} onOpenChange={setIsEditing}>

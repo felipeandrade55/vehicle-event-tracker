@@ -41,3 +41,52 @@ export interface DocumentRequirement {
   type: "file" | "multiple-files";
   acceptedFormats: string[];
 }
+
+export interface OccurrenceDetailsProps {
+  occurrence: {
+    id: string;
+    date: string;
+    associate: string;
+    vehicle: string;
+    type: string;
+    location: string;
+    status: string;
+    contactMethod?: "Telefone" | "WhatsApp" | "App" | "Site";
+    contractNumber?: string;
+    phone?: string;
+    address?: string;
+    vehicleDetails?: {
+      brand: string;
+      model: string;
+      plate: string;
+      color: string;
+      chassis?: string;
+      trackerStatus?: "connected" | "offline";
+    };
+    description?: string;
+    timeline?: Array<{
+      date: string;
+      action: string;
+      agent?: string;
+    }>;
+    team?: Array<{
+      name: string;
+      role: string;
+      contact?: string;
+    }>;
+    systemActions?: Array<{
+      user: string;
+      action: string;
+      date: string;
+    }>;
+    documents?: {
+      driversLicense?: string;
+      vehicleRegistration?: string;
+      eventReport?: string;
+      policeReport?: string;
+      proofOfResidence?: string;
+      vehiclePhotos?: string[];
+      tirePhotos?: string[];
+    };
+  };
+}
