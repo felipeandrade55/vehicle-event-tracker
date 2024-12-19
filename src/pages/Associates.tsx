@@ -67,6 +67,7 @@ const Associates = () => {
       phone: data.phone || "",
       email: data.email || "",
       role: "associate",
+      planId: data.planId || "plan-basic", // Add default planId
       plan: {
         id: "default",
         name: "Plano Básico",

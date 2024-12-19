@@ -56,6 +56,7 @@ const createTestAssociate = (index: number): Associate => {
     createTestPlan("intermediate", 150),
     createTestPlan("premium", 200),
   ];
+  const selectedPlan = plans[index % plans.length];
 
   return {
     id: `ASS-${String(index + 1).padStart(3, "0")}`,
@@ -64,7 +65,8 @@ const createTestAssociate = (index: number): Associate => {
     cpf: String(Math.floor(10000000000 + Math.random() * 90000000000)),
     phone: `(11) 9${String(Math.floor(10000000 + Math.random() * 90000000))}`,
     role: "associate",
-    plan: plans[index % plans.length],
+    planId: selectedPlan.id,
+    plan: selectedPlan,
     contractId: `CTR-${String(index + 1).padStart(3, "0")}`,
     address: {
       street: `Rua Teste ${index + 1}`,

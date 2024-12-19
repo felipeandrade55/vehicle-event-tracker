@@ -43,6 +43,7 @@ export function AssociateSelector({ form }: AssociateSelectorProps) {
         cpf: "123.456.789-00",
         phone: "(11) 99999-9999",
         role: "associate",
+        planId: "plan-basic",
         contractId: "CONT-001",
         plan: {
           id: "basic",
