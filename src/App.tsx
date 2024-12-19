@@ -9,6 +9,8 @@ import OccurrenceList from "./pages/OccurrenceList";
 import OccurrenceDetails from "./pages/OccurrenceDetails";
 import DashboardLayout from "@/components/DashboardLayout";
 import { OccurrenceForm } from "@/components/occurrences/OccurrenceForm";
+import UserManagement from "./pages/settings/UserManagement";
+import RoleManagement from "./pages/settings/RoleManagement";
 
 // Componente de proteção de rota
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -74,6 +76,26 @@ function App() {
               <ProtectedRoute>
                 <DashboardLayout>
                   <OccurrenceForm />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings/users"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <UserManagement />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings/roles"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <RoleManagement />
                 </DashboardLayout>
               </ProtectedRoute>
             }

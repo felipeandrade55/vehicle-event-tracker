@@ -1,10 +1,17 @@
-export type UserRole = "admin" | "associate";
+export type UserRole = "admin" | "associate" | "manager" | "operator";
 
 export interface User {
   id: string;
   name: string;
   email: string;
   role: UserRole;
+}
+
+export interface Role {
+  id: string;
+  name: string;
+  description: string;
+  permissions: string[];
 }
 
 export interface Vehicle {
