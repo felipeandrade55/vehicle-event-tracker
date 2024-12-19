@@ -69,10 +69,14 @@ export function OccurrenceFilters({
         </PopoverTrigger>
         <PopoverContent 
           className="w-auto p-0" 
-          align="start" 
+          align="start"
           side="bottom"
-          sideOffset={4}
-          style={{ zIndex: 1000 }}
+          sideOffset={8}
+          style={{ 
+            zIndex: 9999,
+            position: 'relative',
+            marginTop: '4px'
+          }}
         >
           <Calendar
             mode="single"
