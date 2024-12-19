@@ -12,7 +12,6 @@ import { OccurrenceForm } from "@/components/occurrences/OccurrenceForm";
 import UserManagement from "./pages/settings/UserManagement";
 import RoleManagement from "./pages/settings/RoleManagement";
 
-// Componente de proteção de rota
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, isLoading } = useAuth();
 
@@ -33,7 +32,16 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Index />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <Index />
+                </DashboardLayout>
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/associates"
             element={
@@ -48,7 +56,9 @@ function App() {
             path="/plan"
             element={
               <ProtectedRoute>
-                <Plan />
+                <DashboardLayout>
+                  <Plan />
+                </DashboardLayout>
               </ProtectedRoute>
             }
           />
@@ -56,7 +66,9 @@ function App() {
             path="/occurrences"
             element={
               <ProtectedRoute>
-                <OccurrenceList />
+                <DashboardLayout>
+                  <OccurrenceList />
+                </DashboardLayout>
               </ProtectedRoute>
             }
           />
