@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +14,7 @@ import { Associate } from "@/types";
 import { AssociateForm } from "@/components/associates/AssociateForm";
 import { AssociateDetails } from "@/components/associates/AssociateDetails";
 import { toast } from "@/components/ui/use-toast";
+import { isTestDataActive, loadTestData } from "@/data/testData";
 
 const Associates = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -26,9 +27,37 @@ const Associates = () => {
     null
   );
 
+  useEffect(() => {
+    const storedAssociates = localStorage.getItem("associates");
+    if (storedAssociates) {
+      setAssociates(JSON.parse(storedAssociates));
+    }
+  }, []);
+
   const handleSearch = () => {
-    console.log("Buscando por:", searchQuery);
-    // Implementar lógica de busca aqui
+    const storedAssociates = localStorage.getItem("associates");
+    if (!storedAssociates) return;
+
+    const allAssociates: Associate[] = JSON.parse(storedAssociates);
+    if (!searchQuery.trim()) {
+      setAssociates(allAssociates);
+      return;
+    }
+
+    const filteredAssociates = allAssociates.filter((associate) => {
+      const searchLower = searchQuery.toLowerCase();
+      return (
+        associate.name.toLowerCase().includes(searchLower) ||
+        associate.cpf.includes(searchQuery) ||
+        associate.phone.includes(searchQuery) ||
+        associate.email.toLowerCase().includes(searchLower) ||
+        associate.vehicles.some((vehicle) =>
+          vehicle.licensePlate.toLowerCase().includes(searchLower)
+        )
+      );
+    });
+
+    setAssociates(filteredAssociates);
   };
 
   const handleSaveAssociate = (data: Partial<Associate>) => {
