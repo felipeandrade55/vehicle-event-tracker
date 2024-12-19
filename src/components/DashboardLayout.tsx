@@ -10,12 +10,12 @@ interface DashboardLayoutProps {
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   return (
     <SidebarProvider>
-      <div className="min-h-screen bg-gray-50 flex w-full">
+      <div className="min-h-screen bg-gray-50 flex w-full overflow-x-hidden">
         <DashboardSidebar />
-        <div className="flex-1">
+        <div className="flex-1 flex flex-col">
           <DashboardHeader />
-          <main className="flex-1 p-8 bg-gray-50">
-            <div className="max-w-7xl mx-auto">
+          <main className="flex-1 p-4 md:p-8 bg-gray-50 overflow-x-hidden">
+            <div className="container mx-auto max-w-[1400px]">
               {children}
             </div>
             <DashboardFooter />
