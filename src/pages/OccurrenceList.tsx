@@ -63,7 +63,7 @@ const OccurrenceList = () => {
 
   const handleViewOccurrence = (occurrenceId: string) => {
     console.log("Navigating to occurrence:", occurrenceId);
-    navigate(`/occurrences/${occurrenceId}`);
+    navigate(`/occurrences/${occurrenceId.replace("#", "")}`);
   };
 
   const filteredOccurrences = filterOccurrences(mockOccurrences);
