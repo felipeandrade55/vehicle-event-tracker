@@ -3,6 +3,12 @@ import { Slot } from "@radix-ui/react-slot"
 import { cn } from "@/lib/utils"
 import { sidebarMenuButtonVariants } from "./variants"
 import type { SidebarMenuButtonProps } from "./types"
+import { useSidebar } from "./context"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 export const SidebarMenu = React.forwardRef<
   HTMLUListElement,
@@ -32,11 +38,7 @@ SidebarMenuItem.displayName = "SidebarMenuItem"
 
 export const SidebarMenuButton = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentProps<"button"> & {
-    asChild?: boolean
-    isActive?: boolean
-    tooltip?: string | React.ComponentProps<typeof TooltipContent>
-  } & SidebarMenuButtonProps
+  SidebarMenuButtonProps
 >(
   (
     {
