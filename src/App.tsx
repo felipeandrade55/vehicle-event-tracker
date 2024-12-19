@@ -1,105 +1,24 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { Toaster } from "@/components/ui/toaster";
-import { AuthProvider, useAuth } from "@/contexts/AuthContext";
-import Login from "@/pages/Login";
-import Plan from "@/pages/Plan";
-import Associates from "@/pages/Associates";
-import DashboardLayout from "@/components/DashboardLayout";
-import { OccurrenceForm } from "@/components/occurrences/OccurrenceForm";
-import OccurrenceList from "@/pages/OccurrenceList";
-import OccurrenceDetailsPage from "@/pages/OccurrenceDetails";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Index from "./pages/Index";
+import Login from "./pages/Login";
+import Associates from "./pages/Associates";
+import Plan from "./pages/Plan";
+import OccurrenceList from "./pages/OccurrenceList";
+import OccurrenceDetails from "./pages/OccurrenceDetails";
 
-// Componente de proteção de rota
-const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
-  const { user, isLoading } = useAuth();
-
-  if (isLoading) {
-    return <div>Carregando...</div>;
-  }
-
-  if (!user) {
-    return <Navigate to="/login" />;
-  }
-
-  return <>{children}</>;
-};
-
-// Página temporária do Dashboard
-const Dashboard = () => (
-  <div className="space-y-4">
-    <h1 className="text-2xl font-bold">Dashboard</h1>
-    <p>Bem-vindo ao seu painel de controle!</p>
-  </div>
-);
-
-const App = () => {
+function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route
-            path="/dashboard"
-            element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <Dashboard />
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/plan"
-            element={
-              <ProtectedRoute>
-                <Plan />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/associates"
-            element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <Associates />
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/occurrences"
-            element={
-              <ProtectedRoute>
-                <OccurrenceList />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/occurrences/:id"
-            element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <OccurrenceDetailsPage />
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/occurrences/new"
-            element={
-              <ProtectedRoute>
-                <DashboardLayout>
-                  <OccurrenceForm />
-                </DashboardLayout>
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        </Routes>
-      </BrowserRouter>
-      <Toaster />
-    </AuthProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/associates" element={<Associates />} />
+        <Route path="/plan" element={<Plan />} />
+        <Route path="/occurrences" element={<OccurrenceList />} />
+        <Route path="/occurrences/:id" element={<OccurrenceDetails />} />
+      </Routes>
+    </BrowserRouter>
   );
-};
+}
 
 export default App;
