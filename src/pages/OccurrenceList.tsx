@@ -116,7 +116,12 @@ const OccurrenceList = () => {
                   <TableCell>{occurrence.location}</TableCell>
                   <TableCell>{occurrence.status}</TableCell>
                   <TableCell>
-                    <Button variant="ghost" size="sm">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => navigate(`/occurrences/${occurrence.id}`)}
+                      title="Visualizar detalhes"
+                    >
                       <Eye className="h-4 w-4" />
                     </Button>
                   </TableCell>
