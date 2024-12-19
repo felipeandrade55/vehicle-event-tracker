@@ -14,7 +14,6 @@ import { Associate } from "@/types";
 import { AssociateForm } from "@/components/associates/AssociateForm";
 import { AssociateDetails } from "@/components/associates/AssociateDetails";
 import { toast } from "@/components/ui/use-toast";
-import { isTestDataActive, loadTestData } from "@/data/testData";
 
 const Associates = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -110,6 +109,15 @@ const Associates = () => {
     setEditingAssociate(null);
   };
 
+  const handleUpdateAssociate = (updatedAssociate: Associate) => {
+    const updatedAssociates = associates.map((associate) =>
+      associate.id === updatedAssociate.id ? updatedAssociate : associate
+    );
+    setAssociates(updatedAssociates);
+    localStorage.setItem("associates", JSON.stringify(updatedAssociates));
+    setSelectedAssociate(updatedAssociate);
+  };
+
   const handleViewDetails = (associate: Associate) => {
     setSelectedAssociate(associate);
     setIsFormOpen(false);
@@ -133,6 +141,7 @@ const Associates = () => {
         associate={selectedAssociate}
         onEdit={() => handleEdit(selectedAssociate)}
         onBack={handleBack}
+        onUpdateAssociate={handleUpdateAssociate}
       />
     );
   }
