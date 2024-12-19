@@ -14,7 +14,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { VehicleForm } from "./VehicleForm";
+import { VehicleForm } from "./vehicle/VehicleForm";
+import { VehicleList } from "./vehicle/VehicleList";
+import { VehicleFormData } from "./vehicle/types";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -37,6 +39,10 @@ interface AssociateFormProps {
 }
 
 export function AssociateForm({ onSubmit, initialData }: AssociateFormProps) {
+  const [vehicles, setVehicles] = useState<(VehicleFormData & { id: string })[]>([]);
+  const [isAddingVehicle, setIsAddingVehicle] = useState(false);
+  const [editingVehicleId, setEditingVehicleId] = useState<string | null>(null);
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
@@ -55,13 +61,30 @@ export function AssociateForm({ onSubmit, initialData }: AssociateFormProps) {
     });
   }
 
-  function handleVehicleSubmit(vehicleData: any) {
-    console.log("Dados do veículo:", vehicleData);
+  function handleVehicleSubmit(vehicleData: VehicleFormData) {
+    if (editingVehicleId) {
+      setVehicles(vehicles.map(v => 
+        v.id === editingVehicleId ? { ...vehicleData, id: editingVehicleId } : v
+      ));
+      setEditingVehicleId(null);
+    } else {
+      setVehicles([...vehicles, { ...vehicleData, id: crypto.randomUUID() }]);
+    }
+    setIsAddingVehicle(false);
     toast({
       title: "Veículo adicionado com sucesso!",
       description: "O veículo foi vinculado ao associado.",
     });
   }
+
+  function handleEditVehicle(vehicleId: string) {
+    setEditingVehicleId(vehicleId);
+    setIsAddingVehicle(true);
+  }
+
+  const editingVehicle = editingVehicleId 
+    ? vehicles.find(v => v.id === editingVehicleId)
+    : undefined;
 
   return (
     <Tabs defaultValue="personal" className="w-full">
@@ -135,7 +158,31 @@ export function AssociateForm({ onSubmit, initialData }: AssociateFormProps) {
       </TabsContent>
 
       <TabsContent value="vehicle">
-        <VehicleForm onSubmit={handleVehicleSubmit} />
+        {isAddingVehicle ? (
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h2 className="text-xl font-semibold">
+                {editingVehicleId ? "Editar" : "Adicionar"} Veículo
+              </h2>
+              <Button variant="outline" onClick={() => {
+                setIsAddingVehicle(false);
+                setEditingVehicleId(null);
+              }}>
+                Voltar
+              </Button>
+            </div>
+            <VehicleForm 
+              onSubmit={handleVehicleSubmit}
+              initialData={editingVehicle}
+            />
+          </div>
+        ) : (
+          <VehicleList
+            vehicles={vehicles}
+            onAddVehicle={() => setIsAddingVehicle(true)}
+            onEditVehicle={handleEditVehicle}
+          />
+        )}
       </TabsContent>
     </Tabs>
   );
