@@ -2,32 +2,52 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { AssociateSelector } from "./form/AssociateSelector";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { AssociateSelector } from "./AssociateSelector";
 import { OccurrenceFormData } from "./types";
 
 const formSchema = z.object({
   associateId: z.string().min(1, {
     message: "Selecione um associado.",
   }),
-  contractNumber: z.string().optional(),
-  phone: z.string().optional(),
-  address: z.string().optional(),
-  vehicle: z.string().min(2, {
-    message: "A descrição do veículo deve ter pelo menos 2 caracteres.",
-  }),
-  type: z.string().min(1, {
-    message: "Selecione o tipo de ocorrência.",
-  }),
-  location: z.string().min(2, {
-    message: "A localização deve ter pelo menos 2 caracteres.",
-  }),
+  searchQuery: z.string().optional(),
+  type: z.enum(["collision", "theft", "robbery"]),
+  date: z.string(),
   description: z.string().optional(),
-  contactMethod: z.enum(["Telefone", "WhatsApp", "App", "Site"]).optional(),
+  driver: z.enum(["associate", "third-party"]).optional(),
+  contactMethod: z.enum(["Telefone", "WhatsApp", "Site", "APP"]).optional(),
+  licensePlate: z.string(),
+  vehicleModel: z.string(),
+  vehicleBrand: z.string(),
+  documents: z.object({
+    driversLicense: z.string().optional(),
+    vehicleRegistration: z.string().optional(),
+    eventReport: z.string().optional(),
+    policeReport: z.string().optional(),
+    proofOfResidence: z.string().optional(),
+    vehiclePhotos: z.array(z.string()).optional(),
+    tirePhotos: z.array(z.string()).optional(),
+  }).optional(),
 });
 
 interface OccurrenceFormProps {
-  initialData?: OccurrenceFormData;
+  initialData?: Partial<OccurrenceFormData>;
   onSuccess?: () => void;
 }
 
@@ -36,14 +56,12 @@ export function OccurrenceForm({ initialData, onSuccess }: OccurrenceFormProps) 
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       associateId: "",
-      contractNumber: "",
-      phone: "",
-      address: "",
-      vehicle: "",
-      type: "",
-      location: "",
-      description: "",
-      contactMethod: undefined,
+      type: "collision",
+      date: new Date().toISOString(),
+      licensePlate: "",
+      vehicleModel: "",
+      vehicleBrand: "",
+      documents: {},
     },
   });
 
@@ -55,31 +73,27 @@ export function OccurrenceForm({ initialData, onSuccess }: OccurrenceFormProps) 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <AssociateSelector form={form} />
-          <FormField
-            control={form.control}
-            name="contractNumber"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Número do Contrato</FormLabel>
-                <FormControl>
-                  <Input placeholder="Ex: 123456" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <AssociateSelector form={form} />
 
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormField
             control={form.control}
-            name="phone"
+            name="type"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Telefone</FormLabel>
-                <FormControl>
-                  <Input placeholder="(00) 00000-0000" {...field} />
-                </FormControl>
+                <FormLabel>Tipo de Ocorrência</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione o tipo" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="collision">Colisão</SelectItem>
+                    <SelectItem value="theft">Furto</SelectItem>
+                    <SelectItem value="robbery">Roubo</SelectItem>
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -94,14 +108,14 @@ export function OccurrenceForm({ initialData, onSuccess }: OccurrenceFormProps) 
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Selecione o método de contato" />
+                      <SelectValue placeholder="Selecione o método" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="Telefone">Telefone</SelectItem>
                     <SelectItem value="WhatsApp">WhatsApp</SelectItem>
-                    <SelectItem value="App">App</SelectItem>
                     <SelectItem value="Site">Site</SelectItem>
+                    <SelectItem value="APP">APP</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -111,12 +125,12 @@ export function OccurrenceForm({ initialData, onSuccess }: OccurrenceFormProps) 
 
           <FormField
             control={form.control}
-            name="vehicle"
+            name="licensePlate"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Veículo</FormLabel>
+                <FormLabel>Placa do Veículo</FormLabel>
                 <FormControl>
-                  <Input placeholder="Marca/Modelo" {...field} />
+                  <Input placeholder="ABC1234" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -125,36 +139,12 @@ export function OccurrenceForm({ initialData, onSuccess }: OccurrenceFormProps) 
 
           <FormField
             control={form.control}
-            name="type"
+            name="vehicleBrand"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Tipo de Ocorrência</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Selecione o tipo" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="Roubo">Roubo</SelectItem>
-                    <SelectItem value="Furto">Furto</SelectItem>
-                    <SelectItem value="Acidente">Acidente</SelectItem>
-                    <SelectItem value="Pane">Pane</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="location"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Localização</FormLabel>
+                <FormLabel>Marca</FormLabel>
                 <FormControl>
-                  <Input placeholder="Endereço do evento" {...field} />
+                  <Input placeholder="Ex: Volkswagen" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -163,12 +153,12 @@ export function OccurrenceForm({ initialData, onSuccess }: OccurrenceFormProps) 
 
           <FormField
             control={form.control}
-            name="address"
+            name="vehicleModel"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Endereço do Associado</FormLabel>
+                <FormLabel>Modelo</FormLabel>
                 <FormControl>
-                  <Input placeholder="Endereço completo" {...field} />
+                  <Input placeholder="Ex: Gol" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

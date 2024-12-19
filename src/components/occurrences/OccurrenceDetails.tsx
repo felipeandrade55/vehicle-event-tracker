@@ -76,6 +76,20 @@ export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
     setIsEditing(true);
   };
 
+  const mapOccurrenceToFormData = (occurrence: any): Partial<OccurrenceFormData> => {
+    return {
+      associateId: occurrence.id,
+      type: occurrence.type.toLowerCase() as OccurrenceType,
+      date: occurrence.date,
+      description: occurrence.description,
+      contactMethod: occurrence.contactMethod,
+      licensePlate: occurrence.vehicleDetails?.plate || "",
+      vehicleModel: occurrence.vehicleDetails?.model || "",
+      vehicleBrand: occurrence.vehicleDetails?.brand || "",
+      documents: {},
+    };
+  };
+
   return (
     <div className="space-y-6">
       <OccurrenceActions 
@@ -225,7 +239,7 @@ export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
       <Dialog open={isEditing} onOpenChange={setIsEditing}>
         <DialogContent className="max-w-4xl">
           <OccurrenceForm
-            initialData={occurrence}
+            initialData={mapOccurrenceToFormData(occurrence)}
             onSuccess={() => {
               setIsEditing(false);
               handleRefresh();
