@@ -4,7 +4,7 @@ import { User } from "@/types";
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
-  logout: () => void;
+  signOut: () => void;
   isLoading: boolean;
 }
 
@@ -57,13 +57,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const logout = () => {
+  const signOut = () => {
     setUser(null);
     localStorage.removeItem("user");
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ user, login, signOut, isLoading }}>
       {children}
     </AuthContext.Provider>
   );
