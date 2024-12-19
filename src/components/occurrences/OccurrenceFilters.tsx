@@ -67,7 +67,7 @@ export function OccurrenceFilters({
             {date ? format(date, "PPP", { locale: ptBR }) : "Selecionar data"}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto p-0">
+        <PopoverContent className="w-auto p-0" align="start" side="bottom">
           <Calendar
             mode="single"
             selected={date}
