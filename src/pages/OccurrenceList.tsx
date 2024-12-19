@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Plus, Shield } from "lucide-react";
-import DashboardLayout from "@/components/DashboardLayout";
 import { mockOccurrences } from "@/data/occurrenceData";
 import { format, isEqual, parseISO } from "date-fns";
 import { OccurrenceListFilters } from "@/components/occurrences/OccurrenceListFilters";
@@ -65,73 +64,71 @@ const OccurrenceList = () => {
   const filteredOccurrences = filterOccurrences(mockOccurrences);
 
   return (
-    <DashboardLayout>
-      <div className="space-y-6 w-full">
-        <div className="flex justify-between items-center">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary rounded-lg">
-              <Shield className="h-6 w-6 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-gray-900">
-                Ocorrências / Acionamentos
-              </h1>
-              <p className="text-sm text-gray-500">
-                Gerencie todas as ocorrências de proteção veicular
-              </p>
-            </div>
+    <div className="space-y-6 w-full">
+      <div className="flex justify-between items-center">
+        <div className="flex items-center gap-3">
+          <div className="p-2 bg-primary rounded-lg">
+            <Shield className="h-6 w-6 text-white" />
           </div>
-          <Button
-            onClick={() => navigate("/occurrences/new")}
-            className="shadow-lg hover:shadow-xl transition-shadow"
-          >
-            <Plus className="mr-2 h-4 w-4" /> Novo Registro
-          </Button>
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">
+              Ocorrências / Acionamentos
+            </h1>
+            <p className="text-sm text-gray-500">
+              Gerencie todas as ocorrências de proteção veicular
+            </p>
+          </div>
         </div>
-
-        <OccurrenceListFilters
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          date={date}
-          setDate={setDate}
-          selectedType={selectedType}
-          setSelectedType={setSelectedType}
-          selectedStatus={selectedStatus}
-          setSelectedStatus={setSelectedStatus}
-          handleClearFilters={handleClearFilters}
-        />
-
-        <OccurrenceListTable
-          occurrences={filteredOccurrences}
-          getStatusColor={getStatusColor}
-          onViewOccurrence={handleViewOccurrence}
-        />
-
-        <div className="flex justify-center mt-4">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious href="#" />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">1</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#" isActive>
-                  2
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">3</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext href="#" />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
+        <Button
+          onClick={() => navigate("/occurrences/new")}
+          className="shadow-lg hover:shadow-xl transition-shadow"
+        >
+          <Plus className="mr-2 h-4 w-4" /> Novo Registro
+        </Button>
       </div>
-    </DashboardLayout>
+
+      <OccurrenceListFilters
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        date={date}
+        setDate={setDate}
+        selectedType={selectedType}
+        setSelectedType={setSelectedType}
+        selectedStatus={selectedStatus}
+        setSelectedStatus={setSelectedStatus}
+        handleClearFilters={handleClearFilters}
+      />
+
+      <OccurrenceListTable
+        occurrences={filteredOccurrences}
+        getStatusColor={getStatusColor}
+        onViewOccurrence={handleViewOccurrence}
+      />
+
+      <div className="flex justify-center mt-4">
+        <Pagination>
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious href="#" />
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">1</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#" isActive>
+                2
+              </PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationLink href="#">3</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext href="#" />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      </div>
+    </div>
   );
 };
 
