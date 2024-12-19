@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { User, Role } from "@/types";
+import { User, UserRole } from "@/types";
 
 interface UserFormProps {
   onSubmit: (user: User) => void;
@@ -20,7 +20,7 @@ export function UserForm({ onSubmit, user }: UserFormProps) {
   const [formData, setFormData] = useState({
     name: user?.name || "",
     email: user?.email || "",
-    role: user?.role || "",
+    role: user?.role || "operator" as UserRole,
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -62,7 +62,7 @@ export function UserForm({ onSubmit, user }: UserFormProps) {
         <Label htmlFor="role">Cargo</Label>
         <Select
           value={formData.role}
-          onValueChange={(value) =>
+          onValueChange={(value: UserRole) =>
             setFormData({ ...formData, role: value })
           }
         >
