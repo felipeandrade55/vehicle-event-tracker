@@ -10,10 +10,13 @@ import { OccurrenceTypeSelector } from "./OccurrenceTypeSelector";
 import { VehicleInfoForm } from "./VehicleInfoForm";
 import { EventDetailsForm } from "./EventDetailsForm";
 import { DocumentUploadForm } from "./DocumentUploadForm";
+import { AssociateSelector } from "./AssociateSelector";
 import { Card, CardContent } from "@/components/ui/card";
 import { Steps, Step } from "@/components/ui/steps";
 
 const formSchema = z.object({
+  associateId: z.string().min(1, "Selecione um associado"),
+  searchQuery: z.string().optional(),
   type: z.enum(["collision", "theft", "robbery"] as const),
   date: z.string().min(1, "Data é obrigatória"),
   description: z.string().optional(),
@@ -36,6 +39,7 @@ export function OccurrenceForm() {
   const form = useForm<OccurrenceFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      associateId: "",
       type: "collision",
       date: "",
       description: "",
@@ -47,6 +51,7 @@ export function OccurrenceForm() {
   });
 
   const steps = [
+    { title: "Selecionar Associado", component: AssociateSelector },
     { title: "Tipo de Evento", component: OccurrenceTypeSelector },
     { title: "Dados do Veículo", component: VehicleInfoForm },
     { title: "Detalhes do Evento", component: EventDetailsForm },
@@ -56,6 +61,15 @@ export function OccurrenceForm() {
   const CurrentStepComponent = steps[currentStep].component;
 
   const nextStep = () => {
+    if (currentStep === 0 && !form.getValues("associateId")) {
+      toast({
+        title: "Selecione um associado",
+        description: "É necessário selecionar um associado para continuar.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     }
@@ -69,7 +83,6 @@ export function OccurrenceForm() {
 
   const onSubmit = async (data: OccurrenceFormData) => {
     try {
-      // Here you would typically send the data to your backend
       console.log("Form submitted:", data);
       toast({
         title: "Evento registrado com sucesso!",

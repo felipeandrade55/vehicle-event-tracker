@@ -1,6 +1,10 @@
 export type OccurrenceType = "collision" | "theft" | "robbery";
 
 export interface OccurrenceFormData {
+  // Associate information
+  associateId: string;
+  searchQuery?: string;
+
   // Event details
   type: OccurrenceType;
   date: string;
