@@ -23,7 +23,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           <div className="flex justify-between h-16">
             <div className="flex items-center">
               <img 
-                src="/lovable-uploads/ancore-logo.png" 
+                src="https://ancore.app/wp-content/uploads/2024/07/Ancore-logo.png" 
                 alt="Ancore Proteção Veicular" 
                 className="h-12 w-auto object-contain"
               />
