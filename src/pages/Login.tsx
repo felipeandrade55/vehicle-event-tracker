@@ -35,7 +35,7 @@ const Login = () => {
             <img 
               src="/lovable-uploads/ancore-logo.png" 
               alt="Ancore Proteção Veicular" 
-              className="h-12"
+              className="h-16 w-auto object-contain"
             />
           </div>
           <h1 className="text-2xl font-bold text-primary">Proteção Veicular</h1>

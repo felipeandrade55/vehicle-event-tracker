@@ -25,7 +25,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
               <img 
                 src="/lovable-uploads/ancore-logo.png" 
                 alt="Ancore Proteção Veicular" 
-                className="h-8"
+                className="h-12 w-auto object-contain"
               />
             </div>
             <div className="flex items-center space-x-4">
