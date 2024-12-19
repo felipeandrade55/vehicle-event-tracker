@@ -7,10 +7,32 @@ export interface User {
   role: UserRole;
 }
 
+export interface Vehicle {
+  id: string;
+  brand: string;
+  model: string;
+  year: number;
+  licensePlate: string;
+  chassisNumber: string;
+  color: string;
+  associateId: string;
+}
+
 export interface Associate extends User {
   cpf: string;
   phone: string;
   plan: Plan;
+  contractId: string;
+  address: {
+    street: string;
+    number: string;
+    complement?: string;
+    neighborhood: string;
+    city: string;
+    state: string;
+    zipCode: string;
+  };
+  vehicles: Vehicle[];
 }
 
 export interface Plan {

@@ -3,6 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import Login from "@/pages/Login";
 import Plan from "@/pages/Plan";
+import Associates from "@/pages/Associates";
 import DashboardLayout from "@/components/DashboardLayout";
 
 // Componente de proteção de rota
@@ -49,6 +50,16 @@ const App = () => {
             element={
               <ProtectedRoute>
                 <Plan />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/associates"
+            element={
+              <ProtectedRoute>
+                <DashboardLayout>
+                  <Associates />
+                </DashboardLayout>
               </ProtectedRoute>
             }
           />
