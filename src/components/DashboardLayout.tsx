@@ -1,7 +1,7 @@
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { Shield, LogOut, User, FileText, Car } from "lucide-react";
+import { Shield, LogOut, User, FileText, Car, Users } from "lucide-react";
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
@@ -63,6 +63,14 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             >
               <User className="mr-3 h-4 w-4" />
               Perfil
+            </Button>
+            <Button
+              variant="ghost"
+              className="w-full justify-start hover:bg-primary/10 hover:text-primary transition-colors"
+              onClick={() => navigate("/associates")}
+            >
+              <Users className="mr-3 h-4 w-4" />
+              Associados
             </Button>
             <Button
               variant="ghost"
