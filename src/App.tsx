@@ -6,6 +6,7 @@ import Plan from "@/pages/Plan";
 import Associates from "@/pages/Associates";
 import DashboardLayout from "@/components/DashboardLayout";
 import { OccurrenceForm } from "@/components/occurrences/OccurrenceForm";
+import OccurrenceList from "@/pages/OccurrenceList";
 
 // Componente de proteção de rota
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -66,6 +67,14 @@ const App = () => {
           />
           <Route
             path="/occurrences"
+            element={
+              <ProtectedRoute>
+                <OccurrenceList />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/occurrences/new"
             element={
               <ProtectedRoute>
                 <DashboardLayout>

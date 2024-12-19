@@ -105,7 +105,7 @@ export function OccurrenceForm() {
         description: `Seu protocolo de atendimento é: ${protocolNumber}. Você será notificado sobre o andamento do seu caso.`,
       });
 
-      // Aguarda 2 segundos antes de redirecionar
+      // Redireciona para a lista de ocorrências após 2 segundos
       setTimeout(() => {
         navigate('/occurrences');
       }, 2000);
