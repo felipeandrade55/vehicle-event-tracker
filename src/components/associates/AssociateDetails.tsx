@@ -7,7 +7,15 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Edit, ArrowLeft } from "lucide-react";
+import { Edit, ArrowLeft, Car } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface AssociateDetailsProps {
   associate: Associate;
@@ -76,6 +84,43 @@ export function AssociateDetails({
                 {associate.plan.description}
               </p>
             </div>
+          </div>
+
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <Car className="h-5 w-5" />
+              <h3 className="font-medium">Veículos</h3>
+            </div>
+            {associate.vehicles.length > 0 ? (
+              <div className="border rounded-lg">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Placa</TableHead>
+                      <TableHead>Marca/Modelo</TableHead>
+                      <TableHead>Ano</TableHead>
+                      <TableHead>Cor</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {associate.vehicles.map((vehicle) => (
+                      <TableRow key={vehicle.id}>
+                        <TableCell>{vehicle.licensePlate}</TableCell>
+                        <TableCell>
+                          {vehicle.brand} {vehicle.model}
+                        </TableCell>
+                        <TableCell>{vehicle.year}</TableCell>
+                        <TableCell>{vehicle.color}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                Nenhum veículo cadastrado
+              </p>
+            )}
           </div>
         </CardContent>
       </Card>
