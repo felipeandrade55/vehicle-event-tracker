@@ -107,7 +107,11 @@ const OccurrenceList = () => {
             </TableHeader>
             <TableBody>
               {filteredOccurrences.map((occurrence) => (
-                <TableRow key={occurrence.id}>
+                <TableRow 
+                  key={occurrence.id}
+                  className="cursor-pointer hover:bg-gray-50"
+                  onClick={() => handleViewOccurrence(occurrence.id)}
+                >
                   <TableCell>{occurrence.id}</TableCell>
                   <TableCell>{occurrence.date}</TableCell>
                   <TableCell>{occurrence.associate}</TableCell>
@@ -119,7 +123,10 @@ const OccurrenceList = () => {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => handleViewOccurrence(occurrence.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleViewOccurrence(occurrence.id);
+                      }}
                       title="Visualizar detalhes"
                     >
                       <Eye className="h-4 w-4" />
