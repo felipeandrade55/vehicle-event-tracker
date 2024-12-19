@@ -18,17 +18,18 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <nav className="bg-primary text-white shadow-md">
+      <nav className="bg-white shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <div className="flex items-center">
-              <Shield className="h-8 w-8" />
-              <span className="ml-2 text-xl font-semibold">
-                Proteção Veicular
-              </span>
+              <img 
+                src="/lovable-uploads/ancore-logo.png" 
+                alt="Ancore Proteção Veicular" 
+                className="h-8"
+              />
             </div>
             <div className="flex items-center space-x-4">
-              <span className="text-sm">{user?.name}</span>
+              <span className="text-sm text-gray-700">{user?.name}</span>
               <Button variant="ghost" size="icon" onClick={handleLogout}>
                 <LogOut className="h-5 w-5" />
               </Button>
@@ -67,7 +68,12 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           </nav>
         </aside>
 
-        <main className="flex-1 p-8">{children}</main>
+        <main className="flex-1 p-8">
+          {children}
+          <footer className="fixed bottom-0 left-0 w-full bg-white shadow-md p-4 text-center text-sm text-gray-600">
+            Ancore Proteção Veicular - Uma empresa subsidiária do Grupo ARX
+          </footer>
+        </main>
       </div>
     </div>
   );

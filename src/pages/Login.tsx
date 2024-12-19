@@ -4,7 +4,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
-import { Shield } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 
 const Login = () => {
@@ -33,7 +32,11 @@ const Login = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
           <div className="flex justify-center mb-4">
-            <Shield className="h-12 w-12 text-primary" />
+            <img 
+              src="/lovable-uploads/ancore-logo.png" 
+              alt="Ancore Proteção Veicular" 
+              className="h-12"
+            />
           </div>
           <h1 className="text-2xl font-bold text-primary">Proteção Veicular</h1>
           <p className="text-gray-600">Faça login para acessar sua conta</p>
@@ -64,16 +67,21 @@ const Login = () => {
                 required
               />
             </div>
-            <Button type="submit" className="w-full">
+            <Button type="submit" className="w-full bg-primary hover:bg-primary/90">
               Entrar
             </Button>
           </form>
         </CardContent>
         <CardFooter className="text-center text-sm text-gray-600">
-          Credenciais para teste:<br />
-          Admin: admin@example.com<br />
-          Associado: joao@example.com<br />
-          Senha: 123456
+          <div className="w-full space-y-2">
+            <p>Credenciais para teste:</p>
+            <p>Admin: admin@example.com</p>
+            <p>Associado: joao@example.com</p>
+            <p>Senha: 123456</p>
+            <p className="pt-4 text-xs">
+              Ancore Proteção Veicular - Uma empresa subsidiária do Grupo ARX
+            </p>
+          </div>
         </CardFooter>
       </Card>
     </div>
