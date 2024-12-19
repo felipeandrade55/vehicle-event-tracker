@@ -39,7 +39,6 @@ const OccurrenceList = () => {
 
   const filterOccurrences = (occurrences: Occurrence[]) => {
     return occurrences.filter((occurrence) => {
-      // Search query filter
       const searchLower = searchQuery.toLowerCase();
       const matchesSearch =
         !searchQuery ||
@@ -47,7 +46,6 @@ const OccurrenceList = () => {
         occurrence.id.toLowerCase().includes(searchLower) ||
         occurrence.vehicle.toLowerCase().includes(searchLower);
 
-      // Date filter
       const matchesDate =
         !date ||
         isEqual(
@@ -55,14 +53,16 @@ const OccurrenceList = () => {
           new Date(format(date, "yyyy-MM-dd"))
         );
 
-      // Type filter
       const matchesType = !selectedType || occurrence.type === selectedType;
 
-      // Status filter
       const matchesStatus = !selectedStatus || occurrence.status === selectedStatus;
 
       return matchesSearch && matchesDate && matchesType && matchesStatus;
     });
+  };
+
+  const handleViewOccurrence = (occurrenceId: string) => {
+    navigate(`/occurrences/${occurrenceId}`);
   };
 
   const filteredOccurrences = filterOccurrences(mockOccurrences);
@@ -119,7 +119,7 @@ const OccurrenceList = () => {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => navigate(`/occurrences/${occurrence.id}`)}
+                      onClick={() => handleViewOccurrence(occurrence.id)}
                       title="Visualizar detalhes"
                     >
                       <Eye className="h-4 w-4" />
