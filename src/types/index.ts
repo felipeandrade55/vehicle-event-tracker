@@ -18,6 +18,10 @@ export interface Plan {
   name: string;
   description: string;
   coverage: string[];
+  type: "basic" | "intermediate" | "premium";
+  price: number;
+  features: string[];
+  assistanceDetails: string[];
 }
 
 export interface Occurrence {
