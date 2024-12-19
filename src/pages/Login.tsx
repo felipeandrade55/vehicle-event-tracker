@@ -32,7 +32,7 @@ const Login = () => {
         <div className="flex flex-col items-center">
           <div className="mb-4">
             <img 
-              src="/lovable-uploads/ancore-logo.png" 
+              src="/lovable-uploads/4cdea265-7f27-49b5-8b3d-9050b2d272b9.png" 
               alt="Ancore Proteção Veicular" 
               className="h-16 w-auto object-contain"
             />

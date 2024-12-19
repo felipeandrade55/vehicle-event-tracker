@@ -40,7 +40,7 @@ export function DashboardHeader() {
       <div className="flex h-16 items-center px-4 gap-4">
         <div className="flex items-center flex-1">
           <img 
-            src="/lovable-uploads/ca1d4b88-3767-427b-bc84-34b232bd8892.png" 
+            src="/lovable-uploads/4cdea265-7f27-49b5-8b3d-9050b2d272b9.png" 
             alt="Ancore Logo" 
             className="h-8 w-auto mr-4"
           />
