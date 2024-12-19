@@ -6,6 +6,28 @@ export interface Occurrence {
   type: string;
   location: string;
   status: string;
+  contractNumber?: string;
+  phone?: string;
+  address?: string;
+  vehicleDetails?: {
+    brand: string;
+    model: string;
+    plate: string;
+    color: string;
+    chassis?: string;
+    trackerStatus?: "connected" | "offline";
+  };
+  description?: string;
+  timeline?: Array<{
+    date: string;
+    action: string;
+    agent?: string;
+  }>;
+  team?: Array<{
+    name: string;
+    role: string;
+    contact?: string;
+  }>;
 }
 
 export const mockOccurrences: Occurrence[] = [
@@ -13,10 +35,51 @@ export const mockOccurrences: Occurrence[] = [
     id: "#2024-001",
     date: "2024-03-19 10:32",
     associate: "João da Silva",
-    vehicle: "ABC-1234 (Fiesta)",
+    vehicle: "Fiesta",
     type: "Colisão",
-    location: "São Paulo - SP",
+    location: "Av. Paulista, 1000 - São Paulo, SP",
     status: "Em Análise",
+    contractNumber: "CTR-2024-001",
+    phone: "(11) 98765-4321",
+    address: "Rua das Flores, 123 - São Paulo, SP",
+    vehicleDetails: {
+      brand: "Ford",
+      model: "Fiesta",
+      plate: "ABC-1234",
+      color: "Prata",
+      chassis: "9BWZZZ377VT004251",
+      trackerStatus: "connected"
+    },
+    description: "Colisão traseira em semáforo. Danos materiais apenas.",
+    timeline: [
+      {
+        date: "2024-03-19 10:32",
+        action: "Acionamento registrado",
+        agent: "Sistema"
+      },
+      {
+        date: "2024-03-19 10:35",
+        action: "Equipe técnica notificada",
+        agent: "Central de Atendimento"
+      },
+      {
+        date: "2024-03-19 10:40",
+        action: "Equipe a caminho do local",
+        agent: "José Santos"
+      }
+    ],
+    team: [
+      {
+        name: "José Santos",
+        role: "Técnico Principal",
+        contact: "(11) 97777-8888"
+      },
+      {
+        name: "Maria Oliveira",
+        role: "Atendente",
+        contact: "(11) 96666-7777"
+      }
+    ]
   },
   {
     id: "#2024-002",

@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom";
-import DashboardLayout from "@/components/DashboardLayout";
 import { OccurrenceDetails } from "@/components/occurrences/OccurrenceDetails";
 import { mockOccurrences } from "@/data/occurrenceData";
 import { useToast } from "@/components/ui/use-toast";
@@ -27,9 +26,5 @@ export default function OccurrenceDetailsPage() {
     return null;
   }
 
-  return (
-    <div className="p-6">
-      <OccurrenceDetails occurrence={occurrence} />
-    </div>
-  );
+  return <OccurrenceDetails occurrence={occurrence} />;
 }
