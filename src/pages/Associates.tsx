@@ -9,33 +9,102 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Plus, Search } from "lucide-react";
 import { Associate } from "@/types";
+import { AssociateForm } from "@/components/associates/AssociateForm";
+import { AssociateDetails } from "@/components/associates/AssociateDetails";
 
 const Associates = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [associates, setAssociates] = useState<Associate[]>([]);
+  const [selectedAssociate, setSelectedAssociate] = useState<Associate | null>(
+    null
+  );
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingAssociate, setEditingAssociate] = useState<Associate | null>(
+    null
+  );
 
-  // Função de busca que será implementada posteriormente com backend
   const handleSearch = () => {
     console.log("Buscando por:", searchQuery);
+    // Implementar lógica de busca aqui
   };
+
+  const handleSaveAssociate = (data: Partial<Associate>) => {
+    console.log("Salvando associado:", data);
+    // Implementar lógica de salvar aqui
+    setIsFormOpen(false);
+    setEditingAssociate(null);
+  };
+
+  const handleViewDetails = (associate: Associate) => {
+    setSelectedAssociate(associate);
+    setIsFormOpen(false);
+  };
+
+  const handleEdit = (associate: Associate) => {
+    setEditingAssociate(associate);
+    setIsFormOpen(true);
+    setSelectedAssociate(null);
+  };
+
+  const handleBack = () => {
+    setSelectedAssociate(null);
+    setIsFormOpen(false);
+    setEditingAssociate(null);
+  };
+
+  if (selectedAssociate) {
+    return (
+      <AssociateDetails
+        associate={selectedAssociate}
+        onEdit={() => handleEdit(selectedAssociate)}
+        onBack={handleBack}
+      />
+    );
+  }
+
+  if (isFormOpen) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center gap-4">
+          <Button variant="outline" onClick={handleBack}>
+            Voltar
+          </Button>
+          <h2 className="text-2xl font-bold">
+            {editingAssociate ? "Editar" : "Novo"} Associado
+          </h2>
+        </div>
+        <AssociateForm
+          onSubmit={handleSaveAssociate}
+          initialData={editingAssociate || undefined}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Gerenciamento de Associados</h1>
-      
-      {/* Barra de pesquisa */}
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Gerenciamento de Associados</h1>
+        <Button onClick={() => setIsFormOpen(true)}>
+          <Plus className="mr-2 h-4 w-4" /> Novo Associado
+        </Button>
+      </div>
+
       <div className="flex gap-4">
-        <Input
-          placeholder="Buscar por CPF, Telefone, Placa, ID ou Nome"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="max-w-xl"
-        />
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Buscar por CPF, Telefone, ID ou Nome"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9"
+          />
+        </div>
         <Button onClick={handleSearch}>Buscar</Button>
       </div>
 
-      {/* Tabela de Associados */}
       <div className="border rounded-lg">
         <Table>
           <TableHeader>
@@ -45,7 +114,6 @@ const Associates = () => {
               <TableHead>CPF</TableHead>
               <TableHead>Telefone</TableHead>
               <TableHead>Plano</TableHead>
-              <TableHead>Veículo</TableHead>
               <TableHead>Ações</TableHead>
             </TableRow>
           </TableHeader>
@@ -57,14 +125,24 @@ const Associates = () => {
                 <TableCell>{associate.cpf}</TableCell>
                 <TableCell>{associate.phone}</TableCell>
                 <TableCell>{associate.plan.name}</TableCell>
-                <TableCell>Placa do Veículo</TableCell>
                 <TableCell>
-                  <Button variant="outline" size="sm">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => handleViewDetails(associate)}
+                  >
                     Ver Detalhes
                   </Button>
                 </TableCell>
               </TableRow>
             ))}
+            {associates.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center py-4">
+                  Nenhum associado encontrado
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </div>
