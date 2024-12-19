@@ -2,27 +2,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Form } from "@/components/ui/form";
+import { AssociateSelector } from "./form/AssociateSelector";
+import { OccurrenceFormData } from "./types";
 
 const formSchema = z.object({
-  associate: z.string().min(2, {
-    message: "O nome do associado deve ter pelo menos 2 caracteres.",
+  associateId: z.string().min(1, {
+    message: "Selecione um associado.",
   }),
   contractNumber: z.string().optional(),
   phone: z.string().optional(),
@@ -40,61 +26,28 @@ const formSchema = z.object({
   contactMethod: z.enum(["Telefone", "WhatsApp", "App", "Site"]).optional(),
 });
 
-type OccurrenceType = {
-  id: string;
-  date: string;
-  associate: string;
-  vehicle: string;
-  type: string;
-  location: string;
-  status: string;
-  contactMethod?: "Telefone" | "WhatsApp" | "App" | "Site";
-  contractNumber?: string;
-  phone?: string;
-  address?: string;
-  vehicleDetails?: {
-    brand: string;
-    model: string;
-    plate: string;
-    color: string;
-    chassis?: string;
-    trackerStatus?: "connected" | "offline";
-  };
-  description?: string;
-  timeline?: Array<{
-    date: string;
-    action: string;
-    agent?: string;
-  }>;
-  team?: Array<{
-    name: string;
-    role: string;
-    contact?: string;
-  }>;
-};
-
 interface OccurrenceFormProps {
-  initialData?: OccurrenceType;
+  initialData?: OccurrenceFormData;
   onSuccess?: () => void;
 }
 
 export function OccurrenceForm({ initialData, onSuccess }: OccurrenceFormProps) {
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<OccurrenceFormData>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      associate: initialData?.associate || "",
-      contractNumber: initialData?.contractNumber || "",
-      phone: initialData?.phone || "",
-      address: initialData?.address || "",
-      vehicle: initialData?.vehicle || "",
-      type: initialData?.type || "",
-      location: initialData?.location || "",
-      description: initialData?.description || "",
-      contactMethod: initialData?.contactMethod,
+    defaultValues: initialData || {
+      associateId: "",
+      contractNumber: "",
+      phone: "",
+      address: "",
+      vehicle: "",
+      type: "",
+      location: "",
+      description: "",
+      contactMethod: undefined,
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
+  function onSubmit(values: OccurrenceFormData) {
     console.log(values);
     onSuccess?.();
   }
@@ -103,20 +56,7 @@ export function OccurrenceForm({ initialData, onSuccess }: OccurrenceFormProps) 
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormField
-            control={form.control}
-            name="associate"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Nome do Associado</FormLabel>
-                <FormControl>
-                  <Input placeholder="Nome completo" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
+          <AssociateSelector form={form} />
           <FormField
             control={form.control}
             name="contractNumber"
