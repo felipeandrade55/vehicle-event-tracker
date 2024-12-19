@@ -4,9 +4,7 @@ import { cn } from "@/lib/utils"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { SidebarContext } from "./context"
 import { SIDEBAR_COOKIE_NAME, SIDEBAR_COOKIE_MAX_AGE, SIDEBAR_KEYBOARD_SHORTCUT } from "./constants"
-
-const SIDEBAR_WIDTH = "16rem"
-const SIDEBAR_WIDTH_ICON = "3rem"
+import type { SidebarContextType } from "./types"
 
 export const SidebarProvider = React.forwardRef<
   HTMLDivElement,
@@ -66,9 +64,9 @@ export const SidebarProvider = React.forwardRef<
       return () => window.removeEventListener("keydown", handleKeyDown)
     }, [toggleSidebar])
 
-    const state = open ? "expanded" : "collapsed"
+    const state: "expanded" | "collapsed" = open ? "expanded" : "collapsed"
 
-    const contextValue = React.useMemo(
+    const contextValue: SidebarContextType = React.useMemo(
       () => ({
         state,
         open,
@@ -87,8 +85,8 @@ export const SidebarProvider = React.forwardRef<
           <div
             style={
               {
-                "--sidebar-width": SIDEBAR_WIDTH,
-                "--sidebar-width-icon": SIDEBAR_WIDTH_ICON,
+                "--sidebar-width": "16rem",
+                "--sidebar-width-icon": "3rem",
                 ...style,
               } as React.CSSProperties
             }
