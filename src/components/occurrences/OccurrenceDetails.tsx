@@ -1,18 +1,13 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { 
-  Car, 
   Calendar, 
   MapPin, 
-  AlertTriangle, 
-  User, 
-  Phone, 
-  Home,
+  AlertTriangle,
+  Phone,
   FileImage,
   History,
   Users,
@@ -20,10 +15,12 @@ import {
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { OccurrenceActions } from "./OccurrenceActions";
 import { OccurrenceHeader } from "./OccurrenceHeader";
 import { useToast } from "@/components/ui/use-toast";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { AssociateCard } from "./details/AssociateCard";
+import { VehicleCard } from "./details/VehicleCard";
 import { OccurrenceForm } from "./OccurrenceForm";
 
 interface OccurrenceDetailsProps {
@@ -93,74 +90,17 @@ export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
       />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Associate Information */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <User className="h-5 w-5" />
-              Informações do Associado
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center gap-2">
-              <User className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm">Associado: {occurrence.associate}</span>
-            </div>
-            {occurrence.contractNumber && (
-              <div className="flex items-center gap-2">
-                <AlertTriangle className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm">Contrato: {occurrence.contractNumber}</span>
-              </div>
-            )}
-            {occurrence.phone && (
-              <div className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm">Telefone: {occurrence.phone}</span>
-              </div>
-            )}
-            {occurrence.address && (
-              <div className="flex items-center gap-2">
-                <Home className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm">Endereço: {occurrence.address}</span>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        <AssociateCard 
+          associate={occurrence.associate}
+          contractNumber={occurrence.contractNumber}
+          phone={occurrence.phone}
+          address={occurrence.address}
+        />
 
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Car className="h-5 w-5" />
-              Informações do Veículo
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center gap-2">
-              <Car className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm">Veículo: {occurrence.vehicle}</span>
-            </div>
-            {occurrence.vehicleDetails && (
-              <>
-                <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">Placa: {occurrence.vehicleDetails.plate}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <AlertTriangle className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">
-                    Status do Rastreador: 
-                    <Badge 
-                      variant="secondary" 
-                      className={occurrence.vehicleDetails.trackerStatus === "connected" ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"}
-                    >
-                      {occurrence.vehicleDetails.trackerStatus === "connected" ? "Conectado" : "Offline"}
-                    </Badge>
-                  </span>
-                </div>
-              </>
-            )}
-          </CardContent>
-        </Card>
+        <VehicleCard 
+          vehicle={occurrence.vehicle}
+          vehicleDetails={occurrence.vehicleDetails}
+        />
 
         <Card className="md:col-span-2">
           <CardHeader>

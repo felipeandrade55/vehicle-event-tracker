@@ -1,171 +1,263 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { toast } from "@/components/ui/use-toast";
-import { OccurrenceFormData } from "./types";
-import { OccurrenceTypeSelector } from "./OccurrenceTypeSelector";
-import { VehicleInfoForm } from "./VehicleInfoForm";
-import { EventDetailsForm } from "./EventDetailsForm";
-import { DocumentUploadForm } from "./DocumentUploadForm";
-import { AssociateSelector } from "./AssociateSelector";
-import { Card, CardContent } from "@/components/ui/card";
-import { Steps, Step } from "@/components/ui/steps";
-import { useNavigate } from "react-router-dom";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const formSchema = z.object({
-  // Informações do associado
-  associateId: z.string().optional(),
-  searchQuery: z.string().optional(),
-
-  // Detalhes do evento
-  type: z.enum(["collision", "theft", "robbery"] as const).optional(),
-  date: z.string().optional(),
+  associate: z.string().min(2, {
+    message: "O nome do associado deve ter pelo menos 2 caracteres.",
+  }),
+  contractNumber: z.string().optional(),
+  phone: z.string().optional(),
+  address: z.string().optional(),
+  vehicle: z.string().min(2, {
+    message: "A descrição do veículo deve ter pelo menos 2 caracteres.",
+  }),
+  type: z.string().min(1, {
+    message: "Selecione o tipo de ocorrência.",
+  }),
+  location: z.string().min(2, {
+    message: "A localização deve ter pelo menos 2 caracteres.",
+  }),
   description: z.string().optional(),
-  driver: z.enum(["associate", "third-party"] as const).optional(),
-  contactMethod: z.enum(["Telefone", "WhatsApp", "Site", "APP"] as const).optional(),
-
-  // Informações do veículo
-  licensePlate: z.string().optional(),
-  vehicleModel: z.string().optional(),
-  vehicleBrand: z.string().optional(),
-
-  // Documentos
-  documents: z.object({
-    driversLicense: z.string().optional(),
-    vehicleRegistration: z.string().optional(),
-    eventReport: z.string().optional(),
-    policeReport: z.string().optional(),
-    proofOfResidence: z.string().optional(),
-    vehiclePhotos: z.array(z.string()).optional(),
-    tirePhotos: z.array(z.string()).optional(),
-  }).optional(),
+  contactMethod: z.enum(["Telefone", "WhatsApp", "App", "Site"]).optional(),
 });
 
-// Função para gerar número de protocolo único
-const generateProtocolNumber = () => {
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-  return `${year}${month}${day}-${random}`;
+type OccurrenceType = {
+  id: string;
+  date: string;
+  associate: string;
+  vehicle: string;
+  type: string;
+  location: string;
+  status: string;
+  contactMethod?: "Telefone" | "WhatsApp" | "App" | "Site";
+  contractNumber?: string;
+  phone?: string;
+  address?: string;
+  vehicleDetails?: {
+    brand: string;
+    model: string;
+    plate: string;
+    color: string;
+    chassis?: string;
+    trackerStatus?: "connected" | "offline";
+  };
+  description?: string;
+  timeline?: Array<{
+    date: string;
+    action: string;
+    agent?: string;
+  }>;
+  team?: Array<{
+    name: string;
+    role: string;
+    contact?: string;
+  }>;
 };
 
-export function OccurrenceForm() {
-  const [currentStep, setCurrentStep] = useState(0);
-  const navigate = useNavigate();
-  
-  const form = useForm<OccurrenceFormData>({
+interface OccurrenceFormProps {
+  initialData?: OccurrenceType;
+  onSuccess?: () => void;
+}
+
+export function OccurrenceForm({ initialData, onSuccess }: OccurrenceFormProps) {
+  const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      associateId: "",
-      type: "collision",
-      date: "",
-      description: "",
-      licensePlate: "",
-      vehicleModel: "",
-      vehicleBrand: "",
-      documents: {},
-      contactMethod: "Telefone",
+      associate: initialData?.associate || "",
+      contractNumber: initialData?.contractNumber || "",
+      phone: initialData?.phone || "",
+      address: initialData?.address || "",
+      vehicle: initialData?.vehicle || "",
+      type: initialData?.type || "",
+      location: initialData?.location || "",
+      description: initialData?.description || "",
+      contactMethod: initialData?.contactMethod,
     },
   });
 
-  const steps = [
-    { title: "Selecionar Associado", component: AssociateSelector },
-    { title: "Tipo de Evento", component: OccurrenceTypeSelector },
-    { title: "Dados do Veículo", component: VehicleInfoForm },
-    { title: "Detalhes do Evento", component: EventDetailsForm },
-    { title: "Documentação", component: DocumentUploadForm },
-  ];
-
-  const CurrentStepComponent = steps[currentStep].component;
-
-  const nextStep = () => {
-    if (currentStep < steps.length - 1) {
-      setCurrentStep(currentStep + 1);
-    }
-  };
-
-  const previousStep = () => {
-    if (currentStep > 0) {
-      setCurrentStep(currentStep - 1);
-    }
-  };
-
-  const onSubmit = async (data: OccurrenceFormData) => {
-    // Só processa o submit quando estiver na última etapa
-    if (currentStep === steps.length - 1) {
-      try {
-        const protocolNumber = generateProtocolNumber();
-        
-        console.log("Form submitted:", { ...data, protocolNumber });
-        
-        toast({
-          title: "Evento registrado com sucesso!",
-          description: `Seu protocolo de atendimento é: ${protocolNumber}. Você será notificado sobre o andamento do seu caso.`,
-        });
-
-        setTimeout(() => {
-          navigate('/occurrences');
-        }, 2000);
-        
-      } catch (error) {
-        toast({
-          title: "Erro ao registrar evento",
-          description: "Por favor, tente novamente mais tarde.",
-          variant: "destructive",
-        });
-      }
-    } else {
-      // Se não estiver na última etapa, apenas avança para a próxima
-      nextStep();
-    }
-  };
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
+    onSuccess?.();
+  }
 
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-6">
-      <h1 className="text-2xl font-bold">Registro de Evento</h1>
-      
-      <Steps currentStep={currentStep} className="mb-8">
-        {steps.map((step, index) => (
-          <Step
-            key={index}
-            title={step.title}
-            completed={index < currentStep}
-            current={index === currentStep}
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <FormField
+            control={form.control}
+            name="associate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nome do Associado</FormLabel>
+                <FormControl>
+                  <Input placeholder="Nome completo" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        ))}
-      </Steps>
 
-      <Card>
-        <CardContent className="p-6">
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <CurrentStepComponent form={form} />
-              
-              <div className="flex justify-between mt-6">
-                {currentStep > 0 && (
-                  <Button type="button" variant="outline" onClick={previousStep}>
-                    Voltar
-                  </Button>
-                )}
-                {currentStep < steps.length - 1 ? (
-                  <Button type="submit" className="ml-auto">
-                    Próximo
-                  </Button>
-                ) : (
-                  <Button type="submit" className="ml-auto">
-                    Registrar Evento
-                  </Button>
-                )}
-              </div>
-            </form>
-          </Form>
-        </CardContent>
-      </Card>
-    </div>
+          <FormField
+            control={form.control}
+            name="contractNumber"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Número do Contrato</FormLabel>
+                <FormControl>
+                  <Input placeholder="Ex: 123456" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="phone"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Telefone</FormLabel>
+                <FormControl>
+                  <Input placeholder="(00) 00000-0000" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="contactMethod"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Método de Contato</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione o método de contato" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Telefone">Telefone</SelectItem>
+                    <SelectItem value="WhatsApp">WhatsApp</SelectItem>
+                    <SelectItem value="App">App</SelectItem>
+                    <SelectItem value="Site">Site</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="vehicle"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Veículo</FormLabel>
+                <FormControl>
+                  <Input placeholder="Marca/Modelo" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="type"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Tipo de Ocorrência</FormLabel>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Selecione o tipo" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="Roubo">Roubo</SelectItem>
+                    <SelectItem value="Furto">Furto</SelectItem>
+                    <SelectItem value="Acidente">Acidente</SelectItem>
+                    <SelectItem value="Pane">Pane</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="location"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Localização</FormLabel>
+                <FormControl>
+                  <Input placeholder="Endereço do evento" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="address"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Endereço do Associado</FormLabel>
+                <FormControl>
+                  <Input placeholder="Endereço completo" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Descrição</FormLabel>
+              <FormControl>
+                <Textarea
+                  placeholder="Descreva os detalhes da ocorrência"
+                  className="resize-none"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="flex justify-end gap-4">
+          <Button type="submit">Salvar Alterações</Button>
+        </div>
+      </form>
+    </Form>
   );
 }
