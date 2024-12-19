@@ -16,14 +16,21 @@ import { Steps, Step } from "@/components/ui/steps";
 import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
-  associateId: z.string().min(1, "Selecione um associado"),
+  // Informações do associado
+  associateId: z.string().optional(),
   searchQuery: z.string().optional(),
-  type: z.enum(["collision", "theft", "robbery"] as const),
-  date: z.string().min(1, "Data é obrigatória"),
+
+  // Detalhes do evento
+  type: z.enum(["collision", "theft", "robbery"] as const).optional(),
+  date: z.string().optional(),
   description: z.string().optional(),
-  licensePlate: z.string().min(7, "Placa do veículo é obrigatória"),
-  vehicleModel: z.string().min(2, "Modelo do veículo é obrigatório"),
-  vehicleBrand: z.string().min(2, "Marca do veículo é obrigatória"),
+
+  // Informações do veículo
+  licensePlate: z.string().optional(),
+  vehicleModel: z.string().optional(),
+  vehicleBrand: z.string().optional(),
+
+  // Documentos
   documents: z.object({
     driversLicense: z.string().optional(),
     vehicleRegistration: z.string().optional(),
@@ -32,7 +39,7 @@ const formSchema = z.object({
     proofOfResidence: z.string().optional(),
     vehiclePhotos: z.array(z.string()).optional(),
     tirePhotos: z.array(z.string()).optional(),
-  }),
+  }).optional(),
 });
 
 // Função para gerar número de protocolo único
@@ -74,15 +81,6 @@ export function OccurrenceForm() {
   const CurrentStepComponent = steps[currentStep].component;
 
   const nextStep = () => {
-    if (currentStep === 0 && !form.getValues("associateId")) {
-      toast({
-        title: "Selecione um associado",
-        description: "É necessário selecionar um associado para continuar.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     }
