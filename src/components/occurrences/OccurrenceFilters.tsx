@@ -16,7 +16,7 @@ import {
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
-import { Download, Filter, Search, X } from "lucide-react";
+import { Download, Filter, Search, X, CalendarIcon } from "lucide-react";
 import { occurrenceTypes, occurrenceStatus } from "@/data/occurrenceData";
 
 interface OccurrenceFiltersProps {
@@ -54,39 +54,38 @@ export function OccurrenceFilters({
         />
       </div>
 
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant={"outline"}
-            className={cn(
-              "justify-start text-left font-normal",
-              !date && "text-muted-foreground"
-            )}
+      <div className="relative">
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "w-full justify-start text-left font-normal",
+                !date && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {date ? format(date, "dd/MM/yyyy", { locale: ptBR }) : "Selecionar data"}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent
+            className="w-auto p-0"
+            align="start"
           >
-            <Calendar className="mr-2 h-4 w-4" />
-            {date ? format(date, "PPP", { locale: ptBR }) : "Selecionar data"}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent 
-          className="w-auto p-0" 
-          align="start"
-          side="bottom"
-          sideOffset={8}
-          style={{ 
-            zIndex: 9999,
-            position: 'relative',
-            marginTop: '4px'
-          }}
-        >
-          <Calendar
-            mode="single"
-            selected={date}
-            onSelect={setDate}
-            locale={ptBR}
-            initialFocus={false}
-          />
-        </PopoverContent>
-      </Popover>
+            <Calendar
+              mode="single"
+              selected={date}
+              onSelect={setDate}
+              locale={ptBR}
+              initialFocus={false}
+              disabled={(date) =>
+                date > new Date() || date < new Date("1900-01-01")
+              }
+              className="rounded-md border"
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
 
       <Select value={selectedType} onValueChange={setSelectedType}>
         <SelectTrigger>
