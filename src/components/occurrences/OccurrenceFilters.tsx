@@ -83,7 +83,7 @@ export function OccurrenceFilters({
             selected={date}
             onSelect={setDate}
             locale={ptBR}
-            initialFocus
+            initialFocus={false}
           />
         </PopoverContent>
       </Popover>
