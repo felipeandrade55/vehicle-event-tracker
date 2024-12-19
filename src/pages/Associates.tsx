@@ -13,6 +13,7 @@ import { Plus, Search } from "lucide-react";
 import { Associate } from "@/types";
 import { AssociateForm } from "@/components/associates/AssociateForm";
 import { AssociateDetails } from "@/components/associates/AssociateDetails";
+import { toast } from "@/components/ui/use-toast";
 
 const Associates = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -31,8 +32,51 @@ const Associates = () => {
   };
 
   const handleSaveAssociate = (data: Partial<Associate>) => {
-    console.log("Salvando associado:", data);
-    // Implementar lógica de salvar aqui
+    const newAssociate: Associate = {
+      id: editingAssociate?.id || crypto.randomUUID(),
+      name: data.name || "",
+      cpf: data.cpf || "",
+      phone: data.phone || "",
+      email: data.email || "",
+      role: "associate",
+      plan: {
+        id: "default",
+        name: "Plano Básico",
+        description: "Plano básico de proteção veicular",
+        coverage: [],
+        type: "basic",
+        price: 0,
+        features: [],
+        assistanceDetails: [],
+      },
+      contractId: crypto.randomUUID(),
+      address: {
+        street: "",
+        number: "",
+        neighborhood: "",
+        city: "",
+        state: "",
+        zipCode: "",
+      },
+      vehicles: [],
+    };
+
+    if (editingAssociate) {
+      setAssociates(associates.map(a => 
+        a.id === editingAssociate.id ? { ...a, ...newAssociate } : a
+      ));
+      toast({
+        title: "Associado atualizado",
+        description: "Os dados do associado foram atualizados com sucesso.",
+      });
+    } else {
+      setAssociates([...associates, newAssociate]);
+      toast({
+        title: "Associado cadastrado",
+        description: "Novo associado foi cadastrado com sucesso.",
+      });
+    }
+    
     setIsFormOpen(false);
     setEditingAssociate(null);
   };
