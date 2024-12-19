@@ -1,7 +1,7 @@
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import { UseFormReturn } from "react-hook-form";
 import { VehicleFormData } from "./types";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 
 interface VehicleInspectionFormProps {
   form: UseFormReturn<VehicleFormData>;
@@ -11,7 +11,6 @@ export function VehicleInspectionForm({ form }: VehicleInspectionFormProps) {
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Vistoria Prévia</h3>
-      
       <FormField
         control={form.control}
         name="inspectionPhotos"

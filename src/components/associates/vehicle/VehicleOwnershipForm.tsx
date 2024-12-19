@@ -1,8 +1,14 @@
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
 import { VehicleFormData } from "./types";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface VehicleOwnershipFormProps {
   form: UseFormReturn<VehicleFormData>;
@@ -12,7 +18,6 @@ export function VehicleOwnershipForm({ form }: VehicleOwnershipFormProps) {
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Propriedade do Veículo</h3>
-      
       <FormField
         control={form.control}
         name="ownershipType"

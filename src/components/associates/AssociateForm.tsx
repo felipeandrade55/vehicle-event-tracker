@@ -3,20 +3,14 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { toast } from "@/components/ui/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { VehicleForm } from "./vehicle/VehicleForm";
 import { VehicleList } from "./vehicle/VehicleList";
-import { VehicleFormData } from "./vehicle/types";
+import { PersonalDataForm } from "./personal/PersonalDataForm";
+import { AddressForm } from "./address/AddressForm";
+import { VehicleFormData, AssociateFormData } from "./types";
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -43,8 +37,8 @@ const formSchema = z.object({
 });
 
 interface AssociateFormProps {
-  onSubmit: (data: z.infer<typeof formSchema>) => void;
-  initialData?: z.infer<typeof formSchema>;
+  onSubmit: (data: AssociateFormData) => void;
+  initialData?: AssociateFormData;
 }
 
 export function AssociateForm({ onSubmit, initialData }: AssociateFormProps) {
@@ -52,7 +46,7 @@ export function AssociateForm({ onSubmit, initialData }: AssociateFormProps) {
   const [isAddingVehicle, setIsAddingVehicle] = useState(false);
   const [editingVehicleId, setEditingVehicleId] = useState<string | null>(null);
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<AssociateFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: initialData || {
       name: "",
@@ -71,7 +65,7 @@ export function AssociateForm({ onSubmit, initialData }: AssociateFormProps) {
     },
   });
 
-  function handleSubmit(values: z.infer<typeof formSchema>) {
+  function handleSubmit(values: AssociateFormData) {
     onSubmit(values);
     toast({
       title: "Associado salvo com sucesso!",
@@ -115,62 +109,7 @@ export function AssociateForm({ onSubmit, initialData }: AssociateFormProps) {
       <TabsContent value="personal">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nome</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Nome do associado" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="cpf"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>CPF</FormLabel>
-                  <FormControl>
-                    <Input placeholder="000.000.000-00" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Telefone</FormLabel>
-                  <FormControl>
-                    <Input placeholder="(00) 00000-0000" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="email@exemplo.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
+            <PersonalDataForm form={form} />
             <Button type="submit">Salvar</Button>
           </form>
         </Form>
@@ -179,108 +118,7 @@ export function AssociateForm({ onSubmit, initialData }: AssociateFormProps) {
       <TabsContent value="address">
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-8">
-            <FormField
-              control={form.control}
-              name="address.street"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Rua</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Nome da rua" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="address.number"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Número</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Número" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="address.complement"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Complemento</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Complemento" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="address.neighborhood"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Bairro</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Bairro" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="address.city"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Cidade</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Cidade" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="address.state"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Estado</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Estado" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-
-            <FormField
-              control={form.control}
-              name="address.zipCode"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>CEP</FormLabel>
-                  <FormControl>
-                    <Input placeholder="00000-000" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
+            <AddressForm form={form} />
             <Button type="submit">Salvar</Button>
           </form>
         </Form>

@@ -1,8 +1,8 @@
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Textarea } from "@/components/ui/textarea";
 import { UseFormReturn } from "react-hook-form";
 import { VehicleFormData } from "./types";
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
+import { Checkbox } from "@/components/ui/checkbox";
 
 interface VehicleHistoryFormProps {
   form: UseFormReturn<VehicleFormData>;
@@ -12,7 +12,6 @@ export function VehicleHistoryForm({ form }: VehicleHistoryFormProps) {
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold">Histórico do Veículo</h3>
-      
       <FormField
         control={form.control}
         name="hasPreviousAccidents"

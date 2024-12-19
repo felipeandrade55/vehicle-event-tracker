@@ -1,24 +1,23 @@
 import { UseFormReturn } from "react-hook-form";
-import { VehicleFormData } from "./types";
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { AssociateFormData } from "../types";
 
-interface VehicleDocumentationFormProps {
-  form: UseFormReturn<VehicleFormData>;
+interface PersonalDataFormProps {
+  form: UseFormReturn<AssociateFormData>;
 }
 
-export function VehicleDocumentationForm({ form }: VehicleDocumentationFormProps) {
+export function PersonalDataForm({ form }: PersonalDataFormProps) {
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold">Documentação do Veículo</h3>
       <FormField
         control={form.control}
-        name="licensePlate"
+        name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Placa do Veículo</FormLabel>
+            <FormLabel>Nome</FormLabel>
             <FormControl>
-              <Input placeholder="ABC-1234" {...field} />
+              <Input placeholder="Nome do associado" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -27,12 +26,12 @@ export function VehicleDocumentationForm({ form }: VehicleDocumentationFormProps
 
       <FormField
         control={form.control}
-        name="chassisNumber"
+        name="cpf"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Número do Chassi</FormLabel>
+            <FormLabel>CPF</FormLabel>
             <FormControl>
-              <Input placeholder="9BWZZZ377VT004251" {...field} />
+              <Input placeholder="000.000.000-00" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -41,12 +40,12 @@ export function VehicleDocumentationForm({ form }: VehicleDocumentationFormProps
 
       <FormField
         control={form.control}
-        name="renavam"
+        name="phone"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>RENAVAM</FormLabel>
+            <FormLabel>Telefone</FormLabel>
             <FormControl>
-              <Input placeholder="00123456789" {...field} />
+              <Input placeholder="(00) 00000-0000" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -55,12 +54,12 @@ export function VehicleDocumentationForm({ form }: VehicleDocumentationFormProps
 
       <FormField
         control={form.control}
-        name="registrationDocument"
+        name="email"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>CRLV (URL do documento)</FormLabel>
+            <FormLabel>Email</FormLabel>
             <FormControl>
-              <Input type="url" placeholder="URL do documento" {...field} />
+              <Input placeholder="email@exemplo.com" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
