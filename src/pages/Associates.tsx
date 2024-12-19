@@ -9,11 +9,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, Eye, UserCircle } from "lucide-react";
 import { Associate } from "@/types";
 import { AssociateForm } from "@/components/associates/AssociateForm";
 import { AssociateDetails } from "@/components/associates/AssociateDetails";
 import { toast } from "@/components/ui/use-toast";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 
 const Associates = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -167,68 +175,132 @@ const Associates = () => {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="space-y-8">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Gerenciamento de Associados</h1>
-        <Button onClick={() => setIsFormOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" /> Novo Associado
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">Associados</h1>
+          <p className="text-muted-foreground mt-2">
+            Gerencie os associados e seus veículos
+          </p>
+        </div>
+        <Button onClick={() => setIsFormOpen(true)} className="gap-2">
+          <Plus className="h-4 w-4" /> Novo Associado
         </Button>
       </div>
 
-      <div className="flex gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Buscar por CPF, Telefone, ID ou Nome"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9"
-          />
-        </div>
-        <Button onClick={handleSearch}>Buscar</Button>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Lista de Associados</CardTitle>
+          <CardDescription>
+            Visualize e gerencie todos os associados cadastrados
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-4 mb-6">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Buscar por CPF, Telefone, ID ou Nome"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9"
+              />
+            </div>
+            <Button onClick={handleSearch} variant="secondary">
+              Buscar
+            </Button>
+          </div>
 
-      <div className="border rounded-lg">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>Nome</TableHead>
-              <TableHead>CPF</TableHead>
-              <TableHead>Telefone</TableHead>
-              <TableHead>Plano</TableHead>
-              <TableHead>Ações</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {associates.map((associate) => (
-              <TableRow key={associate.id}>
-                <TableCell>{associate.id}</TableCell>
-                <TableCell>{associate.name}</TableCell>
-                <TableCell>{associate.cpf}</TableCell>
-                <TableCell>{associate.phone}</TableCell>
-                <TableCell>{associate.plan.name}</TableCell>
-                <TableCell>
-                  <Button
-                    variant="outline"
-                    size="sm"
+          <div className="rounded-md border">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted/50">
+                  <TableHead>ID</TableHead>
+                  <TableHead>Nome</TableHead>
+                  <TableHead>CPF</TableHead>
+                  <TableHead>Telefone</TableHead>
+                  <TableHead>Plano</TableHead>
+                  <TableHead className="text-right">Ações</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {associates.map((associate) => (
+                  <TableRow
+                    key={associate.id}
+                    className="hover:bg-muted/50 cursor-pointer transition-colors"
                     onClick={() => handleViewDetails(associate)}
                   >
-                    Ver Detalhes
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-            {associates.length === 0 && (
-              <TableRow>
-                <TableCell colSpan={6} className="text-center py-4">
-                  Nenhum associado encontrado
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+                    <TableCell className="font-medium">{associate.id}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                          <UserCircle className="h-5 w-5 text-primary" />
+                        </div>
+                        {associate.name}
+                      </div>
+                    </TableCell>
+                    <TableCell>{associate.cpf}</TableCell>
+                    <TableCell>{associate.phone}</TableCell>
+                    <TableCell>
+                      <Badge variant="secondary" className="font-normal">
+                        {associate.plan.name}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleViewDetails(associate);
+                        }}
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                {associates.length === 0 && (
+                  <TableRow>
+                    <TableCell
+                      colSpan={6}
+                      className="h-32 text-center text-muted-foreground"
+                    >
+                      Nenhum associado encontrado
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
+        </CardContent>
+      </Card>
+
+      {selectedAssociate && (
+        <AssociateDetails
+          associate={selectedAssociate}
+          onEdit={() => handleEdit(selectedAssociate)}
+          onBack={handleBack}
+          onUpdateAssociate={handleUpdateAssociate}
+        />
+      )}
+
+      {isFormOpen && (
+        <div className="space-y-4">
+          <div className="flex items-center gap-4">
+            <Button variant="outline" onClick={handleBack}>
+              Voltar
+            </Button>
+            <h2 className="text-2xl font-bold">
+              {editingAssociate ? "Editar" : "Novo"} Associado
+            </h2>
+          </div>
+          <AssociateForm
+            onSubmit={handleSaveAssociate}
+            initialData={editingAssociate || undefined}
+          />
+        </div>
+      )}
     </div>
   );
 };
