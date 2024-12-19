@@ -29,3 +29,12 @@ export interface OccurrenceFormData {
     tirePhotos?: string[];
   };
 }
+
+export interface DocumentRequirement {
+  id: string;
+  name: string;
+  description: string;
+  required: boolean;
+  type: "file" | "multiple-files";
+  acceptedFormats: string[];
+}
