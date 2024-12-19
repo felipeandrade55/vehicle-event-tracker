@@ -9,7 +9,8 @@ export default function OccurrenceDetailsPage() {
   const { id } = useParams();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const occurrence = mockOccurrences.find((o) => o.id === id);
+  const decodedId = id ? decodeURIComponent(id) : "";
+  const occurrence = mockOccurrences.find((o) => o.id === `#${decodedId}`);
 
   useEffect(() => {
     if (!occurrence) {
