@@ -44,7 +44,7 @@ export function DashboardHeader() {
             alt="Ancore Logo" 
             className="h-8 w-auto mr-4"
           />
-          <h1 className="text-xl font-semibold">Ancore Clube de Benefícios</h1>
+          <h1 className="text-xl font-semibold">Ancore Proteção Veicular</h1>
         </div>
         <Button
           variant={testDataEnabled ? "destructive" : "outline"}
