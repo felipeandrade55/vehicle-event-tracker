@@ -56,6 +56,41 @@ export function EventDetailsForm({ form }: EventDetailsFormProps) {
 
       <FormField
         control={form.control}
+        name="contactMethod"
+        render={({ field }) => (
+          <FormItem className="space-y-3">
+            <FormLabel>Método de Contato</FormLabel>
+            <FormControl>
+              <RadioGroup
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                className="flex flex-col space-y-1"
+              >
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Telefone" id="phone" />
+                  <Label htmlFor="phone">Telefone</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="WhatsApp" id="whatsapp" />
+                  <Label htmlFor="whatsapp">WhatsApp</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="Site" id="site" />
+                  <Label htmlFor="site">Site</Label>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <RadioGroupItem value="APP" id="app" />
+                  <Label htmlFor="app">APP</Label>
+                </div>
+              </RadioGroup>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
+
+      <FormField
+        control={form.control}
         name="description"
         render={({ field }) => (
           <FormItem>

@@ -2,6 +2,8 @@ export type OccurrenceType = "collision" | "theft" | "robbery";
 
 export type DriverType = "associate" | "third-party";
 
+export type ContactMethod = "Telefone" | "WhatsApp" | "Site" | "APP";
+
 export interface OccurrenceFormData {
   // Associate information
   associateId: string;
@@ -12,6 +14,7 @@ export interface OccurrenceFormData {
   date: string;
   description?: string;
   driver?: DriverType;
+  contactMethod?: ContactMethod;
 
   // Vehicle information
   licensePlate: string;

@@ -25,6 +25,7 @@ const formSchema = z.object({
   date: z.string().optional(),
   description: z.string().optional(),
   driver: z.enum(["associate", "third-party"] as const).optional(),
+  contactMethod: z.enum(["Telefone", "WhatsApp", "Site", "APP"] as const).optional(),
 
   // Informações do veículo
   licensePlate: z.string().optional(),
@@ -68,6 +69,7 @@ export function OccurrenceForm() {
       vehicleModel: "",
       vehicleBrand: "",
       documents: {},
+      contactMethod: "Telefone",
     },
   });
 
