@@ -209,6 +209,10 @@ export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
               <AlertTriangle className="h-4 w-4 text-muted-foreground" />
               <span className="text-sm">Tipo: {occurrence.type}</span>
             </div>
+            <div className="flex items-center gap-2">
+              <Phone className="h-4 w-4 text-muted-foreground" />
+              <span className="text-sm">Método de Contato: {occurrence.contactMethod || "Não informado"}</span>
+            </div>
             {occurrence.description && (
               <div className="mt-4">
                 <h4 className="text-sm font-medium mb-2">Descrição do Evento:</h4>

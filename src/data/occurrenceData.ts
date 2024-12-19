@@ -6,6 +6,7 @@ export interface Occurrence {
   type: string;
   location: string;
   status: string;
+  contactMethod?: "Telefone" | "WhatsApp" | "App" | "Site";
   contractNumber?: string;
   phone?: string;
   address?: string;
@@ -39,6 +40,7 @@ export const mockOccurrences: Occurrence[] = [
     type: "Colisão",
     location: "Av. Paulista, 1000 - São Paulo, SP",
     status: "Em Análise",
+    contactMethod: "Telefone",
     contractNumber: "CTR-2024-001",
     phone: "(11) 98765-4321",
     address: "Rua das Flores, 123 - São Paulo, SP",
@@ -89,6 +91,7 @@ export const mockOccurrences: Occurrence[] = [
     type: "Roubo/Furto",
     location: "Curitiba - PR",
     status: "Em Atendimento",
+    contactMethod: "WhatsApp",
   },
   {
     id: "#2024-003",
