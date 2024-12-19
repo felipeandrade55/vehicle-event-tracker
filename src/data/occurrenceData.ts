@@ -1,3 +1,5 @@
+// ... keep existing code
+
 export interface Occurrence {
   id: string;
   date: string;
@@ -28,6 +30,11 @@ export interface Occurrence {
     name: string;
     role: string;
     contact?: string;
+  }>;
+  systemActions?: Array<{
+    user: string;
+    action: string;
+    date: string;
   }>;
 }
 

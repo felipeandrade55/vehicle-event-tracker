@@ -10,17 +10,16 @@ import {
   Phone,
   FileImage,
   History,
-  Users,
   Plus
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { OccurrenceActions } from "./OccurrenceActions";
 import { OccurrenceHeader } from "./OccurrenceHeader";
 import { useToast } from "@/components/ui/use-toast";
 import { AssociateCard } from "./details/AssociateCard";
 import { VehicleCard } from "./details/VehicleCard";
+import { TeamCard } from "./details/TeamCard";
 import { OccurrenceForm } from "./OccurrenceForm";
 import { OccurrenceFormData, OccurrenceType } from "./types";
 
@@ -55,6 +54,11 @@ interface OccurrenceDetailsProps {
       name: string;
       role: string;
       contact?: string;
+    }>;
+    systemActions?: Array<{
+      user: string;
+      action: string;
+      date: string;
     }>;
   };
 }
@@ -180,34 +184,10 @@ export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
           </Card>
         )}
 
-        {occurrence.team && (
-          <Card className="md:col-span-2">
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Users className="h-5 w-5" />
-                Equipe Mobilizada
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {occurrence.team.map((member, index) => (
-                  <div key={index} className="flex items-center gap-4">
-                    <Avatar>
-                      <AvatarFallback>{member.name.slice(0, 2).toUpperCase()}</AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="text-sm font-medium">{member.name}</p>
-                      <p className="text-sm text-muted-foreground">{member.role}</p>
-                      {member.contact && (
-                        <p className="text-sm text-muted-foreground">{member.contact}</p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        <TeamCard 
+          team={occurrence.team}
+          systemActions={occurrence.systemActions}
+        />
 
         <Card className="md:col-span-2">
           <CardHeader>
