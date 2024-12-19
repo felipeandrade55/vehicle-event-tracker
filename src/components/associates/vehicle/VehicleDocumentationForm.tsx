@@ -36,7 +36,7 @@ export function VehicleDocumentationForm({ form }: VehicleDocumentationFormProps
 
   const viewFile = (fieldName: keyof VehicleFormData) => {
     const value = form.getValues(fieldName);
-    if (value) {
+    if (typeof value === 'string' && value.length > 0) {
       window.open(value, '_blank');
     }
   };
