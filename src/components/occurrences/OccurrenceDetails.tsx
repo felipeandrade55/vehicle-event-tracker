@@ -33,6 +33,7 @@ interface OccurrenceDetailsProps {
     type: string;
     location: string;
     status: string;
+    contactMethod?: "Telefone" | "WhatsApp" | "App" | "Site";
     contractNumber?: string;
     phone?: string;
     address?: string;
