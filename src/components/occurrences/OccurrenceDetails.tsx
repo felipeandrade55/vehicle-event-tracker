@@ -59,6 +59,15 @@ interface OccurrenceDetailsProps {
       action: string;
       date: string;
     }>;
+    documents?: {
+      driversLicense?: string;
+      vehicleRegistration?: string;
+      eventReport?: string;
+      policeReport?: string;
+      proofOfResidence?: string;
+      vehiclePhotos?: string[];
+      tirePhotos?: string[];
+    };
   };
 }
 
