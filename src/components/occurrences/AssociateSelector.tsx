@@ -17,39 +17,56 @@ export function AssociateSelector({ form }: AssociateSelectorProps) {
   const [selectedAssociate, setSelectedAssociate] = useState<Associate | null>(null);
 
   const handleSearch = () => {
-    // Simulated search - in a real app, this would call an API
-    console.log("Searching for associate with query:", searchQuery);
-    // Mock data for demonstration
-    const mockAssociate: Associate = {
-      id: "1",
-      name: "John Doe",
-      email: "john@example.com",
-      cpf: "123.456.789-00",
-      phone: "(11) 99999-9999",
-      role: "associate",
-      contractId: "CONT-001",
-      plan: {
-        id: "basic",
-        name: "Plano Básico",
-        description: "Cobertura básica",
-        coverage: [],
-        type: "basic",
-        price: 100,
-        features: [],
-        assistanceDetails: [],
-      },
-      address: {
-        street: "Rua Example",
-        number: "123",
-        neighborhood: "Centro",
-        city: "São Paulo",
-        state: "SP",
-        zipCode: "01001-000",
-      },
-      vehicles: [],
-    };
-    setSelectedAssociate(mockAssociate);
-    form.setValue("associateId", mockAssociate.id);
+    const testAssociates = localStorage.getItem('testAssociates');
+    if (testAssociates) {
+      const associates = JSON.parse(testAssociates);
+      const foundAssociate = associates.find((associate: Associate) => 
+        associate.cpf.includes(searchQuery) ||
+        associate.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        associate.contractId.includes(searchQuery) ||
+        associate.vehicles.some(vehicle => vehicle.licensePlate.includes(searchQuery.toUpperCase()))
+      );
+
+      if (foundAssociate) {
+        setSelectedAssociate(foundAssociate);
+        form.setValue("associateId", foundAssociate.id);
+      } else {
+        setSelectedAssociate(null);
+        form.setValue("associateId", "");
+      }
+    } else {
+      // Fallback to mock data for demonstration
+      const mockAssociate: Associate = {
+        id: "1",
+        name: "John Doe",
+        email: "john@example.com",
+        cpf: "123.456.789-00",
+        phone: "(11) 99999-9999",
+        role: "associate",
+        contractId: "CONT-001",
+        plan: {
+          id: "basic",
+          name: "Plano Básico",
+          description: "Cobertura básica",
+          coverage: [],
+          type: "basic",
+          price: 100,
+          features: [],
+          assistanceDetails: [],
+        },
+        address: {
+          street: "Rua Example",
+          number: "123",
+          neighborhood: "Centro",
+          city: "São Paulo",
+          state: "SP",
+          zipCode: "01001-000",
+        },
+        vehicles: [],
+      };
+      setSelectedAssociate(mockAssociate);
+      form.setValue("associateId", mockAssociate.id);
+    }
   };
 
   return (
@@ -88,6 +105,17 @@ export function AssociateSelector({ form }: AssociateSelectorProps) {
               <p>Nome: {selectedAssociate.name}</p>
               <p>CPF: {selectedAssociate.cpf}</p>
               <p>Contrato: {selectedAssociate.contractId}</p>
+              {selectedAssociate.vehicles && selectedAssociate.vehicles.length > 0 && (
+                <div>
+                  <p className="font-semibold mt-4">Veículos:</p>
+                  {selectedAssociate.vehicles.map((vehicle, index) => (
+                    <div key={index} className="ml-4">
+                      <p>Placa: {vehicle.licensePlate}</p>
+                      <p>{vehicle.brand} {vehicle.model} ({vehicle.year})</p>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>
