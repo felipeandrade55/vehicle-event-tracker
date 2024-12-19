@@ -39,7 +39,12 @@ export function DashboardHeader() {
   return (
     <header className="border-b">
       <div className="flex h-16 items-center px-4 gap-4">
-        <div className="flex-1">
+        <div className="flex items-center flex-1">
+          <img 
+            src="/lovable-uploads/ancore-logo.png" 
+            alt="Ancore Logo" 
+            className="h-8 mr-4"
+          />
           <h1 className="text-xl font-semibold">Ancore Clube de Benefícios</h1>
         </div>
         <Button
