@@ -13,6 +13,7 @@ import { DocumentUploadForm } from "./DocumentUploadForm";
 import { AssociateSelector } from "./AssociateSelector";
 import { Card, CardContent } from "@/components/ui/card";
 import { Steps, Step } from "@/components/ui/steps";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   associateId: z.string().min(1, "Selecione um associado"),
@@ -34,8 +35,20 @@ const formSchema = z.object({
   }),
 });
 
+// Função para gerar número de protocolo único
+const generateProtocolNumber = () => {
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
+  return `${year}${month}${day}-${random}`;
+};
+
 export function OccurrenceForm() {
   const [currentStep, setCurrentStep] = useState(0);
+  const navigate = useNavigate();
+  
   const form = useForm<OccurrenceFormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -83,11 +96,21 @@ export function OccurrenceForm() {
 
   const onSubmit = async (data: OccurrenceFormData) => {
     try {
-      console.log("Form submitted:", data);
+      const protocolNumber = generateProtocolNumber();
+      
+      // Aqui você adicionaria a lógica para salvar os dados com o número do protocolo
+      console.log("Form submitted:", { ...data, protocolNumber });
+      
       toast({
         title: "Evento registrado com sucesso!",
-        description: "Você será notificado sobre o andamento do seu caso.",
+        description: `Seu protocolo de atendimento é: ${protocolNumber}. Você será notificado sobre o andamento do seu caso.`,
       });
+
+      // Aguarda 2 segundos para o usuário ver a mensagem de sucesso
+      setTimeout(() => {
+        navigate('/occurrences');
+      }, 2000);
+      
     } catch (error) {
       toast({
         title: "Erro ao registrar evento",
