@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -5,9 +6,6 @@ import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { 
-  ArrowLeft, 
-  RefreshCw, 
-  FileText, 
   Car, 
   Calendar, 
   MapPin, 
@@ -20,9 +18,13 @@ import {
   Users,
   Plus
 } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { OccurrenceActions } from "./OccurrenceActions";
+import { OccurrenceHeader } from "./OccurrenceHeader";
+import { useToast } from "@/components/ui/use-toast";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { OccurrenceForm } from "./OccurrenceForm";
 
 interface OccurrenceDetailsProps {
   occurrence: {
@@ -59,64 +61,36 @@ interface OccurrenceDetailsProps {
   };
 }
 
-const getStatusColor = (status: string) => {
-  switch (status.toLowerCase()) {
-    case "em análise":
-      return "bg-yellow-100 text-yellow-800";
-    case "em atendimento":
-      return "bg-blue-100 text-blue-800";
-    case "concluído":
-      return "bg-green-100 text-green-800";
-    case "cancelado":
-      return "bg-red-100 text-red-800";
-    default:
-      return "bg-gray-100 text-gray-800";
-  }
-};
-
 export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
-  const navigate = useNavigate();
+  const [isEditing, setIsEditing] = useState(false);
+  const { toast } = useToast();
   const formattedDate = format(new Date(occurrence.date), "dd/MM/yyyy 'às' HH:mm", {
     locale: ptBR,
   });
 
+  const handleRefresh = () => {
+    toast({
+      title: "Atualizado",
+      description: "Os dados do acionamento foram atualizados.",
+    });
+  };
+
+  const handleEdit = () => {
+    setIsEditing(true);
+  };
+
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <div className="flex items-center gap-4">
-          <Button 
-            variant="outline" 
-            onClick={() => navigate("/occurrences")}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Voltar à Lista
-          </Button>
-          <Button variant="outline" className="flex items-center gap-2">
-            <RefreshCw className="h-4 w-4" />
-            Atualizar
-          </Button>
-          <Button variant="outline" className="flex items-center gap-2">
-            <FileText className="h-4 w-4" />
-            Exportar PDF
-          </Button>
-        </div>
-      </div>
+      <OccurrenceActions 
+        id={occurrence.id} 
+        onEdit={handleEdit}
+        onRefresh={handleRefresh}
+      />
 
-      {/* Event Identification */}
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-bold">Detalhes do Acionamento</h1>
-          <p className="text-muted-foreground">ID: {occurrence.id}</p>
-        </div>
-        <Badge 
-          variant="secondary" 
-          className={`px-4 py-2 text-sm ${getStatusColor(occurrence.status)}`}
-        >
-          {occurrence.status}
-        </Badge>
-      </div>
+      <OccurrenceHeader 
+        id={occurrence.id}
+        status={occurrence.status}
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Associate Information */}
@@ -134,7 +108,7 @@ export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
             </div>
             {occurrence.contractNumber && (
               <div className="flex items-center gap-2">
-                <FileText className="h-4 w-4 text-muted-foreground" />
+                <AlertTriangle className="h-4 w-4 text-muted-foreground" />
                 <span className="text-sm">Contrato: {occurrence.contractNumber}</span>
               </div>
             )}
@@ -153,7 +127,6 @@ export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
           </CardContent>
         </Card>
 
-        {/* Vehicle Information */}
         <Card>
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
@@ -189,7 +162,6 @@ export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
           </CardContent>
         </Card>
 
-        {/* Event Details */}
         <Card className="md:col-span-2">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
@@ -223,7 +195,6 @@ export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
           </CardContent>
         </Card>
 
-        {/* Timeline */}
         {occurrence.timeline && (
           <Card className="md:col-span-2">
             <CardHeader>
@@ -254,7 +225,6 @@ export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
           </Card>
         )}
 
-        {/* Team */}
         {occurrence.team && (
           <Card className="md:col-span-2">
             <CardHeader>
@@ -284,7 +254,6 @@ export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
           </Card>
         )}
 
-        {/* Documents */}
         <Card className="md:col-span-2">
           <CardHeader>
             <CardTitle className="text-lg flex items-center gap-2">
@@ -312,6 +281,18 @@ export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={isEditing} onOpenChange={setIsEditing}>
+        <DialogContent className="max-w-4xl">
+          <OccurrenceForm
+            initialData={occurrence}
+            onSuccess={() => {
+              setIsEditing(false);
+              handleRefresh();
+            }}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
