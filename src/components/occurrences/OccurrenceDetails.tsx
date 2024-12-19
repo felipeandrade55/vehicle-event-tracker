@@ -22,6 +22,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { AssociateCard } from "./details/AssociateCard";
 import { VehicleCard } from "./details/VehicleCard";
 import { OccurrenceForm } from "./OccurrenceForm";
+import { OccurrenceFormData, OccurrenceType } from "./types";
 
 interface OccurrenceDetailsProps {
   occurrence: {
