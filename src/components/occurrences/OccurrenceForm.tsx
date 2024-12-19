@@ -98,20 +98,22 @@ export function OccurrenceForm() {
     try {
       const protocolNumber = generateProtocolNumber();
       
-      // Aqui você adicionaria a lógica para salvar os dados com o número do protocolo
+      // Log dos dados do formulário e protocolo
       console.log("Form submitted:", { ...data, protocolNumber });
       
+      // Exibe mensagem de sucesso com o número do protocolo
       toast({
         title: "Evento registrado com sucesso!",
         description: `Seu protocolo de atendimento é: ${protocolNumber}. Você será notificado sobre o andamento do seu caso.`,
       });
 
-      // Aguarda 2 segundos para o usuário ver a mensagem de sucesso
+      // Aguarda 2 segundos antes de redirecionar
       setTimeout(() => {
         navigate('/occurrences');
       }, 2000);
       
     } catch (error) {
+      // Em caso de erro, exibe mensagem de erro
       toast({
         title: "Erro ao registrar evento",
         description: "Por favor, tente novamente mais tarde.",
@@ -148,11 +150,11 @@ export function OccurrenceForm() {
                   </Button>
                 )}
                 {currentStep < steps.length - 1 ? (
-                  <Button type="button" onClick={nextStep}>
+                  <Button type="button" onClick={nextStep} className="ml-auto">
                     Próximo
                   </Button>
                 ) : (
-                  <Button type="submit">
+                  <Button type="submit" className="ml-auto">
                     Registrar Evento
                   </Button>
                 )}
