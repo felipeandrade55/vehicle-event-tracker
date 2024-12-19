@@ -21,6 +21,7 @@ export interface Vehicle {
 export interface Associate extends User {
   cpf: string;
   phone: string;
+  planId: string; // Added this field
   plan: Plan;
   contractId: string;
   address: {
