@@ -25,6 +25,7 @@ const MOCK_PAYMENTS: ServicePayment[] = [
     status: "paid",
     description: "Troca de embreagem",
     serviceType: "Mecânica",
+    occurrenceId: "#2024-001",
     vehicleInfo: {
       brand: "Fiat",
       model: "Uno",
@@ -41,6 +42,7 @@ const MOCK_PAYMENTS: ServicePayment[] = [
     status: "pending",
     description: "Revisão completa",
     serviceType: "Revisão",
+    occurrenceId: "#2024-002",
     vehicleInfo: {
       brand: "Volkswagen",
       model: "Gol",
@@ -54,8 +56,8 @@ export function WorkshopPayments() {
 
   const getStatusBadge = (status: ServicePayment["status"]) => {
     const statusConfig = {
-      paid: { label: "Pago", variant: "success" as const },
-      pending: { label: "Pendente", variant: "warning" as const },
+      paid: { label: "Pago", variant: "default" as const },
+      pending: { label: "Pendente", variant: "secondary" as const },
       cancelled: { label: "Cancelado", variant: "destructive" as const },
     };
 
@@ -79,6 +81,7 @@ export function WorkshopPayments() {
             <TableHead>Data do Serviço</TableHead>
             <TableHead>Valor</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Nº Ocorrência</TableHead>
             <TableHead className="text-right">Ações</TableHead>
           </TableRow>
         </TableHeader>
@@ -111,6 +114,11 @@ export function WorkshopPayments() {
               </TableCell>
               <TableCell>{formatCurrency(payment.amount)}</TableCell>
               <TableCell>{getStatusBadge(payment.status)}</TableCell>
+              <TableCell>
+                <Button variant="link" className="p-0 h-auto font-medium">
+                  {payment.occurrenceId}
+                </Button>
+              </TableCell>
               <TableCell className="text-right">
                 <Button variant="ghost" size="sm">
                   Detalhes

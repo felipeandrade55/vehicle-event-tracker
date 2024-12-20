@@ -8,6 +8,7 @@ export interface ServicePayment {
   status: "pending" | "paid" | "cancelled";
   description: string;
   serviceType: string;
+  occurrenceId: string;
   vehicleInfo?: {
     brand: string;
     model: string;
