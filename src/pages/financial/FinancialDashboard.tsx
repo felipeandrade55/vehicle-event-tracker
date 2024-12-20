@@ -1,81 +1,74 @@
-import { CashFlowChart } from "@/components/financial/dashboard/CashFlowChart";
 import { FinancialSummaryCards } from "@/components/financial/dashboard/FinancialSummaryCards";
 import { UpcomingPayments } from "@/components/financial/dashboard/UpcomingPayments";
+import { CashFlowChart } from "@/components/financial/dashboard/CashFlowChart";
+import { PaymentNotifications } from "@/components/financial/notifications/PaymentNotifications";
+import { DefaultersReport } from "@/components/financial/reports/DefaultersReport";
 
 const FinancialDashboard = () => {
   // Dados mockados para exemplo
-  const cashFlowData = [
-    {
-      month: "Jan",
-      receitas: 12450,
-      despesas: 8230,
-    },
-    {
-      month: "Fev",
-      receitas: 14200,
-      despesas: 7800,
-    },
-    {
-      month: "Mar",
-      receitas: 13800,
-      despesas: 8500,
-    },
-    {
-      month: "Abr",
-      receitas: 15300,
-      despesas: 9200,
-    },
-    {
-      month: "Mai",
-      receitas: 14700,
-      despesas: 8900,
-    },
-    {
-      month: "Jun",
-      receitas: 16200,
-      despesas: 9500,
-    },
-  ];
-
   const summaryData = {
-    totalBalance: 45231.89,
-    monthlyRevenue: 12450.00,
-    monthlyExpenses: 8230.50,
-    defaultRate: 3.2,
-    revenueCount: 32,
-    expenseCount: 15,
-    defaultCount: 5,
-    monthlyGrowth: 20.1,
+    totalBalance: 25000.0,
+    monthlyRevenue: 15000.0,
+    monthlyExpenses: 8000.0,
+    defaultRate: 5.2,
+    revenueCount: 45,
+    expenseCount: 12,
+    defaultCount: 3,
+    monthlyGrowth: 12.5,
   };
 
   const upcomingPayments = [
     {
       id: "1",
-      description: "Fornecedor XYZ",
-      dueDate: new Date(),
-      value: 1250.00,
-      daysUntilDue: 3,
+      description: "Mensalidade João Silva",
+      dueDate: new Date("2024-04-15"),
+      value: 250.0,
+      daysUntilDue: 2,
     },
     {
       id: "2",
-      description: "Manutenção Preventiva",
-      dueDate: new Date(),
-      value: 890.00,
-      daysUntilDue: 5,
+      description: "Mensalidade Maria Santos",
+      dueDate: new Date("2024-04-16"),
+      value: 150.0,
+      daysUntilDue: 3,
+    },
+  ];
+
+  const cashFlowData = [
+    {
+      month: "Jan",
+      receitas: 12000,
+      despesas: 8000,
+    },
+    {
+      month: "Fev",
+      receitas: 15000,
+      despesas: 9000,
+    },
+    {
+      month: "Mar",
+      receitas: 18000,
+      despesas: 10000,
     },
   ];
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Dashboard Financeiro</h1>
-      </div>
-
+      <h1 className="text-2xl font-bold">Dashboard Financeiro</h1>
+      
       <FinancialSummaryCards data={summaryData} />
-
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <CashFlowChart data={cashFlowData} />
+      
+      <div className="grid gap-4 md:grid-cols-2">
+        <PaymentNotifications />
         <UpcomingPayments payments={upcomingPayments} />
+      </div>
+      
+      <div className="grid gap-4">
+        <DefaultersReport />
+      </div>
+      
+      <div className="grid gap-4">
+        <CashFlowChart data={cashFlowData} />
       </div>
     </div>
   );
