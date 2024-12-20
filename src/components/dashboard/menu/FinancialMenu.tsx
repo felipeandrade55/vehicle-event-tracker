@@ -5,12 +5,11 @@ import {
   TrendingUp,
   FileText,
   DollarSign,
-  Building2,
-  Users,
   FileSpreadsheet,
 } from "lucide-react";
 import { MenuItems } from "./MenuItems";
 import { MenuItem } from "../types/sidebar";
+import { SidebarGroup, SidebarGroupLabel, SidebarGroupContent, SidebarMenu } from "@/components/ui/sidebar";
 
 const items: MenuItem[] = [
   {
@@ -65,5 +64,14 @@ const items: MenuItem[] = [
 ];
 
 export const FinancialMenu = () => {
-  return <MenuItems items={items} />;
+  return (
+    <SidebarGroup>
+      <SidebarGroupLabel className="text-base font-semibold">Financeiro</SidebarGroupLabel>
+      <SidebarGroupContent>
+        <SidebarMenu>
+          <MenuItems items={items} />
+        </SidebarMenu>
+      </SidebarGroupContent>
+    </SidebarGroup>
+  );
 };

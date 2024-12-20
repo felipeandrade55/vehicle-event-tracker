@@ -6,11 +6,13 @@ import { SettingsMenu } from "./menu/SettingsMenu";
 
 export const DashboardSidebar = () => {
   return (
-    <div className="w-64 h-screen bg-white border-r border-gray-200 shadow-lg">
+    <div className="w-64 h-full bg-white border-r border-gray-200 shadow-lg overflow-y-auto">
       <Sidebar>
-        <SidebarContent className="py-4">
+        <SidebarContent className="py-4 space-y-4">
           <MainMenu />
-          <FinancialMenu />
+          <div className="px-3">
+            <FinancialMenu />
+          </div>
           <PartnersMenu />
           <SettingsMenu />
         </SidebarContent>
