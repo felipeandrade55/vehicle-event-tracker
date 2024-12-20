@@ -3,7 +3,6 @@ import { useToast } from "@/components/ui/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
 import { Brain } from "lucide-react";
 import { mockOccurrences } from "@/data/occurrenceData";
 import { AuditHistory } from "./AuditHistory";
@@ -11,6 +10,7 @@ import { AuditStepConfig, AuditStepConfiguration } from "./config/AuditStepConfi
 import { AuditScoring } from "./scoring/AuditScoring";
 import { AuditHistoryFilters, AuditHistoryFilters as FilterType } from "./history/AuditHistoryFilters";
 import { AuditLegend } from "./legend/AuditLegend";
+import { AuditProgress } from "./progress/AuditProgress";
 
 interface AuditAction {
   id: string;
@@ -105,6 +105,7 @@ export function AIAudit() {
     }
 
     setIsAuditing(true);
+    setCurrentStep(0);
     
     const enabledSteps = steps.filter(s => s.enabled);
     
@@ -163,7 +164,7 @@ export function AIAudit() {
           return step;
         });
 
-        if (i === steps.length - 1) {
+        if (i === enabledSteps.length - 1) {
           const finalResult = {
             status: "positive" as const,
             message: "Auditoria concluída com sucesso. Todos os critérios foram atendidos satisfatoriamente."
@@ -185,7 +186,6 @@ export function AIAudit() {
     }
     
     const riskScore = calculateRiskScore(steps);
-    
     setIsAuditing(false);
   };
 
@@ -216,7 +216,7 @@ export function AIAudit() {
     return true;
   });
 
-  const progress = (currentStep / steps.length) * 100;
+  const progress = (currentStep / (steps.filter(s => s.enabled).length)) * 100;
 
   return (
     <div className="space-y-6 p-6">
@@ -243,9 +243,10 @@ export function AIAudit() {
               </Button>
             </div>
 
-            {isAuditing && (
-              <Progress value={progress} className="h-2" />
-            )}
+            <AuditProgress 
+              isAuditing={isAuditing} 
+              progress={progress}
+            />
           </CardContent>
         </Card>
 
