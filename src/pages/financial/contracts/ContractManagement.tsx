@@ -81,10 +81,18 @@ const ContractManagement = () => {
             Gerencie todos os contratos da associação
           </p>
         </div>
-        <Button onClick={() => navigate("/financial/contracts/editor/new")}>
-          <FileText className="mr-2 h-4 w-4" />
-          Novo Contrato
-        </Button>
+        <div className="space-x-2">
+          <Button
+            variant="outline"
+            onClick={() => navigate("/financial/contracts/approval-levels")}
+          >
+            Alçadas de Aprovação
+          </Button>
+          <Button onClick={() => navigate("/financial/contracts/editor/new")}>
+            <FileText className="mr-2 h-4 w-4" />
+            Novo Contrato
+          </Button>
+        </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-4">
