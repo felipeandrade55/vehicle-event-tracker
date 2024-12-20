@@ -4,7 +4,7 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { OccurrenceFormData } from "./types";
-import { AssociateSelector } from "./AssociateSelector";
+import { AssociateSelector } from "./form/AssociateSelector";
 import { OccurrenceTypeSelector } from "./OccurrenceTypeSelector";
 import { EventDetailsForm } from "./EventDetailsForm";
 import { VehicleInfoForm } from "./VehicleInfoForm";
@@ -92,14 +92,31 @@ export function OccurrenceForm({ initialData, onSuccess }: OccurrenceFormProps) 
     },
   ];
 
-  function onSubmit(values: OccurrenceFormData) {
-    console.log(values);
-    toast({
-      title: "Ocorrência registrada com sucesso!",
-      description: "A ocorrência foi registrada e será analisada pela equipe.",
-    });
-    navigate("/occurrences");
-    onSuccess?.();
+  async function onSubmit(values: OccurrenceFormData) {
+    try {
+      console.log("Form values:", values);
+      
+      // Here you would typically make an API call to save the occurrence
+      // For now, we'll just simulate success
+      
+      toast({
+        title: "Ocorrência registrada com sucesso!",
+        description: "A ocorrência foi registrada e será analisada pela equipe.",
+      });
+
+      // Call onSuccess callback if provided
+      onSuccess?.();
+      
+      // Navigate to occurrences list
+      navigate("/occurrences");
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      toast({
+        title: "Erro ao registrar ocorrência",
+        description: "Houve um erro ao registrar a ocorrência. Tente novamente.",
+        variant: "destructive",
+      });
+    }
   }
 
   const nextStep = () => {
@@ -147,7 +164,9 @@ export function OccurrenceForm({ initialData, onSuccess }: OccurrenceFormProps) 
               </Button>
               
               {isLastStep ? (
-                <Button type="submit">Finalizar Registro</Button>
+                <Button type="submit">
+                  Finalizar Registro
+                </Button>
               ) : (
                 <Button type="button" onClick={nextStep}>
                   Próximo
