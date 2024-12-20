@@ -63,3 +63,28 @@ export interface Occurrence {
   documents: string[];
   associateId: string;
 }
+
+export interface Supplier {
+  id: string;
+  name: string;
+  cnpj: string;
+  email: string;
+  phone: string;
+  address: string;
+  services: string;
+  notes?: string;
+}
+
+export interface Workshop {
+  id: string;
+  name: string;
+  cnpj: string;
+  email: string;
+  phone: string;
+  address: string;
+  specialties: string;
+  hasEmergencyService: boolean;
+  workingHours: string;
+  rating?: number;
+  notes?: string;
+}
