@@ -6,6 +6,9 @@ import ContractManagement from "@/pages/financial/contracts/ContractManagement";
 import ContractEditor from "@/pages/financial/contracts/ContractEditor";
 import ApprovalLevels from "@/pages/financial/contracts/ApprovalLevels";
 import DashboardLayout from "@/components/DashboardLayout";
+import CashFlow from "@/pages/financial/CashFlow";
+import Revenues from "@/pages/financial/Revenues";
+import Expenses from "@/pages/financial/Expenses";
 
 function App() {
   return (
@@ -17,6 +20,9 @@ function App() {
         <Route path="/financial/contracts" element={<ContractManagement />} />
         <Route path="/financial/contracts/editor/:id" element={<ContractEditor />} />
         <Route path="/financial/contracts/approval-levels" element={<ApprovalLevels />} />
+        <Route path="/financial/cash-flow" element={<CashFlow />} />
+        <Route path="/financial/revenues" element={<Revenues />} />
+        <Route path="/financial/expenses" element={<Expenses />} />
       </Route>
     </Routes>
   );
