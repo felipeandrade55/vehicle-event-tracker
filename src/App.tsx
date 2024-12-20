@@ -11,6 +11,8 @@ import RoleManagement from "./pages/settings/RoleManagement";
 import FinancialDashboard from "./pages/financial/FinancialDashboard";
 import Revenues from "./pages/financial/Revenues";
 import { RevenueForm } from "./components/financial/RevenueForm";
+import Expenses from "./pages/financial/Expenses";
+import { ExpenseForm } from "./components/financial/ExpenseForm";
 import Login from "./pages/Login";
 import { useAuth } from "./contexts/AuthContext";
 import { Navigate } from "react-router-dom";
@@ -42,6 +44,8 @@ function App() {
         <Route path="/financial" element={<FinancialDashboard />} />
         <Route path="/financial/revenues" element={<Revenues />} />
         <Route path="/financial/revenues/new" element={<RevenueForm />} />
+        <Route path="/financial/expenses" element={<Expenses />} />
+        <Route path="/financial/expenses/new" element={<ExpenseForm />} />
         <Route path="/settings/users" element={<UserManagement />} />
         <Route path="/settings/roles" element={<RoleManagement />} />
       </Route>
