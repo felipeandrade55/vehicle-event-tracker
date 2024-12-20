@@ -58,11 +58,11 @@ export function AuditHistoryFilters({ onFilterChange }: AuditHistoryFiltersProps
 
         <div className="flex gap-2">
           <DatePicker
-            placeholder="Data inicial"
+            date={null}
             onChange={(date) => handleDateChange("start", date)}
           />
           <DatePicker
-            placeholder="Data final"
+            date={null}
             onChange={(date) => handleDateChange("end", date)}
           />
         </div>

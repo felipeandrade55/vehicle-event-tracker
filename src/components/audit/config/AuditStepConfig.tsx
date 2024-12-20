@@ -11,6 +11,11 @@ export interface AuditStepConfiguration {
   title: string;
   enabled: boolean;
   weight: number;
+  status?: "processing" | "completed";
+  result?: {
+    status: "positive" | "negative" | "partial";
+    message: string;
+  };
 }
 
 interface AuditStepConfigProps {
