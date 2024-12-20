@@ -21,6 +21,7 @@ import Associates from "@/pages/Associates";
 import Plan from "@/pages/Plan";
 import OccurrenceList from "@/pages/OccurrenceList";
 import OccurrenceDetails from "@/pages/OccurrenceDetails";
+import MonthlyPayments from "@/pages/financial/MonthlyPayments";
 
 function App() {
   return (
@@ -41,8 +42,8 @@ function App() {
         <Route path="/financial/cash-flow" element={<CashFlow />} />
         <Route path="/financial/revenues" element={<Revenues />} />
         <Route path="/financial/expenses" element={<Expenses />} />
+        <Route path="/financial/monthly-payments" element={<MonthlyPayments />} />
         
-        {/* Contratos */}
         <Route path="/financial/contracts" element={<ContractManagement />} />
         <Route path="/financial/contracts/editor/:id" element={<ContractEditor />} />
         <Route path="/financial/contracts/approval-levels" element={<ApprovalLevels />} />
