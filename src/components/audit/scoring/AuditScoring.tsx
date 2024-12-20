@@ -16,23 +16,32 @@ interface AuditScoringProps {
 }
 
 export function AuditScoring({ score }: AuditScoringProps) {
+  const [animatedTotal, setAnimatedTotal] = useState(0);
   const [animatedScores, setAnimatedScores] = useState<{[key: string]: number}>({});
 
   useEffect(() => {
+    // Initialize all scores to zero first
     score.breakdown.forEach((item) => {
-      const percentage = Math.round((item.score / item.maxScore) * 100);
       setAnimatedScores(prev => ({
         ...prev,
         [item.category]: 0
       }));
-      
-      setTimeout(() => {
+    });
+    setAnimatedTotal(0);
+
+    // Animate to final values after a short delay
+    const timer = setTimeout(() => {
+      setAnimatedTotal(score.total);
+      score.breakdown.forEach((item) => {
+        const percentage = Math.round((item.score / item.maxScore) * 100);
         setAnimatedScores(prev => ({
           ...prev,
           [item.category]: percentage
         }));
-      }, 100);
-    });
+      });
+    }, 300);
+
+    return () => clearTimeout(timer);
   }, [score]);
 
   const getRiskLevel = (score: number) => {
@@ -41,7 +50,7 @@ export function AuditScoring({ score }: AuditScoringProps) {
     return { label: "Baixo Risco", color: "bg-green-500" };
   };
 
-  const risk = getRiskLevel(score.total);
+  const risk = getRiskLevel(animatedTotal);
 
   return (
     <Card>
@@ -51,7 +60,7 @@ export function AuditScoring({ score }: AuditScoringProps) {
       <CardContent>
         <div className="space-y-6">
           <div className="text-center">
-            <span className="text-2xl font-bold">{score.total}%</span>
+            <span className="text-2xl font-bold">{animatedTotal}%</span>
             <p className={`text-sm font-medium ${
               risk.color === "bg-red-500" ? "text-red-600" :
               risk.color === "bg-yellow-500" ? "text-yellow-600" :
@@ -62,7 +71,7 @@ export function AuditScoring({ score }: AuditScoringProps) {
           </div>
 
           <Progress 
-            value={score.total} 
+            value={animatedTotal} 
             className={`h-2 ${risk.color} transition-all duration-1000`} 
           />
 
