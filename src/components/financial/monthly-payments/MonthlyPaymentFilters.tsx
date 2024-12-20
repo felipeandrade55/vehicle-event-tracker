@@ -33,7 +33,7 @@ export const MonthlyPaymentFilters = ({
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Todos</SelectItem>
+            <SelectItem value="all">Todos</SelectItem>
             <SelectItem value="paid">Pago</SelectItem>
             <SelectItem value="pending">Pendente</SelectItem>
             <SelectItem value="overdue">Atrasado</SelectItem>
@@ -52,7 +52,7 @@ export const MonthlyPaymentFilters = ({
             <SelectValue placeholder="Mês" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Todos</SelectItem>
+            <SelectItem value="all">Todos</SelectItem>
             <SelectItem value="0">Janeiro</SelectItem>
             <SelectItem value="1">Fevereiro</SelectItem>
             <SelectItem value="2">Março</SelectItem>
