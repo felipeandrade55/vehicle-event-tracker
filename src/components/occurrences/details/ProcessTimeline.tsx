@@ -1,4 +1,14 @@
-import { Check, Clock, AlertCircle, User } from "lucide-react";
+import { 
+  Check, 
+  Clock, 
+  AlertCircle, 
+  User, 
+  FileText, 
+  Scale, 
+  Car, 
+  CheckCircle2,
+  CalendarClock
+} from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
@@ -10,6 +20,13 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { Progress } from "@/components/ui/progress";
 
 export type StepStatus = "completed" | "pending" | "in-progress";
 
@@ -33,7 +50,10 @@ interface ProcessTimelineProps {
   steps: TimelineStep[];
 }
 
-const getStatusIcon = (status: StepStatus) => {
+const getStatusIcon = (status: StepStatus, type?: string) => {
+  if (type === "document_upload") return <FileText className="h-4 w-4 text-white" />;
+  if (type === "team_assignment") return <User className="h-4 w-4 text-white" />;
+  
   switch (status) {
     case "completed":
       return <Check className="h-4 w-4 text-white" />;
@@ -42,6 +62,15 @@ const getStatusIcon = (status: StepStatus) => {
     case "pending":
       return <AlertCircle className="h-4 w-4 text-white" />;
   }
+};
+
+const getStepIcon = (title: string) => {
+  if (title.toLowerCase().includes("registro")) return <Car className="h-4 w-4 text-blue-500" />;
+  if (title.toLowerCase().includes("documentação")) return <FileText className="h-4 w-4 text-blue-500" />;
+  if (title.toLowerCase().includes("jurídica")) return <Scale className="h-4 w-4 text-blue-500" />;
+  if (title.toLowerCase().includes("aprovação")) return <CheckCircle2 className="h-4 w-4 text-blue-500" />;
+  if (title.toLowerCase().includes("finalização")) return <CalendarClock className="h-4 w-4 text-blue-500" />;
+  return null;
 };
 
 const getStatusColor = (status: StepStatus) => {
@@ -55,18 +84,15 @@ const getStatusColor = (status: StepStatus) => {
   }
 };
 
-const getEventIcon = (type?: string) => {
-  switch (type) {
-    case "team_assignment":
-      return <User className="h-4 w-4 text-blue-500" />;
-    default:
-      return null;
-  }
+const calculateProgress = (steps: TimelineStep[]) => {
+  const completed = steps.filter(step => step.status === "completed").length;
+  return (completed / steps.length) * 100;
 };
 
 export function ProcessTimeline({ steps }: ProcessTimelineProps) {
   const [selectedStep, setSelectedStep] = useState<TimelineStep | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const progress = calculateProgress(steps);
 
   const handleStepClick = (step: TimelineStep) => {
     setSelectedStep(step);
@@ -74,61 +100,82 @@ export function ProcessTimeline({ steps }: ProcessTimelineProps) {
   };
 
   return (
-    <>
-      <div className="relative p-6 bg-white rounded-lg shadow-sm">
-        <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:h-full before:w-0.5 before:-translate-x-1/2 before:bg-gradient-to-b before:from-blue-500 before:via-blue-300 before:to-gray-200">
-          {steps.map((step, index) => (
-            <div 
-              key={step.id} 
-              className={cn(
-                "relative animate-fade-in cursor-pointer group",
-                "transition-all duration-500 hover:scale-[1.02]"
-              )}
-              onClick={() => handleStepClick(step)}
-            >
-              <div className="flex items-center">
-                <div className={cn(
-                  "flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
-                  getStatusColor(step.status),
-                  "transition-all duration-700 shadow-lg",
-                  "group-hover:ring-4 group-hover:ring-offset-2",
-                  step.status === "in-progress" && "animate-pulse duration-[2000ms]",
-                  "group-hover:ring-blue-100"
-                )}>
-                  {getStatusIcon(step.status)}
-                </div>
-                <div className="ml-4 flex-grow">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <h4 className={cn(
-                        "font-medium text-gray-900",
-                        "group-hover:text-blue-600 transition-colors duration-300"
+    <TooltipProvider>
+      <div className="space-y-4">
+        <div className="flex items-center gap-4">
+          <Progress value={progress} className="h-2" />
+          <span className="text-sm font-medium text-gray-600">
+            {Math.round(progress)}%
+          </span>
+        </div>
+        
+        <div className="relative p-6 bg-white rounded-lg shadow-sm">
+          <div className="space-y-8 relative before:absolute before:inset-0 before:ml-5 before:h-full before:w-0.5 before:-translate-x-1/2 before:bg-gradient-to-b before:from-blue-500 before:via-blue-300 before:to-gray-200">
+            {steps.map((step, index) => (
+              <div 
+                key={step.id} 
+                className={cn(
+                  "relative animate-fade-in cursor-pointer group",
+                  "transition-all duration-500 hover:scale-[1.02]"
+                )}
+                onClick={() => handleStepClick(step)}
+              >
+                <div className="flex items-center">
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <div className={cn(
+                        "flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
+                        getStatusColor(step.status),
+                        "transition-all duration-700 shadow-lg",
+                        "group-hover:ring-4 group-hover:ring-offset-2",
+                        step.status === "in-progress" && "animate-pulse duration-[2000ms]",
+                        "group-hover:ring-blue-100"
                       )}>
-                        {step.title}
-                      </h4>
-                      {getEventIcon(step.type)}
+                        {getStatusIcon(step.status, step.type)}
+                      </div>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Status: {
+                        step.status === "completed" ? "Concluído" :
+                        step.status === "in-progress" ? "Em andamento" :
+                        "Pendente"
+                      }</p>
+                    </TooltipContent>
+                  </Tooltip>
+                  
+                  <div className="ml-4 flex-grow">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <h4 className={cn(
+                          "font-medium text-gray-900",
+                          "group-hover:text-blue-600 transition-colors duration-300"
+                        )}>
+                          {step.title}
+                        </h4>
+                        {getStepIcon(step.title)}
+                      </div>
+                      {step.date && (
+                        <time className="text-sm text-gray-500 bg-gray-50 px-3 py-1 rounded-full">
+                          {format(new Date(step.date), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
+                        </time>
+                      )}
                     </div>
-                    {step.date && (
-                      <time className="text-sm text-gray-500 bg-gray-50 px-3 py-1 rounded-full">
-                        {format(new Date(step.date), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
-                      </time>
+                    {step.description && (
+                      <p className="mt-1 text-sm text-gray-500 line-clamp-2">{step.description}</p>
+                    )}
+                    {step.agent && (
+                      <p className="mt-1 text-sm font-medium text-blue-500">por {step.agent}</p>
+                    )}
+                    {step.type === "team_assignment" && step.details?.role && (
+                      <Badge variant="secondary" className="mt-2">
+                        {step.details.role}
+                      </Badge>
                     )}
                   </div>
-                  {step.description && (
-                    <p className="mt-1 text-sm text-gray-500 line-clamp-2">{step.description}</p>
-                  )}
-                  {step.agent && (
-                    <p className="mt-1 text-sm font-medium text-blue-500">por {step.agent}</p>
-                  )}
-                  {step.type === "team_assignment" && step.details?.role && (
-                    <Badge variant="secondary" className="mt-2">
-                      {step.details.role}
-                    </Badge>
-                  )}
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 
@@ -181,6 +228,6 @@ export function ProcessTimeline({ steps }: ProcessTimelineProps) {
           </div>
         </DialogContent>
       </Dialog>
-    </>
+    </TooltipProvider>
   );
 }
