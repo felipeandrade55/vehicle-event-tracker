@@ -12,8 +12,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DatePicker } from "@/components/ui/date-picker";
 import { ChartContainer, ChartTooltip } from "@/components/ui/chart";
 import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
+import { useState } from "react";
 
 const ExpenseAllocation = () => {
+  const [startDate, setStartDate] = useState<Date>();
+  const [endDate, setEndDate] = useState<Date>();
+
   // Dados mockados para exemplo
   const allocations = [
     {
@@ -101,8 +105,8 @@ const ExpenseAllocation = () => {
             <div>
               <label className="text-sm font-medium">Período</label>
               <div className="flex gap-2">
-                <DatePicker />
-                <DatePicker />
+                <DatePicker date={startDate} onChange={setStartDate} />
+                <DatePicker date={endDate} onChange={setEndDate} />
               </div>
             </div>
           </CardContent>
