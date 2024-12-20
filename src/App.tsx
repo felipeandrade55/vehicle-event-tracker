@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { DashboardLayout } from "./components/DashboardLayout";
+import DashboardLayout from "./components/DashboardLayout";
 import OccurrenceList from "./pages/OccurrenceList";
 import OccurrenceDetails from "./pages/OccurrenceDetails";
 import { OccurrenceForm } from "./components/occurrences/OccurrenceForm";

@@ -3,21 +3,31 @@ import { cn } from "@/lib/utils";
 interface StepsProps {
   currentStep: number;
   className?: string;
-  children: React.ReactNode;
+  steps: Array<{
+    title: string;
+    description: string;
+  }>;
+}
+
+export function Steps({ currentStep, className, steps }: StepsProps) {
+  return (
+    <div className={cn("flex items-center justify-between", className)}>
+      {steps.map((step, index) => (
+        <Step
+          key={index}
+          title={step.title}
+          completed={index < currentStep}
+          current={index === currentStep}
+        />
+      ))}
+    </div>
+  );
 }
 
 interface StepProps {
   title: string;
   completed?: boolean;
   current?: boolean;
-}
-
-export function Steps({ currentStep, className, children }: StepsProps) {
-  return (
-    <div className={cn("flex items-center justify-between", className)}>
-      {children}
-    </div>
-  );
 }
 
 export function Step({ title, completed, current }: StepProps) {
