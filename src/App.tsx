@@ -14,6 +14,7 @@ import { RevenueForm } from "./components/financial/RevenueForm";
 import Expenses from "./pages/financial/Expenses";
 import { ExpenseForm } from "./components/financial/ExpenseForm";
 import { MonthlyPaymentList } from "./components/financial/monthly-payments/MonthlyPaymentList";
+import CashFlow from "./pages/financial/CashFlow";
 import Login from "./pages/Login";
 import { useAuth } from "./contexts/AuthContext";
 import { Navigate } from "react-router-dom";
@@ -48,6 +49,7 @@ function App() {
         <Route path="/financial/monthly-payments" element={<MonthlyPaymentList />} />
         <Route path="/financial/expenses" element={<Expenses />} />
         <Route path="/financial/expenses/new" element={<ExpenseForm />} />
+        <Route path="/financial/cash-flow" element={<CashFlow />} />
         <Route path="/settings/users" element={<UserManagement />} />
         <Route path="/settings/roles" element={<RoleManagement />} />
       </Route>
