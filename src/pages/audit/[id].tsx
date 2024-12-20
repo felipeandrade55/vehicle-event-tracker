@@ -63,6 +63,11 @@ export default function AuditDetailsPage() {
   
   const occurrence = mockOccurrences.find(o => o.id === id);
 
+  const handleAuditItemClick = (action: any) => {
+    // Handle the audit item click
+    console.log("Clicked audit item:", action);
+  };
+
   if (!occurrence) {
     return <div>Acionamento não encontrado</div>;
   }
@@ -137,7 +142,10 @@ export default function AuditDetailsPage() {
           </CardContent>
         </Card>
 
-        <AuditHistory actions={mockAuditHistory} />
+        <AuditHistory 
+          actions={mockAuditHistory} 
+          onItemClick={handleAuditItemClick}
+        />
 
         <Card className="md:col-span-2">
           <CardContent className="p-6">

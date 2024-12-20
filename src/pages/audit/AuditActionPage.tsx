@@ -33,6 +33,11 @@ export default function AuditActionPage() {
   const decodedId = id ? decodeURIComponent(id) : "";
   const occurrence = mockOccurrences.find(o => o.id === decodedId);
 
+  const handleAuditItemClick = (action: any) => {
+    // Handle the audit item click
+    console.log("Clicked audit item:", action);
+  };
+
   if (!occurrence) {
     return (
       <div className="p-8">
@@ -116,15 +121,8 @@ export default function AuditActionPage() {
           </CardHeader>
           <CardContent>
             <AuditHistory 
-              actions={[
-                {
-                  id: "1",
-                  date: new Date().toISOString(),
-                  user: "Auditor",
-                  action: "Iniciou a auditoria",
-                  status: "Em andamento",
-                }
-              ]} 
+              actions={mockAuditHistory}
+              onItemClick={handleAuditItemClick}
             />
           </CardContent>
         </Card>
