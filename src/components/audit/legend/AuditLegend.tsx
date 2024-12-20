@@ -28,17 +28,20 @@ export function AuditLegend() {
     {
       level: "Alto Risco",
       threshold: "80% ou mais",
-      color: "text-red-600"
+      color: "text-red-600",
+      description: "Indica que há MUITAS irregularidades identificadas no processo. Requer atenção urgente e análise detalhada."
     },
     {
       level: "Risco Moderado",
       threshold: "Entre 50% e 79%",
-      color: "text-yellow-600"
+      color: "text-yellow-600",
+      description: "Indica que há ALGUMAS irregularidades que precisam de atenção e acompanhamento."
     },
     {
       level: "Baixo Risco",
       threshold: "Abaixo de 50%",
-      color: "text-green-600"
+      color: "text-green-600",
+      description: "Indica que há POUCAS ou nenhuma irregularidade. O caso apresenta maior segurança."
     }
   ];
 
@@ -70,13 +73,23 @@ export function AuditLegend() {
             </div>
           </TabsContent>
           <TabsContent value="risk" className="mt-4 space-y-4">
-            <div className="space-y-2">
-              <h4 className="font-medium text-sm">Níveis de Risco</h4>
-              <div className="space-y-2">
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-medium text-sm mb-2">Como Interpretar a Pontuação</h4>
+                <p className="text-sm text-gray-600 mb-4">
+                  A pontuação de risco indica o nível de irregularidades encontradas durante a análise. 
+                  Quanto maior a porcentagem, mais irregularidades foram identificadas:
+                </p>
+              </div>
+              
+              <div className="space-y-4">
                 {riskLevels.map((risk) => (
-                  <div key={risk.level} className="flex items-center justify-between">
-                    <span className={`text-sm font-medium ${risk.color}`}>{risk.level}</span>
-                    <span className="text-sm text-gray-600">{risk.threshold}</span>
+                  <div key={risk.level} className="space-y-1">
+                    <div className="flex items-center justify-between">
+                      <span className={`text-sm font-medium ${risk.color}`}>{risk.level}</span>
+                      <span className="text-sm text-gray-600">{risk.threshold}</span>
+                    </div>
+                    <p className="text-sm text-gray-600">{risk.description}</p>
                   </div>
                 ))}
               </div>
