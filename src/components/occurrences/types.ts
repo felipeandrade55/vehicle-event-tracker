@@ -4,6 +4,31 @@ export type DriverType = "associate" | "third-party";
 
 export type ContactMethod = "Telefone" | "WhatsApp" | "Site" | "APP";
 
+export type TeamMemberRole = 
+  | "technical_analyst"
+  | "legal_analyst"
+  | "financial_analyst"
+  | "field_inspector"
+  | "customer_service"
+  | "manager";
+
+export interface TeamMember {
+  id: string;
+  name: string;
+  role: TeamMemberRole;
+  contact?: string;
+  assignedAt: string;
+  assignedTo: string[];
+  status: "active" | "inactive";
+}
+
+export interface TeamAssignment {
+  memberId: string;
+  processStep: string;
+  assignedAt: string;
+  assignedBy: string;
+}
+
 export interface OccurrenceFormData {
   // Associate information
   associateId: string;
@@ -68,12 +93,15 @@ export interface OccurrenceDetailsProps {
       date: string;
       action: string;
       agent?: string;
+      type?: "team_assignment" | "status_change" | "document_upload" | "general";
+      details?: {
+        role?: TeamMemberRole;
+        previousStatus?: string;
+        newStatus?: string;
+        documentType?: string;
+      };
     }>;
-    team?: Array<{
-      name: string;
-      role: string;
-      contact?: string;
-    }>;
+    team?: TeamMember[];
     systemActions?: Array<{
       user: string;
       action: string;

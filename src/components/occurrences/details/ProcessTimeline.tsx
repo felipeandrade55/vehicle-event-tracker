@@ -1,4 +1,4 @@
-import { Check, Clock, AlertCircle } from "lucide-react";
+import { Check, Clock, AlertCircle, User } from "lucide-react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
 
 export type StepStatus = "completed" | "pending" | "in-progress";
 
@@ -19,6 +20,13 @@ interface TimelineStep {
   status: StepStatus;
   date?: string;
   agent?: string;
+  type?: "team_assignment" | "status_change" | "document_upload" | "general";
+  details?: {
+    role?: string;
+    previousStatus?: string;
+    newStatus?: string;
+    documentType?: string;
+  };
 }
 
 interface ProcessTimelineProps {
@@ -44,6 +52,15 @@ const getStatusColor = (status: StepStatus) => {
       return "bg-blue-500 shadow-blue-200";
     case "pending":
       return "bg-gray-300 shadow-gray-100";
+  }
+};
+
+const getEventIcon = (type?: string) => {
+  switch (type) {
+    case "team_assignment":
+      return <User className="h-4 w-4 text-blue-500" />;
+    default:
+      return null;
   }
 };
 
@@ -82,12 +99,15 @@ export function ProcessTimeline({ steps }: ProcessTimelineProps) {
                 </div>
                 <div className="ml-4 flex-grow">
                   <div className="flex items-center justify-between">
-                    <h4 className={cn(
-                      "font-medium text-gray-900",
-                      "group-hover:text-blue-600 transition-colors duration-300"
-                    )}>
-                      {step.title}
-                    </h4>
+                    <div className="flex items-center gap-2">
+                      <h4 className={cn(
+                        "font-medium text-gray-900",
+                        "group-hover:text-blue-600 transition-colors duration-300"
+                      )}>
+                        {step.title}
+                      </h4>
+                      {getEventIcon(step.type)}
+                    </div>
                     {step.date && (
                       <time className="text-sm text-gray-500 bg-gray-50 px-3 py-1 rounded-full">
                         {format(new Date(step.date), "dd/MM/yyyy 'às' HH:mm", { locale: ptBR })}
@@ -99,6 +119,11 @@ export function ProcessTimeline({ steps }: ProcessTimelineProps) {
                   )}
                   {step.agent && (
                     <p className="mt-1 text-sm font-medium text-blue-500">por {step.agent}</p>
+                  )}
+                  {step.type === "team_assignment" && step.details?.role && (
+                    <Badge variant="secondary" className="mt-2">
+                      {step.details.role}
+                    </Badge>
                   )}
                 </div>
               </div>
@@ -131,6 +156,12 @@ export function ProcessTimeline({ steps }: ProcessTimelineProps) {
               <div>
                 <h4 className="text-sm font-medium text-gray-500">Responsável</h4>
                 <p className="mt-1 text-gray-900">{selectedStep.agent}</p>
+              </div>
+            )}
+            {selectedStep?.type === "team_assignment" && selectedStep.details?.role && (
+              <div>
+                <h4 className="text-sm font-medium text-gray-500">Função Atribuída</h4>
+                <p className="mt-1 text-gray-900">{selectedStep.details.role}</p>
               </div>
             )}
             <div>
