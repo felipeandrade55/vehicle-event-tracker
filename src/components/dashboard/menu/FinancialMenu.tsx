@@ -33,20 +33,6 @@ const financialMenuItems: MenuItem[] = [
     title: "Controle de Custos",
     url: "/financial/costs",
     icon: Building,
-    submenu: [
-      {
-        title: "Centro de Custos",
-        url: "/financial/costs/departments",
-      },
-      {
-        title: "Rateio de Despesas",
-        url: "/financial/costs/allocation",
-      },
-      {
-        title: "Custos por Associado",
-        url: "/financial/costs/associates",
-      },
-    ],
   },
 ];
 
