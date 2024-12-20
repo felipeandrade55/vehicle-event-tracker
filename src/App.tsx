@@ -17,6 +17,10 @@ import CostControl from "@/pages/financial/costs/CostControl";
 import DepartmentCosts from "@/pages/financial/costs/DepartmentCosts";
 import ExpenseAllocation from "@/pages/financial/costs/ExpenseAllocation";
 import AssociateCosts from "@/pages/financial/costs/AssociateCosts";
+import Associates from "@/pages/Associates";
+import Plan from "@/pages/Plan";
+import OccurrenceList from "@/pages/OccurrenceList";
+import OccurrenceDetails from "@/pages/OccurrenceDetails";
 
 function App() {
   return (
@@ -25,6 +29,12 @@ function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/settings/users" element={<UserManagement />} />
         <Route path="/settings/roles" element={<RoleManagement />} />
+        
+        {/* Rotas Principais */}
+        <Route path="/associates" element={<Associates />} />
+        <Route path="/plan" element={<Plan />} />
+        <Route path="/occurrences" element={<OccurrenceList />} />
+        <Route path="/occurrences/:id" element={<OccurrenceDetails />} />
         
         {/* Rotas Financeiras */}
         <Route path="/financial" element={<FinancialDashboard />} />
