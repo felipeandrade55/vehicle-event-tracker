@@ -76,6 +76,25 @@ export const DashboardSidebar = () => {
       url: "/financial/cash-flow",
       icon: Wallet,
     },
+    {
+      title: "Controle de Custos",
+      url: "/financial/costs",
+      icon: Building,
+      submenu: [
+        {
+          title: "Centro de Custos",
+          url: "/financial/costs/departments",
+        },
+        {
+          title: "Rateio de Despesas",
+          url: "/financial/costs/allocation",
+        },
+        {
+          title: "Custos por Associado",
+          url: "/financial/costs/associates",
+        },
+      ],
+    },
   ];
 
   const partnersMenuItems = [
@@ -137,6 +156,19 @@ export const DashboardSidebar = () => {
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>
+                  {item.submenu && (
+                    <div className="ml-6 mt-2 space-y-2">
+                      {item.submenu.map((subItem) => (
+                        <SidebarMenuItem key={subItem.title}>
+                          <SidebarMenuButton asChild>
+                            <Link to={subItem.url} className="text-sm py-2">
+                              <span>{subItem.title}</span>
+                            </Link>
+                          </SidebarMenuButton>
+                        </SidebarMenuItem>
+                      ))}
+                    </div>
+                  )}
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
