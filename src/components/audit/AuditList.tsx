@@ -11,12 +11,20 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ClipboardList } from "lucide-react";
 import { mockOccurrences, Occurrence } from "@/data/occurrenceData";
+import { format, isEqual, parseISO } from "date-fns";
 
 interface AuditListProps {
   status: "pending" | "in-progress" | "completed";
+  filters: {
+    searchQuery: string;
+    date?: Date;
+    selectedAuditor: string;
+    selectedStatus: string;
+    selectedPriority: string;
+  };
 }
 
-export function AuditList({ status }: AuditListProps) {
+export function AuditList({ status, filters }: AuditListProps) {
   const navigate = useNavigate();
 
   const getStatusBadge = (status: string) => {
@@ -36,24 +44,47 @@ export function AuditList({ status }: AuditListProps) {
     }
   };
 
-  const filterOccurrencesByAuditStatus = (occurrences: Occurrence[]) => {
-    switch (status) {
-      case "pending":
-        return occurrences.filter(
-          (occ) => occ.status === "Em Análise" || occ.status === "Aguardando Documentação"
-        );
-      case "in-progress":
-        return occurrences.filter((occ) => occ.status === "Em Atendimento");
-      case "completed":
-        return occurrences.filter(
-          (occ) => occ.status === "Concluído" || occ.status === "Cancelado"
-        );
-      default:
-        return occurrences;
-    }
+  const filterOccurrences = (occurrences: Occurrence[]) => {
+    return occurrences.filter((occ) => {
+      // Filter by audit status
+      const auditStatusMatch = (() => {
+        switch (status) {
+          case "pending":
+            return occ.status === "Em Análise" || occ.status === "Aguardando Documentação";
+          case "in-progress":
+            return occ.status === "Em Atendimento";
+          case "completed":
+            return occ.status === "Concluído" || occ.status === "Cancelado";
+          default:
+            return true;
+        }
+      })();
+
+      // Filter by search query
+      const searchLower = filters.searchQuery.toLowerCase();
+      const searchMatch = !filters.searchQuery || 
+        occ.id.toLowerCase().includes(searchLower) ||
+        occ.associate.toLowerCase().includes(searchLower);
+
+      // Filter by date
+      const dateMatch = !filters.date || 
+        isEqual(parseISO(occ.date), filters.date);
+
+      // Filter by status if not "Todos"
+      const statusMatch = filters.selectedStatus === "Todos" || 
+        occ.status === filters.selectedStatus;
+
+      // Additional filters can be added here for auditor and priority
+      // For now, we'll consider them always matching as they're mock data
+      const auditorMatch = filters.selectedAuditor === "Todos" || true;
+      const priorityMatch = filters.selectedPriority === "Todos" || true;
+
+      return auditStatusMatch && searchMatch && dateMatch && 
+             statusMatch && auditorMatch && priorityMatch;
+    });
   };
 
-  const filteredOccurrences = filterOccurrencesByAuditStatus(mockOccurrences);
+  const filteredOccurrences = filterOccurrences(mockOccurrences);
 
   return (
     <Table>
@@ -71,7 +102,7 @@ export function AuditList({ status }: AuditListProps) {
         {filteredOccurrences.map((occurrence) => (
           <TableRow key={occurrence.id}>
             <TableCell>{occurrence.id}</TableCell>
-            <TableCell>{occurrence.date}</TableCell>
+            <TableCell>{format(new Date(occurrence.date), "dd/MM/yyyy HH:mm")}</TableCell>
             <TableCell>{occurrence.associate}</TableCell>
             <TableCell>{occurrence.type}</TableCell>
             <TableCell>{getStatusBadge(occurrence.status)}</TableCell>
