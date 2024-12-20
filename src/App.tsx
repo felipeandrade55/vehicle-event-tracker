@@ -18,6 +18,8 @@ import CashFlow from "./pages/financial/CashFlow";
 import Login from "./pages/Login";
 import { useAuth } from "./contexts/AuthContext";
 import { Navigate } from "react-router-dom";
+import Workshops from "./pages/partners/Workshops";
+import Suppliers from "./pages/partners/Suppliers";
 
 function App() {
   const { user, isLoading } = useAuth();
@@ -52,6 +54,8 @@ function App() {
         <Route path="/financial/cash-flow" element={<CashFlow />} />
         <Route path="/settings/users" element={<UserManagement />} />
         <Route path="/settings/roles" element={<RoleManagement />} />
+        <Route path="/workshops" element={<Workshops />} />
+        <Route path="/suppliers" element={<Suppliers />} />
       </Route>
     </Routes>
   );
