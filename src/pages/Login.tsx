@@ -97,6 +97,21 @@ const Login = () => {
                 </Button>
               </div>
             </form>
+
+            <div className="mt-6 p-4 bg-gray-50 rounded-md">
+              <h3 className="text-sm font-medium text-gray-700 mb-2">Credenciais de exemplo:</h3>
+              <div className="space-y-2 text-sm text-gray-600">
+                <p>
+                  <span className="font-medium">Administrador:</span> admin@example.com
+                </p>
+                <p>
+                  <span className="font-medium">Associado:</span> joao@example.com
+                </p>
+                <p>
+                  <span className="font-medium">Senha:</span> 123456
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
