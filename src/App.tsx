@@ -20,6 +20,10 @@ import { useAuth } from "./contexts/AuthContext";
 import { Navigate } from "react-router-dom";
 import Workshops from "./pages/partners/Workshops";
 import Suppliers from "./pages/partners/Suppliers";
+import CostControl from "./pages/financial/costs/CostControl";
+import DepartmentCosts from "./pages/financial/costs/DepartmentCosts";
+import ExpenseAllocation from "./pages/financial/costs/ExpenseAllocation";
+import AssociateCosts from "./pages/financial/costs/AssociateCosts";
 
 function App() {
   const { user, isLoading } = useAuth();
@@ -52,6 +56,10 @@ function App() {
         <Route path="/financial/expenses" element={<Expenses />} />
         <Route path="/financial/expenses/new" element={<ExpenseForm />} />
         <Route path="/financial/cash-flow" element={<CashFlow />} />
+        <Route path="/financial/costs" element={<CostControl />} />
+        <Route path="/financial/costs/departments" element={<DepartmentCosts />} />
+        <Route path="/financial/costs/allocation" element={<ExpenseAllocation />} />
+        <Route path="/financial/costs/associates" element={<AssociateCosts />} />
         <Route path="/settings/users" element={<UserManagement />} />
         <Route path="/settings/roles" element={<RoleManagement />} />
         <Route path="/workshops" element={<Workshops />} />
