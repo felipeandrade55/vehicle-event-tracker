@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ServiceHistory } from "@/types/payments";
+import type { ServiceHistory as ServiceHistoryType } from "@/types/payments";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -48,9 +48,9 @@ const MOCK_HISTORY: ServiceHistory[] = [
 ];
 
 export function ServiceHistory() {
-  const [history, setHistory] = useState<ServiceHistory[]>(MOCK_HISTORY);
+  const [history, setHistory] = useState<ServiceHistoryType[]>(MOCK_HISTORY);
 
-  const getStatusBadge = (status: ServiceHistory["status"]) => {
+  const getStatusBadge = (status: ServiceHistoryType["status"]) => {
     const statusConfig = {
       completed: { label: "Concluído", variant: "success" as const },
       in_progress: { label: "Em Andamento", variant: "warning" as const },
