@@ -18,7 +18,7 @@ import { ptBR } from "date-fns/locale";
 import { cn } from "@/lib/utils";
 import { Filter, Search, X, CalendarIcon } from "lucide-react";
 
-interface AuditListFiltersProps {
+export interface AuditListFiltersProps {
   searchQuery: string;
   setSearchQuery: (value: string) => void;
   date: Date | undefined;
@@ -34,7 +34,7 @@ interface AuditListFiltersProps {
 
 const auditStatus = ["Todos", "Pendente", "Em Análise", "Aprovado", "Reprovado"];
 const priorities = ["Todos", "Alta", "Média", "Baixa"];
-const auditors = ["Todos", "João Silva", "Maria Santos", "Pedro Oliveira"]; // Mock data
+const auditors = ["Todos", "João Silva", "Maria Santos", "Pedro Oliveira"];
 
 export function AuditListFilters({
   searchQuery,
