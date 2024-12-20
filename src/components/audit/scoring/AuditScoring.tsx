@@ -20,28 +20,23 @@ export function AuditScoring({ score }: AuditScoringProps) {
   const [animatedScores, setAnimatedScores] = useState<{[key: string]: number}>({});
 
   useEffect(() => {
-    // Initialize all scores to zero first
+    // Update total score with animation
+    setAnimatedTotal(prev => {
+      const diff = score.total - prev;
+      if (Math.abs(diff) > 0) {
+        return score.total;
+      }
+      return prev;
+    });
+
+    // Update individual scores
     score.breakdown.forEach((item) => {
+      const percentage = Math.round((item.score / item.maxScore) * 100);
       setAnimatedScores(prev => ({
         ...prev,
-        [item.category]: 0
+        [item.category]: percentage
       }));
     });
-    setAnimatedTotal(0);
-
-    // Animate to final values after a short delay
-    const timer = setTimeout(() => {
-      setAnimatedTotal(score.total);
-      score.breakdown.forEach((item) => {
-        const percentage = Math.round((item.score / item.maxScore) * 100);
-        setAnimatedScores(prev => ({
-          ...prev,
-          [item.category]: percentage
-        }));
-      });
-    }, 300);
-
-    return () => clearTimeout(timer);
   }, [score]);
 
   const getRiskLevel = (score: number) => {

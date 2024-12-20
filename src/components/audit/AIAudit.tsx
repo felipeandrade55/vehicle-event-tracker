@@ -66,12 +66,25 @@ export function AIAudit() {
     dateRange: { start: null, end: null }
   });
   const { toast } = useToast();
+  const [currentScore, setCurrentScore] = useState<{
+    total: number;
+    breakdown: { category: string; score: number; maxScore: number; }[];
+  }>({ total: 0, breakdown: [] });
 
-  const calculateRiskScore = (stepResults: any[]) => {
+  const calculateRiskScore = (stepResults: any[], currentStepIndex: number) => {
     const enabledSteps = steps.filter(s => s.enabled);
     const totalWeight = enabledSteps.reduce((acc, step) => acc + step.weight, 0);
     
-    const breakdown = enabledSteps.map(step => {
+    const breakdown = enabledSteps.map((step, index) => {
+      // Only calculate score for steps that have been completed
+      if (index > currentStepIndex) {
+        return {
+          category: step.title,
+          score: 0,
+          maxScore: step.weight
+        };
+      }
+
       const result = stepResults.find(r => r.id === step.id);
       const score = result?.result?.status === "positive" ? step.weight :
                    result?.result?.status === "partial" ? step.weight * 0.5 : 0;
@@ -83,7 +96,10 @@ export function AIAudit() {
       };
     });
 
-    const totalScore = (breakdown.reduce((acc, item) => acc + item.score, 0) / totalWeight) * 100;
+    const completedScores = breakdown.slice(0, currentStepIndex + 1);
+    const totalScore = completedScores.length > 0 
+      ? (completedScores.reduce((acc, item) => acc + item.score, 0) / totalWeight) * 100
+      : 0;
 
     return {
       total: Math.round(totalScore),
@@ -106,6 +122,7 @@ export function AIAudit() {
 
     setIsAuditing(true);
     setCurrentStep(0);
+    setCurrentScore({ total: 0, breakdown: [] });
     
     const enabledSteps = steps.filter(s => s.enabled);
     
@@ -164,6 +181,10 @@ export function AIAudit() {
           return step;
         });
 
+        // Calculate and update score after each step
+        const stepScore = calculateRiskScore(newSteps, i);
+        setCurrentScore(stepScore);
+
         if (i === enabledSteps.length - 1) {
           const finalResult = {
             status: "positive" as const,
@@ -185,7 +206,6 @@ export function AIAudit() {
       });
     }
     
-    const riskScore = calculateRiskScore(steps);
     setIsAuditing(false);
   };
 
@@ -259,7 +279,7 @@ export function AIAudit() {
 
         {steps.some(step => step.result) && (
           <AuditScoring
-            score={calculateRiskScore(steps)}
+            score={currentScore}
           />
         )}
       </div>
