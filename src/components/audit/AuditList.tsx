@@ -20,7 +20,7 @@ export function AuditList({ status, filters }: AuditListProps) {
   const navigate = useNavigate();
 
   const handleAuditClick = (id: string) => {
-    navigate(`/audit/action/${id}`);
+    navigate(`/audit/action/${encodeURIComponent(id)}`);
   };
 
   // Filter occurrences based on the filters prop

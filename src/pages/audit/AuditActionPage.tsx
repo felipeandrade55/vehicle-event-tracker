@@ -13,7 +13,8 @@ export default function AuditActionPage() {
   const navigate = useNavigate();
   const { toast } = useToast();
   
-  const occurrence = mockOccurrences.find(o => o.id === id);
+  const decodedId = id ? decodeURIComponent(id) : "";
+  const occurrence = mockOccurrences.find(o => o.id === decodedId);
 
   if (!occurrence) {
     return (
