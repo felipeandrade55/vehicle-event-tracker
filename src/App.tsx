@@ -25,6 +25,8 @@ import Workshops from "@/pages/partners/Workshops";
 import UserManagement from "@/pages/settings/UserManagement";
 import RoleManagement from "@/pages/settings/RoleManagement";
 import SupportPage from "@/pages/support/index";
+import NewTicket from "@/pages/support/NewTicket";
+import TicketDetails from "@/pages/support/TicketDetails";
 
 function App() {
   return (
@@ -43,6 +45,8 @@ function App() {
           
           {/* Support Routes */}
           <Route path="support" element={<SupportPage />} />
+          <Route path="support/tickets/new" element={<NewTicket />} />
+          <Route path="support/tickets/:id" element={<TicketDetails />} />
           
           {/* Financial Routes */}
           <Route path="financial" element={<FinancialDashboard />} />
