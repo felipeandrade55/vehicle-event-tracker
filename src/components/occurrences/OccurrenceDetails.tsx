@@ -112,7 +112,10 @@ export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
         />
 
         <Card className="md:col-span-2">
-          <ProcessTimeline steps={processSteps} />
+          <div className="p-6">
+            <h2 className="text-xl font-semibold mb-4">Timeline do processo</h2>
+            <ProcessTimeline steps={processSteps} />
+          </div>
         </Card>
 
         <TeamCard 
