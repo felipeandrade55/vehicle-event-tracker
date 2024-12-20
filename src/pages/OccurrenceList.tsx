@@ -61,6 +61,10 @@ const OccurrenceList = () => {
     navigate(`/occurrences/${encodeURIComponent(occurrenceId)}`);
   };
 
+  const handleNewOccurrence = () => {
+    navigate("/occurrences/new");
+  };
+
   const filteredOccurrences = filterOccurrences(mockOccurrences);
 
   return (
@@ -80,7 +84,7 @@ const OccurrenceList = () => {
           </div>
         </div>
         <Button
-          onClick={() => navigate("/occurrences/new")}
+          onClick={handleNewOccurrence}
           className="shadow-lg hover:shadow-xl transition-shadow"
         >
           <Plus className="mr-2 h-4 w-4" /> Novo Registro
