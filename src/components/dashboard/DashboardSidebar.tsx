@@ -4,6 +4,7 @@ import { FinancialMenu } from "./menu/FinancialMenu";
 import { PartnersMenu } from "./menu/PartnersMenu";
 import { SettingsMenu } from "./menu/SettingsMenu";
 import { AuditMenu } from "./menu/AuditMenu";
+import { SupportMenu } from "./menu/SupportMenu";
 
 export const DashboardSidebar = () => {
   return (
@@ -15,6 +16,7 @@ export const DashboardSidebar = () => {
             <FinancialMenu />
           </div>
           <AuditMenu />
+          <SupportMenu />
           <PartnersMenu />
           <SettingsMenu />
         </SidebarContent>

@@ -24,6 +24,7 @@ import Suppliers from "@/pages/partners/Suppliers";
 import Workshops from "@/pages/partners/Workshops";
 import UserManagement from "@/pages/settings/UserManagement";
 import RoleManagement from "@/pages/settings/RoleManagement";
+import SupportPage from "@/pages/support/index";
 
 function App() {
   return (
@@ -39,6 +40,9 @@ function App() {
           <Route path="audit" element={<AuditPage />} />
           <Route path="audit/action/:id" element={<AuditActionPage />} />
           <Route path="audit/ai" element={<AiAuditPage />} />
+          
+          {/* Support Routes */}
+          <Route path="support" element={<SupportPage />} />
           
           {/* Financial Routes */}
           <Route path="financial" element={<FinancialDashboard />} />
