@@ -1,3 +1,7 @@
+import { mockDocuments } from "./mock/documents";
+import { mockTimeline } from "./mock/timeline";
+import { mockTeam } from "./mock/team";
+import { mockSystemActions } from "./mock/systemActions";
 import { TeamMemberRole } from "@/components/occurrences/types";
 
 export interface Occurrence {
@@ -25,6 +29,13 @@ export interface Occurrence {
     date: string;
     action: string;
     agent?: string;
+    type?: "team_assignment" | "status_change" | "document_upload" | "general";
+    details?: {
+      role?: TeamMemberRole;
+      previousStatus?: string;
+      newStatus?: string;
+      documentType?: string;
+    };
   }>;
   team?: Array<{
     id: string;
@@ -40,6 +51,15 @@ export interface Occurrence {
     action: string;
     date: string;
   }>;
+  documents?: {
+    driversLicense?: string;
+    vehicleRegistration?: string;
+    eventReport?: string;
+    policeReport?: string;
+    proofOfResidence?: string;
+    vehiclePhotos?: string[];
+    tirePhotos?: string[];
+  };
 }
 
 export const mockOccurrences: Occurrence[] = [
@@ -64,50 +84,10 @@ export const mockOccurrences: Occurrence[] = [
       trackerStatus: "connected"
     },
     description: "Colisão traseira em semáforo. Danos materiais apenas.",
-    timeline: [
-      {
-        date: "2024-03-19 10:32",
-        action: "Acionamento registrado",
-        agent: "Sistema"
-      },
-      {
-        date: "2024-03-19 10:35",
-        action: "Equipe técnica notificada",
-        agent: "Central de Atendimento"
-      },
-      {
-        date: "2024-03-19 10:40",
-        action: "Equipe a caminho do local",
-        agent: "José Santos"
-      }
-    ],
-    team: [
-      {
-        id: "1",
-        name: "José Santos",
-        role: "technical_analyst",
-        contact: "(11) 97777-8888",
-        assignedAt: "2024-03-19 10:32",
-        assignedTo: ["Registro do evento", "Documentação"],
-        status: "active"
-      },
-      {
-        id: "2",
-        name: "Maria Oliveira",
-        role: "customer_service",
-        contact: "(11) 96666-7777",
-        assignedAt: "2024-03-19 10:32",
-        assignedTo: ["Registro do evento"],
-        status: "active"
-      }
-    ],
-    systemActions: [
-      {
-        user: "Sistema",
-        action: "Registro inicial do acionamento",
-        date: "2024-03-19 10:32"
-      }
-    ]
+    timeline: mockTimeline,
+    team: mockTeam,
+    systemActions: mockSystemActions,
+    documents: mockDocuments
   },
   {
     id: "#2024-002",
