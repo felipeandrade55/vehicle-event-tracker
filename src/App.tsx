@@ -1,78 +1,32 @@
-import { Routes, Route } from "react-router-dom";
-import Dashboard from "@/pages/dashboard";
-import UserManagement from "@/pages/settings/UserManagement";
-import RoleManagement from "@/pages/settings/RoleManagement";
-import ContractManagement from "@/pages/financial/contracts/ContractManagement";
-import ContractEditor from "@/pages/financial/contracts/ContractEditor";
-import ApprovalLevels from "@/pages/financial/contracts/ApprovalLevels";
-import DashboardLayout from "@/components/DashboardLayout";
-import CashFlow from "@/pages/financial/CashFlow";
-import Revenues from "@/pages/financial/Revenues";
-import Expenses from "@/pages/financial/Expenses";
-import FinancialDashboard from "@/pages/financial/FinancialDashboard";
-import ContractHistory from "@/pages/financial/contracts/ContractHistory";
-import ContractRenewals from "@/pages/financial/contracts/ContractRenewals";
-import ContractAdjustments from "@/pages/financial/contracts/ContractAdjustments";
-import CostControl from "@/pages/financial/costs/CostControl";
-import DepartmentCosts from "@/pages/financial/costs/DepartmentCosts";
-import ExpenseAllocation from "@/pages/financial/costs/ExpenseAllocation";
-import AssociateCosts from "@/pages/financial/costs/AssociateCosts";
-import Associates from "@/pages/Associates";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Toaster } from "@/components/ui/toaster";
+import { DashboardLayout } from "@/components/DashboardLayout";
+import Index from "@/pages/Index";
+import Login from "@/pages/Login";
 import Plan from "@/pages/Plan";
+import Associates from "@/pages/Associates";
 import OccurrenceList from "@/pages/OccurrenceList";
 import OccurrenceDetails from "@/pages/OccurrenceDetails";
-import MonthlyPayments from "@/pages/financial/MonthlyPayments";
-import Workshops from "@/pages/partners/Workshops";
-import Suppliers from "@/pages/partners/Suppliers";
-import AuditPage from "@/pages/audit";
-import AuditDetailsPage from "@/pages/audit/[id]";
-
-import AuditActionPage from "./pages/audit/AuditActionPage";
+import AuditActionPage from "@/pages/audit/AuditActionPage";
+import AiAuditPage from "@/pages/audit/AiAuditPage";
 
 function App() {
   return (
-    <Routes>
-      <Route element={<DashboardLayout />}>
-        <Route path="/" element={<Dashboard />} />
-        <Route path="/settings/users" element={<UserManagement />} />
-        <Route path="/settings/roles" element={<RoleManagement />} />
-        
-        {/* Rotas Principais */}
-        <Route path="/associates" element={<Associates />} />
-        <Route path="/plan" element={<Plan />} />
-        <Route path="/occurrences" element={<OccurrenceList />} />
-        <Route path="/occurrences/:id" element={<OccurrenceDetails />} />
-        
-        {/* Rotas de Auditoria */}
-        <Route path="/audit" element={<AuditPage />} />
-      <Route path="/audit/action/:id" element={<AuditActionPage />} />
-        <Route path="/audit/:id" element={<AuditDetailsPage />} />
-        
-        {/* Rotas Financeiras */}
-        <Route path="/financial" element={<FinancialDashboard />} />
-        <Route path="/financial/cash-flow" element={<CashFlow />} />
-        <Route path="/financial/revenues" element={<Revenues />} />
-        <Route path="/financial/expenses" element={<Expenses />} />
-        <Route path="/financial/monthly-payments" element={<MonthlyPayments />} />
-        
-        <Route path="/financial/contracts" element={<ContractManagement />} />
-        <Route path="/financial/contracts/editor/:id" element={<ContractEditor />} />
-        <Route path="/financial/contracts/approval-levels" element={<ApprovalLevels />} />
-        <Route path="/financial/contracts/history" element={<ContractHistory />} />
-        <Route path="/financial/contracts/renewals" element={<ContractRenewals />} />
-        <Route path="/financial/contracts/adjustments" element={<ContractAdjustments />} />
-        
-        {/* Controle de Custos */}
-        <Route path="/financial/costs" element={<CostControl />} />
-        <Route path="/financial/costs/departments" element={<DepartmentCosts />} />
-        <Route path="/financial/costs/allocation" element={<ExpenseAllocation />} />
-        <Route path="/financial/costs/associates" element={<AssociateCosts />} />
-
-        {/* Rotas de Parceiros */}
-        <Route path="/workshops" element={<Workshops />} />
-        <Route path="/suppliers" element={<Suppliers />} />
-      </Route>
-    </Routes>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<DashboardLayout />}>
+          <Route index element={<Index />} />
+          <Route path="associates" element={<Associates />} />
+          <Route path="plan" element={<Plan />} />
+          <Route path="occurrences" element={<OccurrenceList />} />
+          <Route path="occurrences/:id" element={<OccurrenceDetails />} />
+          <Route path="audit/action/:id" element={<AuditActionPage />} />
+          <Route path="audit/ai" element={<AiAuditPage />} />
+        </Route>
+      </Routes>
+      <Toaster />
+    </BrowserRouter>
   );
 }
 
