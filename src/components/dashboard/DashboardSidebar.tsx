@@ -11,7 +11,7 @@ import {
   Receipt,
   Wallet,
   CreditCard,
-  cog,
+  Cog,
   Truck,
   Building
 } from "lucide-react";
@@ -82,7 +82,7 @@ export const DashboardSidebar = () => {
     {
       title: "Oficinas",
       url: "/workshops",
-      icon: cog,
+      icon: Cog,
     },
     {
       title: "Fornecedores",
