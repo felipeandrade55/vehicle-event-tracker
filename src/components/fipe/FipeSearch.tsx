@@ -10,12 +10,13 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { fetchBrands, fetchModels, fetchYears, fetchVehicleDetails } from "@/services/fipeApi";
-import { toast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 export function FipeSearch() {
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
+  const { toast } = useToast();
 
   const { data: brands = [], isLoading: isLoadingBrands } = useQuery({
     queryKey: ["fipe", "brands"],
@@ -38,22 +39,20 @@ export function FipeSearch() {
     queryKey: ["fipe", "details", selectedBrand, selectedModel, selectedYear],
     queryFn: () => fetchVehicleDetails(selectedBrand, selectedModel, selectedYear),
     enabled: !!selectedBrand && !!selectedModel && !!selectedYear,
-    meta: {
-      onSuccess: (data: any) => {
-        if (data) {
-          toast({
-            title: "Valor FIPE encontrado",
-            description: `${data.marca} ${data.modelo} - ${data.anoModelo}: ${data.valor}`,
-          });
-        }
-      },
-      onError: () => {
+    onSuccess: (data) => {
+      if (data) {
         toast({
-          title: "Erro ao consultar valor",
-          description: "Não foi possível obter o valor do veículo",
-          variant: "destructive",
+          title: "Valor FIPE encontrado",
+          description: `${data.marca} ${data.modelo} - ${data.anoModelo}: ${data.valor}`,
         });
-      },
+      }
+    },
+    onError: () => {
+      toast({
+        title: "Erro ao consultar valor",
+        description: "Não foi possível obter o valor do veículo",
+        variant: "destructive",
+      });
     },
   });
 
