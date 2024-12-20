@@ -10,8 +10,8 @@ import { RevenueTable } from "@/components/financial/revenues/RevenueTable";
 const Revenues = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
 
   // Dados mockados para exemplo
   const revenues = [
@@ -46,12 +46,12 @@ const Revenues = () => {
     const matchesSearch = revenue.description
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter
-      ? revenue.status.toLowerCase() === statusFilter.toLowerCase()
-      : true;
-    const matchesCategory = categoryFilter
-      ? revenue.category.toLowerCase() === categoryFilter.toLowerCase()
-      : true;
+    const matchesStatus = statusFilter === "all" 
+      ? true 
+      : revenue.status.toLowerCase() === statusFilter;
+    const matchesCategory = categoryFilter === "all"
+      ? true
+      : revenue.category.toLowerCase() === categoryFilter;
 
     return matchesSearch && matchesStatus && matchesCategory;
   });

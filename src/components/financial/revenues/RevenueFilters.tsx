@@ -39,7 +39,7 @@ export const RevenueFilters = ({
             <SelectValue placeholder="Status" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Todos</SelectItem>
+            <SelectItem value="all">Todos</SelectItem>
             <SelectItem value="recebido">Recebido</SelectItem>
             <SelectItem value="pendente">Pendente</SelectItem>
           </SelectContent>
@@ -51,7 +51,7 @@ export const RevenueFilters = ({
             <SelectValue placeholder="Categoria" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="">Todas</SelectItem>
+            <SelectItem value="all">Todas</SelectItem>
             <SelectItem value="mensalidades">Mensalidades</SelectItem>
             <SelectItem value="taxas">Taxas</SelectItem>
             <SelectItem value="protecoes">Proteções</SelectItem>
