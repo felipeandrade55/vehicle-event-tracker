@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Info } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
 
 export function AuditLegend() {
   const legendItems = [
@@ -22,6 +24,24 @@ export function AuditLegend() {
     }
   ];
 
+  const riskLevels = [
+    {
+      level: "Alto Risco",
+      threshold: "80% ou mais",
+      color: "text-red-600"
+    },
+    {
+      level: "Risco Moderado",
+      threshold: "Entre 50% e 79%",
+      color: "text-yellow-600"
+    },
+    {
+      level: "Baixo Risco",
+      threshold: "Abaixo de 50%",
+      color: "text-green-600"
+    }
+  ];
+
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -32,16 +52,46 @@ export function AuditLegend() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Legenda da Avaliação</DialogTitle>
+          <DialogTitle>Informações da Avaliação</DialogTitle>
         </DialogHeader>
-        <div className="flex gap-4">
-          {legendItems.map((item) => (
-            <div key={item.status} className="flex items-center gap-2">
-              <div className={`w-3 h-3 rounded-full ${item.color}`} />
-              <span className="text-sm">{item.label}</span>
+        <Tabs defaultValue="status">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="status">Status</TabsTrigger>
+            <TabsTrigger value="risk">Pontuação de Risco</TabsTrigger>
+          </TabsList>
+          <TabsContent value="status" className="mt-4">
+            <div className="flex gap-4">
+              {legendItems.map((item) => (
+                <div key={item.status} className="flex items-center gap-2">
+                  <div className={`w-3 h-3 rounded-full ${item.color}`} />
+                  <span className="text-sm">{item.label}</span>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
+          </TabsContent>
+          <TabsContent value="risk" className="mt-4 space-y-4">
+            <div className="space-y-2">
+              <h4 className="font-medium text-sm">Níveis de Risco</h4>
+              <div className="space-y-2">
+                {riskLevels.map((risk) => (
+                  <div key={risk.level} className="flex items-center justify-between">
+                    <span className={`text-sm font-medium ${risk.color}`}>{risk.level}</span>
+                    <span className="text-sm text-gray-600">{risk.threshold}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <Separator />
+            <div className="space-y-2">
+              <h4 className="font-medium text-sm">Cálculo da Pontuação</h4>
+              <div className="space-y-1 text-sm text-gray-600">
+                <p>• Aprovado: 100% do peso da etapa</p>
+                <p>• Parcial: 50% do peso da etapa</p>
+                <p>• Reprovado: 0% do peso da etapa</p>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </DialogContent>
     </Dialog>
   );
