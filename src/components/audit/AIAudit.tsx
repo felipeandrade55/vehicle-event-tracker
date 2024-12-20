@@ -44,6 +44,16 @@ export function AIAudit() {
       status: "pending"
     },
     {
+      id: "legal",
+      title: "Análise Jurídica",
+      status: "pending"
+    },
+    {
+      id: "technical",
+      title: "Análise Técnica",
+      status: "pending"
+    },
+    {
       id: "financial",
       title: "Análise Financeira",
       status: "pending"
@@ -57,30 +67,64 @@ export function AIAudit() {
   
   const { toast } = useToast();
 
+  const generateLegalAnalysis = () => {
+    // Simulando análise de dados do acionamento
+    const isSpeedingViolation = Math.random() < 0.3;
+    const isDrunkDriving = Math.random() < 0.2;
+
+    if (isSpeedingViolation || isDrunkDriving) {
+      return {
+        status: "negative" as const,
+        message: `Irregularidades identificadas: ${isSpeedingViolation ? 'Excesso de velocidade. ' : ''}${isDrunkDriving ? 'Condução sob efeito de álcool. ' : ''}`
+      };
+    }
+    return {
+      status: "positive" as const,
+      message: "Nenhuma irregularidade legal identificada. Condutor seguia as normas de trânsito."
+    };
+  };
+
+  const generateTechnicalAnalysis = () => {
+    // Simulando análise técnica do veículo
+    const tireCondition = Math.random() < 0.7 ? "bom" : "ruim";
+    const brakesCondition = Math.random() < 0.8 ? "bom" : "ruim";
+    
+    if (tireCondition === "ruim" || brakesCondition === "ruim") {
+      return {
+        status: "negative" as const,
+        message: `Problemas técnicos identificados: ${tireCondition === "ruim" ? 'Pneus em condição inadequada. ' : ''}${brakesCondition === "ruim" ? 'Sistema de freios comprometido. ' : ''}`
+      };
+    }
+    return {
+      status: "positive" as const,
+      message: "Veículo em boas condições técnicas. Pneus e freios em estado adequado."
+    };
+  };
+
   const generateFinalAnalysis = (steps: AuditStep[]) => {
     const positiveCount = steps.filter(s => s.result?.status === "positive").length;
     const partialCount = steps.filter(s => s.result?.status === "partial").length;
+    const negativeCount = steps.filter(s => s.result?.status === "negative").length;
     
-    if (positiveCount === steps.length - 1) { // All positive except final step
+    if (negativeCount > 0) {
       return {
-        status: "positive" as const,
-        message: "Auditoria concluída com sucesso. Todos os critérios foram atendidos. Recomendação: Aprovação imediata do processo."
+        status: "negative" as const,
+        message: "Auditoria concluída com restrições críticas. Foram identificados pontos que impedem o prosseguimento do processo. Recomendação: Revisar documentação e condições identificadas antes de prosseguir."
       };
     } else if (partialCount > 0) {
       return {
         status: "partial" as const,
-        message: "Auditoria concluída com ressalvas. Foram identificados pontos de atenção que precisam ser revisados, mas não impeditivos."
+        message: "Auditoria concluída com ressalvas. Existem pontos de atenção que precisam ser revisados, mas não são impeditivos. Recomendação: Acompanhar os pontos identificados."
       };
     } else {
       return {
-        status: "negative" as const,
-        message: "Auditoria concluída com restrições. Foram identificados pontos críticos que precisam ser resolvidos antes de prosseguir."
+        status: "positive" as const,
+        message: "Auditoria concluída com sucesso. Todos os critérios foram atendidos satisfatoriamente. Recomendação: Processo pode prosseguir para aprovação."
       };
     }
   };
 
   const startAudit = async () => {
-    // Format the occurrence ID to include the "#" symbol if not present
     const formattedId = occurrenceId.startsWith("#") ? occurrenceId : `#${occurrenceId}`;
     const occurrence = mockOccurrences.find(o => o.id === formattedId);
     
@@ -95,19 +139,15 @@ export function AIAudit() {
 
     setIsAuditing(true);
     
-    // Simulated AI analysis for each step
     for (let i = 0; i < steps.length; i++) {
       setCurrentStep(i);
       
-      // Update current step to processing
       setSteps(prev => prev.map((step, idx) => 
-        idx === i ? { ...step, status: "processing" } : step
+        idx === i ? { ...step, status: "processing" as const } : step
       ));
       
-      // Simulate AI processing time
       await new Promise(resolve => setTimeout(resolve, 3000));
       
-      // Update step with result
       setSteps(prev => {
         const newSteps = prev.map((step, idx) => {
           if (idx === i) {
@@ -115,19 +155,25 @@ export function AIAudit() {
             switch (step.id) {
               case "plan":
                 result = {
-                  status: "positive",
+                  status: "positive" as const,
                   message: "Plano válido e cobertura confirmada"
                 };
                 break;
               case "contract":
                 result = {
-                  status: "positive",
+                  status: "positive" as const,
                   message: "Contrato ativo e dentro da vigência"
                 };
                 break;
+              case "legal":
+                result = generateLegalAnalysis();
+                break;
+              case "technical":
+                result = generateTechnicalAnalysis();
+                break;
               case "financial":
                 result = {
-                  status: "partial",
+                  status: "partial" as const,
                   message: "Pagamento com atraso de 5 dias"
                 };
                 break;
@@ -136,16 +182,15 @@ export function AIAudit() {
                 break;
               default:
                 result = {
-                  status: "negative",
+                  status: "negative" as const,
                   message: "Erro na análise"
                 };
             }
-            return { ...step, status: "completed", result };
+            return { ...step, status: "completed" as const, result };
           }
           return step;
         });
 
-        // If this is the last step, add to history
         if (i === steps.length - 1) {
           const finalResult = generateFinalAnalysis(newSteps);
           const historyEntry: AuditAction = {
