@@ -7,8 +7,8 @@ import { OccurrenceForm } from "./components/occurrences/OccurrenceForm";
 function App() {
   return (
     <Routes>
-      <Route element={<DashboardLayout />}>
-        <Route path="/" element={<OccurrenceList />} />
+      <Route path="/" element={<DashboardLayout />}>
+        <Route index element={<OccurrenceList />} />
         <Route path="/occurrences" element={<OccurrenceList />} />
         <Route path="/occurrences/new" element={<OccurrenceForm />} />
         <Route path="/occurrences/:id" element={<OccurrenceDetails />} />

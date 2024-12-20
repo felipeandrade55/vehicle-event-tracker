@@ -1,13 +1,10 @@
+import { Outlet } from "react-router-dom";
 import { DashboardHeader } from "./dashboard/DashboardHeader";
 import { DashboardFooter } from "./dashboard/DashboardFooter";
 import { DashboardSidebar } from "./dashboard/DashboardSidebar";
 import { SidebarProvider } from "./ui/sidebar";
 
-interface DashboardLayoutProps {
-  children: React.ReactNode;
-}
-
-const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+const DashboardLayout = () => {
   return (
     <SidebarProvider>
       <div className="min-h-screen bg-gray-50 flex w-full">
@@ -16,7 +13,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           <DashboardHeader />
           <main className="flex-1 p-4 md:p-6 bg-gray-50">
             <div className="w-full max-w-[1400px] mx-auto">
-              {children}
+              <Outlet />
             </div>
             <DashboardFooter />
           </main>
