@@ -232,7 +232,7 @@ export function AIAudit() {
     setOccurrenceId(action.occurrenceId);
     setSteps(prev => 
       prev.map(step => {
-        const historyStep = action.steps.find(hs => hs.id === step.id);
+        const historyStep = action.steps?.find(hs => hs?.id === step.id);
         if (historyStep) {
           return {
             ...step,

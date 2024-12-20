@@ -10,7 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { AuditChecklist } from "@/components/audit/AuditChecklist";
 import { AuditHistory } from "@/components/audit/AuditHistory";
 
-// Mock data for audit history
+// Mock data for audit history with complete interface implementation
 const mockAuditHistory = [
   {
     id: "1",
@@ -18,6 +18,12 @@ const mockAuditHistory = [
     user: "João Silva",
     action: "Iniciou a auditoria",
     status: "Pendente",
+    occurrenceId: "#12345",
+    steps: [],
+    score: {
+      total: 0,
+      breakdown: []
+    }
   },
   {
     id: "2",
@@ -26,6 +32,12 @@ const mockAuditHistory = [
     action: "Solicitou documentação adicional",
     status: "Pendente",
     details: "Necessário enviar fotos adicionais do veículo",
+    occurrenceId: "#12345",
+    steps: [],
+    score: {
+      total: 0,
+      breakdown: []
+    }
   },
   {
     id: "3",
@@ -34,7 +46,13 @@ const mockAuditHistory = [
     action: "Anexou documentos",
     status: "Pendente",
     details: "Fotos do veículo anexadas ao processo",
-  },
+    occurrenceId: "#12345",
+    steps: [],
+    score: {
+      total: 0,
+      breakdown: []
+    }
+  }
 ];
 
 export default function AuditDetailsPage() {

@@ -8,6 +8,23 @@ import { AuditChecklist } from "@/components/audit/AuditChecklist";
 import { AuditHistory } from "@/components/audit/AuditHistory";
 import { mockOccurrences } from "@/data/occurrenceData";
 
+// Mock data for audit history with complete interface implementation
+const mockAuditHistory = [
+  {
+    id: "1",
+    date: "2024-03-20T10:00:00",
+    user: "João Silva",
+    action: "Iniciou a auditoria",
+    status: "Pendente",
+    occurrenceId: "#12345",
+    steps: [],
+    score: {
+      total: 0,
+      breakdown: []
+    }
+  }
+];
+
 export default function AuditActionPage() {
   const { id } = useParams();
   const navigate = useNavigate();
