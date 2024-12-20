@@ -9,7 +9,8 @@ import {
   DollarSign,
   BarChart,
   Receipt,
-  Wallet
+  Wallet,
+  CreditCard
 } from "lucide-react";
 import {
   Sidebar,
@@ -56,6 +57,11 @@ export const DashboardSidebar = () => {
       title: "Receitas",
       url: "/financial/revenues",
       icon: DollarSign,
+    },
+    {
+      title: "Mensalidades",
+      url: "/financial/monthly-payments",
+      icon: CreditCard,
     },
     {
       title: "Despesas",
