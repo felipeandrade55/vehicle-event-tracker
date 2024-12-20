@@ -7,11 +7,11 @@ import { SidebarProvider } from "./ui/sidebar";
 const DashboardLayout = () => {
   return (
     <SidebarProvider>
-      <div className="min-h-screen bg-gray-50 flex w-full">
+      <div className="flex min-h-screen w-full bg-gray-50">
         <DashboardSidebar />
-        <div className="flex-1 flex flex-col w-full ml-[var(--sidebar-width)]">
+        <div className="flex-1 flex flex-col">
           <DashboardHeader />
-          <main className="flex-1 p-4 md:p-6 bg-gray-50">
+          <main className="flex-1 p-4 md:p-6">
             <div className="w-full max-w-[1400px] mx-auto">
               <Outlet />
             </div>
