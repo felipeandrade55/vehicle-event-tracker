@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Users, Plus } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
-import { DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/components/ui/use-toast";
 import { TeamMember } from "../types";
 import { TeamMemberCard } from "./team/TeamMemberCard";
@@ -105,12 +105,22 @@ export function TeamCard({ team = [], onTeamUpdate }: TeamCardProps) {
           <Users className="h-5 w-5" />
           Equipe e Usuários Envolvidos
         </CardTitle>
-        <DialogTrigger asChild>
-          <Button variant="outline" size="sm" onClick={() => setIsAddingMember(true)}>
-            <Plus className="h-4 w-4 mr-2" />
-            Adicionar Membro
-          </Button>
-        </DialogTrigger>
+        <Dialog open={isAddingMember} onOpenChange={setIsAddingMember}>
+          <DialogTrigger asChild>
+            <Button variant="outline" size="sm">
+              <Plus className="h-4 w-4 mr-2" />
+              Adicionar Membro
+            </Button>
+          </DialogTrigger>
+          <TeamMemberDialog
+            open={isAddingMember}
+            onOpenChange={setIsAddingMember}
+            member={newMember}
+            onMemberChange={setNewMember}
+            onSave={handleAddMember}
+            title="Adicionar Novo Membro"
+          />
+        </Dialog>
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-[300px]">
@@ -126,25 +136,18 @@ export function TeamCard({ team = [], onTeamUpdate }: TeamCardProps) {
           </div>
         </ScrollArea>
 
-        <TeamMemberDialog
-          open={isAddingMember}
-          onOpenChange={setIsAddingMember}
-          member={newMember}
-          onMemberChange={setNewMember}
-          onSave={handleAddMember}
-          title="Adicionar Novo Membro"
-        />
-
-        <TeamMemberDialog
-          open={!!editingMember}
-          onOpenChange={() => setEditingMember(null)}
-          member={editingMember || {}}
-          onMemberChange={(changes) =>
-            setEditingMember(changes as TeamMember)
-          }
-          onSave={() => editingMember && handleEditMember(editingMember)}
-          title="Editar Membro"
-        />
+        {editingMember && (
+          <TeamMemberDialog
+            open={!!editingMember}
+            onOpenChange={() => setEditingMember(null)}
+            member={editingMember}
+            onMemberChange={(changes) =>
+              setEditingMember(changes as TeamMember)
+            }
+            onSave={() => editingMember && handleEditMember(editingMember)}
+            title="Editar Membro"
+          />
+        )}
       </CardContent>
     </Card>
   );
