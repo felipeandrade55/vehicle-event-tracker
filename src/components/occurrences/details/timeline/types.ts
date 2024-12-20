@@ -13,5 +13,9 @@ export interface TimelineStep {
     previousStatus?: string;
     newStatus?: string;
     documentType?: string;
+    sla?: {
+      deadline: string;
+      priority: "low" | "medium" | "high";
+    };
   };
 }
