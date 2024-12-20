@@ -1,3 +1,5 @@
+import { TeamMemberRole } from "@/components/occurrences/types";
+
 export interface Occurrence {
   id: string;
   date: string;
@@ -27,7 +29,7 @@ export interface Occurrence {
   team?: Array<{
     id: string;
     name: string;
-    role: string;
+    role: TeamMemberRole;
     contact?: string;
     assignedAt: string;
     assignedTo: string[];
