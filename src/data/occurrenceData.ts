@@ -1,5 +1,3 @@
-// ... keep existing code
-
 export interface Occurrence {
   id: string;
   date: string;
@@ -27,9 +25,13 @@ export interface Occurrence {
     agent?: string;
   }>;
   team?: Array<{
+    id: string;
     name: string;
     role: string;
     contact?: string;
+    assignedAt: string;
+    assignedTo: string[];
+    status: "active" | "inactive";
   }>;
   systemActions?: Array<{
     user: string;
@@ -79,14 +81,29 @@ export const mockOccurrences: Occurrence[] = [
     ],
     team: [
       {
+        id: "1",
         name: "José Santos",
-        role: "Técnico Principal",
-        contact: "(11) 97777-8888"
+        role: "technical_analyst",
+        contact: "(11) 97777-8888",
+        assignedAt: "2024-03-19 10:32",
+        assignedTo: ["Registro do evento", "Documentação"],
+        status: "active"
       },
       {
+        id: "2",
         name: "Maria Oliveira",
-        role: "Atendente",
-        contact: "(11) 96666-7777"
+        role: "customer_service",
+        contact: "(11) 96666-7777",
+        assignedAt: "2024-03-19 10:32",
+        assignedTo: ["Registro do evento"],
+        status: "active"
+      }
+    ],
+    systemActions: [
+      {
+        user: "Sistema",
+        action: "Registro inicial do acionamento",
+        date: "2024-03-19 10:32"
       }
     ]
   },
