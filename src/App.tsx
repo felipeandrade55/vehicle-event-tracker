@@ -9,6 +9,14 @@ import DashboardLayout from "@/components/DashboardLayout";
 import CashFlow from "@/pages/financial/CashFlow";
 import Revenues from "@/pages/financial/Revenues";
 import Expenses from "@/pages/financial/Expenses";
+import FinancialDashboard from "@/pages/financial/FinancialDashboard";
+import ContractHistory from "@/pages/financial/contracts/ContractHistory";
+import ContractRenewals from "@/pages/financial/contracts/ContractRenewals";
+import ContractAdjustments from "@/pages/financial/contracts/ContractAdjustments";
+import CostControl from "@/pages/financial/costs/CostControl";
+import DepartmentCosts from "@/pages/financial/costs/DepartmentCosts";
+import ExpenseAllocation from "@/pages/financial/costs/ExpenseAllocation";
+import AssociateCosts from "@/pages/financial/costs/AssociateCosts";
 
 function App() {
   return (
@@ -17,12 +25,26 @@ function App() {
         <Route path="/" element={<Dashboard />} />
         <Route path="/settings/users" element={<UserManagement />} />
         <Route path="/settings/roles" element={<RoleManagement />} />
-        <Route path="/financial/contracts" element={<ContractManagement />} />
-        <Route path="/financial/contracts/editor/:id" element={<ContractEditor />} />
-        <Route path="/financial/contracts/approval-levels" element={<ApprovalLevels />} />
+        
+        {/* Rotas Financeiras */}
+        <Route path="/financial" element={<FinancialDashboard />} />
         <Route path="/financial/cash-flow" element={<CashFlow />} />
         <Route path="/financial/revenues" element={<Revenues />} />
         <Route path="/financial/expenses" element={<Expenses />} />
+        
+        {/* Contratos */}
+        <Route path="/financial/contracts" element={<ContractManagement />} />
+        <Route path="/financial/contracts/editor/:id" element={<ContractEditor />} />
+        <Route path="/financial/contracts/approval-levels" element={<ApprovalLevels />} />
+        <Route path="/financial/contracts/history" element={<ContractHistory />} />
+        <Route path="/financial/contracts/renewals" element={<ContractRenewals />} />
+        <Route path="/financial/contracts/adjustments" element={<ContractAdjustments />} />
+        
+        {/* Controle de Custos */}
+        <Route path="/financial/costs" element={<CostControl />} />
+        <Route path="/financial/costs/departments" element={<DepartmentCosts />} />
+        <Route path="/financial/costs/allocation" element={<ExpenseAllocation />} />
+        <Route path="/financial/costs/associates" element={<AssociateCosts />} />
       </Route>
     </Routes>
   );
