@@ -8,6 +8,7 @@ import Associates from "./pages/Associates";
 import Plan from "./pages/Plan";
 import UserManagement from "./pages/settings/UserManagement";
 import RoleManagement from "./pages/settings/RoleManagement";
+import FinancialDashboard from "./pages/financial/FinancialDashboard";
 import Login from "./pages/Login";
 import { useAuth } from "./contexts/AuthContext";
 import { Navigate } from "react-router-dom";
@@ -33,6 +34,7 @@ function App() {
         <Route path="/occurrences/:id" element={<OccurrenceDetails />} />
         <Route path="/associates" element={<Associates />} />
         <Route path="/plan" element={<Plan />} />
+        <Route path="/financial" element={<FinancialDashboard />} />
         <Route path="/settings/users" element={<UserManagement />} />
         <Route path="/settings/roles" element={<RoleManagement />} />
       </Route>

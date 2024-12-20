@@ -5,7 +5,11 @@ import {
   Home, 
   Car, 
   ClipboardList,
-  FileText 
+  FileText,
+  DollarSign,
+  BarChart,
+  Receipt,
+  Wallet
 } from "lucide-react";
 import {
   Sidebar,
@@ -42,6 +46,29 @@ export const DashboardSidebar = () => {
     },
   ];
 
+  const financialMenuItems = [
+    {
+      title: "Dashboard Financeiro",
+      url: "/financial",
+      icon: BarChart,
+    },
+    {
+      title: "Receitas",
+      url: "/financial/revenues",
+      icon: DollarSign,
+    },
+    {
+      title: "Despesas",
+      url: "/financial/expenses",
+      icon: Receipt,
+    },
+    {
+      title: "Fluxo de Caixa",
+      url: "/financial/cash-flow",
+      icon: Wallet,
+    },
+  ];
+
   const settingsMenuItems = [
     {
       title: "Usuários",
@@ -63,6 +90,24 @@ export const DashboardSidebar = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               {mainMenuItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <Link to={item.url} className="text-base py-3">
+                      <item.icon className="h-5 w-5" />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-base font-semibold">Financeiro</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {financialMenuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <Link to={item.url} className="text-base py-3">
