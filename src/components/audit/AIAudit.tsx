@@ -47,7 +47,9 @@ export function AIAudit() {
   const { toast } = useToast();
 
   const startAudit = async () => {
-    const occurrence = mockOccurrences.find(o => o.id === occurrenceId);
+    // Format the occurrence ID to include the "#" symbol if not present
+    const formattedId = occurrenceId.startsWith("#") ? occurrenceId : `#${occurrenceId}`;
+    const occurrence = mockOccurrences.find(o => o.id === formattedId);
     
     if (!occurrence) {
       toast({
@@ -143,7 +145,7 @@ export function AIAudit() {
         <CardContent className="space-y-4">
           <div className="flex gap-4">
             <Input
-              placeholder="Digite o número do acionamento"
+              placeholder="Digite o número do acionamento (ex: 2024-001)"
               value={occurrenceId}
               onChange={(e) => setOccurrenceId(e.target.value)}
               disabled={isAuditing}
