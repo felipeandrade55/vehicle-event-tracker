@@ -24,6 +24,8 @@ import OccurrenceDetails from "@/pages/OccurrenceDetails";
 import MonthlyPayments from "@/pages/financial/MonthlyPayments";
 import Workshops from "@/pages/partners/Workshops";
 import Suppliers from "@/pages/partners/Suppliers";
+import AuditPage from "@/pages/audit";
+import AuditDetailsPage from "@/pages/audit/[id]";
 
 function App() {
   return (
@@ -38,6 +40,10 @@ function App() {
         <Route path="/plan" element={<Plan />} />
         <Route path="/occurrences" element={<OccurrenceList />} />
         <Route path="/occurrences/:id" element={<OccurrenceDetails />} />
+        
+        {/* Rotas de Auditoria */}
+        <Route path="/audit" element={<AuditPage />} />
+        <Route path="/audit/:id" element={<AuditDetailsPage />} />
         
         {/* Rotas Financeiras */}
         <Route path="/financial" element={<FinancialDashboard />} />

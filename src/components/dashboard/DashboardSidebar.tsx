@@ -3,6 +3,7 @@ import { MainMenu } from "./menu/MainMenu";
 import { FinancialMenu } from "./menu/FinancialMenu";
 import { PartnersMenu } from "./menu/PartnersMenu";
 import { SettingsMenu } from "./menu/SettingsMenu";
+import { AuditMenu } from "./menu/AuditMenu";
 
 export const DashboardSidebar = () => {
   return (
@@ -13,6 +14,7 @@ export const DashboardSidebar = () => {
           <div className="px-3">
             <FinancialMenu />
           </div>
+          <AuditMenu />
           <PartnersMenu />
           <SettingsMenu />
         </SidebarContent>
