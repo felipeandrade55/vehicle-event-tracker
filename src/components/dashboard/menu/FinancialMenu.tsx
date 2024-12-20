@@ -46,20 +46,6 @@ const items: MenuItem[] = [
     title: "Controle de Custos",
     url: "/financial/costs",
     icon: FileSpreadsheet,
-    submenu: [
-      {
-        title: "Por Departamento",
-        url: "/financial/costs/departments",
-      },
-      {
-        title: "Alocação de Despesas",
-        url: "/financial/costs/allocation",
-      },
-      {
-        title: "Por Associado",
-        url: "/financial/costs/associates",
-      },
-    ],
   },
 ];
 
