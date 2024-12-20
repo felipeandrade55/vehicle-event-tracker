@@ -2,7 +2,7 @@ import { useState } from "react";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Button } from "@/components/ui/button";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { List, Timeline, ZoomIn, ZoomOut } from "lucide-react";
+import { List, History, ZoomIn, ZoomOut } from "lucide-react";
 import { TimelineProgress } from "./timeline/TimelineProgress";
 import { TimelineStep } from "./timeline/TimelineStep";
 import { TimelineStepModal } from "./timeline/TimelineStepModal";
@@ -74,7 +74,7 @@ export function ProcessTimeline({ steps }: ProcessTimelineProps) {
           <div className="flex items-center gap-4">
             <ToggleGroup type="single" value={viewMode} onValueChange={(value) => value && setViewMode(value as "timeline" | "list")}>
               <ToggleGroupItem value="timeline" aria-label="Visualização em Timeline">
-                <Timeline className="h-4 w-4" />
+                <History className="h-4 w-4" />
               </ToggleGroupItem>
               <ToggleGroupItem value="list" aria-label="Visualização em Lista">
                 <List className="h-4 w-4" />
