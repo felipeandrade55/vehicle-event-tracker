@@ -4,7 +4,7 @@ import { DashboardFooter } from "./dashboard/DashboardFooter";
 import { DashboardSidebar } from "./dashboard/DashboardSidebar";
 import { SidebarProvider } from "./ui/sidebar";
 
-const DashboardLayout = () => {
+export const DashboardLayout = () => {
   return (
     <SidebarProvider>
       <div className="flex min-h-screen w-full">
@@ -24,5 +24,3 @@ const DashboardLayout = () => {
     </SidebarProvider>
   );
 };
-
-export default DashboardLayout;
