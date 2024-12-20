@@ -8,11 +8,25 @@ import Associates from "./pages/Associates";
 import Plan from "./pages/Plan";
 import UserManagement from "./pages/settings/UserManagement";
 import RoleManagement from "./pages/settings/RoleManagement";
+import Login from "./pages/Login";
+import { useAuth } from "./contexts/AuthContext";
+import { Navigate } from "react-router-dom";
 
 function App() {
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <div>Carregando...</div>;
+  }
+
   return (
     <Routes>
-      <Route path="/" element={<DashboardLayout />}>
+      <Route path="/login" element={!user ? <Login /> : <Navigate to="/" replace />} />
+      
+      <Route
+        path="/"
+        element={user ? <DashboardLayout /> : <Navigate to="/login" replace />}
+      >
         <Route index element={<Index />} />
         <Route path="/occurrences" element={<OccurrenceList />} />
         <Route path="/occurrences/new" element={<OccurrenceForm />} />
