@@ -1,4 +1,4 @@
-import { BarChart, DollarSign, CreditCard, Receipt, Wallet, Building } from "lucide-react";
+import { BarChart, DollarSign, CreditCard, Receipt, Wallet, Building, FileText } from "lucide-react";
 import { MenuItem } from "../types/sidebar";
 import { SidebarGroup, SidebarGroupLabel, SidebarGroupContent, SidebarMenu } from "@/components/ui/sidebar";
 import { MenuItems } from "./MenuItems";
@@ -33,6 +33,33 @@ const financialMenuItems: MenuItem[] = [
     title: "Controle de Custos",
     url: "/financial/costs",
     icon: Building,
+  },
+  {
+    title: "Gestão de Contratos",
+    url: "/financial/contracts",
+    icon: FileText,
+    submenu: [
+      {
+        title: "Controle de Vigência",
+        url: "/financial/contracts",
+      },
+      {
+        title: "Editor de Contratos",
+        url: "/financial/contracts/editor/new",
+      },
+      {
+        title: "Histórico de Alterações",
+        url: "/financial/contracts/history",
+      },
+      {
+        title: "Renovações Automáticas",
+        url: "/financial/contracts/renewals",
+      },
+      {
+        title: "Reajustes Programados",
+        url: "/financial/contracts/adjustments",
+      },
+    ],
   },
 ];
 

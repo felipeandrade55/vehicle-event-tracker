@@ -24,6 +24,11 @@ import CostControl from "./pages/financial/costs/CostControl";
 import DepartmentCosts from "./pages/financial/costs/DepartmentCosts";
 import ExpenseAllocation from "./pages/financial/costs/ExpenseAllocation";
 import AssociateCosts from "./pages/financial/costs/AssociateCosts";
+import ContractManagement from "./pages/financial/contracts/ContractManagement";
+import ContractEditor from "./pages/financial/contracts/ContractEditor";
+import ContractHistory from "./pages/financial/contracts/ContractHistory";
+import ContractRenewals from "./pages/financial/contracts/ContractRenewals";
+import ContractAdjustments from "./pages/financial/contracts/ContractAdjustments";
 
 function App() {
   const { user, isLoading } = useAuth();
@@ -64,6 +69,11 @@ function App() {
         <Route path="/settings/roles" element={<RoleManagement />} />
         <Route path="/workshops" element={<Workshops />} />
         <Route path="/suppliers" element={<Suppliers />} />
+        <Route path="/financial/contracts" element={<ContractManagement />} />
+        <Route path="/financial/contracts/editor/:id" element={<ContractEditor />} />
+        <Route path="/financial/contracts/history" element={<ContractHistory />} />
+        <Route path="/financial/contracts/renewals" element={<ContractRenewals />} />
+        <Route path="/financial/contracts/adjustments" element={<ContractAdjustments />} />
       </Route>
     </Routes>
   );
