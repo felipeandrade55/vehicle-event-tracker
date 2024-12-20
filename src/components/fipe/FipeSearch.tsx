@@ -10,6 +10,7 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 import { fetchBrands, fetchModels, fetchYears, fetchVehicleDetails } from "@/services/fipeApi";
+import { toast } from "@/components/ui/use-toast";
 
 export function FipeSearch() {
   const [selectedBrand, setSelectedBrand] = useState("");
@@ -37,6 +38,21 @@ export function FipeSearch() {
     queryKey: ["fipe", "details", selectedBrand, selectedModel, selectedYear],
     queryFn: () => fetchVehicleDetails(selectedBrand, selectedModel, selectedYear),
     enabled: !!selectedBrand && !!selectedModel && !!selectedYear,
+    onSuccess: (data) => {
+      if (data) {
+        toast({
+          title: "Valor FIPE encontrado",
+          description: `${data.marca} ${data.modelo} - ${data.anoModelo}: ${data.valor}`,
+        });
+      }
+    },
+    onError: () => {
+      toast({
+        title: "Erro ao consultar valor",
+        description: "Não foi possível obter o valor do veículo",
+        variant: "destructive",
+      });
+    },
   });
 
   const handleBrandChange = (value: string) => {
