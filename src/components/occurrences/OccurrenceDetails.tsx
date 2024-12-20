@@ -22,6 +22,7 @@ import { DocumentationCard } from "./details/DocumentationCard";
 import { ProcessTimeline } from "./details/ProcessTimeline";
 import { OccurrenceForm } from "./OccurrenceForm";
 import { OccurrenceFormData, OccurrenceType } from "./types";
+import type { StepStatus } from "./details/ProcessTimeline";
 
 interface OccurrenceDetailsProps {
   occurrence: {
@@ -84,32 +85,32 @@ export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
     {
       id: 1,
       title: "Registro do evento",
-      status: "completed" as const,
+      status: "completed" as StepStatus,
       date: occurrence.date,
       description: occurrence.description,
     },
     {
       id: 2,
       title: "Documentação recebida",
-      status: occurrence.documents ? "completed" : "pending" as const,
+      status: occurrence.documents ? ("completed" as StepStatus) : ("pending" as StepStatus),
       date: occurrence.timeline?.find(t => t.action.includes("documentação"))?.date,
     },
     {
       id: 3,
       title: "Análise jurídica",
-      status: "in-progress" as const,
+      status: "in-progress" as StepStatus,
       date: occurrence.timeline?.find(t => t.action.includes("jurídica"))?.date,
       agent: occurrence.timeline?.find(t => t.action.includes("jurídica"))?.agent,
     },
     {
       id: 4,
       title: "Aprovação para reparo",
-      status: "pending" as const,
+      status: "pending" as StepStatus,
     },
     {
       id: 5,
       title: "Finalização do processo",
-      status: "pending" as const,
+      status: "pending" as StepStatus,
     },
   ];
 
