@@ -1,5 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { useEffect, useState } from "react";
 
 interface RiskScore {
   total: number;
@@ -15,6 +16,25 @@ interface AuditScoringProps {
 }
 
 export function AuditScoring({ score }: AuditScoringProps) {
+  const [animatedScores, setAnimatedScores] = useState<{[key: string]: number}>({});
+
+  useEffect(() => {
+    score.breakdown.forEach((item) => {
+      const percentage = Math.round((item.score / item.maxScore) * 100);
+      setAnimatedScores(prev => ({
+        ...prev,
+        [item.category]: 0
+      }));
+      
+      setTimeout(() => {
+        setAnimatedScores(prev => ({
+          ...prev,
+          [item.category]: percentage
+        }));
+      }, 100);
+    });
+  }, [score]);
+
   const getRiskLevel = (score: number) => {
     if (score >= 80) return { label: "Alto Risco", color: "bg-red-500" };
     if (score >= 50) return { label: "Risco Moderado", color: "bg-yellow-500" };
@@ -41,18 +61,21 @@ export function AuditScoring({ score }: AuditScoringProps) {
             </p>
           </div>
 
-          <Progress value={score.total} className={`h-2 ${risk.color}`} />
+          <Progress 
+            value={score.total} 
+            className={`h-2 ${risk.color} transition-all duration-1000`} 
+          />
 
           <div className="space-y-4">
             {score.breakdown.map((item, index) => (
               <div key={index} className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>{item.category}</span>
-                  <span>{Math.round((item.score / item.maxScore) * 100)}%</span>
+                  <span>{animatedScores[item.category] || 0}%</span>
                 </div>
                 <Progress
-                  value={(item.score / item.maxScore) * 100}
-                  className="h-1"
+                  value={animatedScores[item.category] || 0}
+                  className="h-1 transition-all duration-1000"
                 />
               </div>
             ))}
