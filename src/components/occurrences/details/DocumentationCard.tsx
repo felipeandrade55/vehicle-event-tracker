@@ -1,6 +1,6 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileImage, Download, Trash2, Eye } from "lucide-react";
+import { FileImage, Download, Trash2, Eye, File } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
 import {
   AlertDialog,
@@ -14,6 +14,8 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface DocumentationCardProps {
   documents: {
@@ -31,14 +33,35 @@ interface DocumentationCardProps {
 export function DocumentationCard({ documents, onDocumentDelete }: DocumentationCardProps) {
   const [selectedDoc, setSelectedDoc] = useState<{ type: string; index?: number } | null>(null);
 
-  const documentLabels: { [key: string]: string } = {
-    driversLicense: "CNH",
-    vehicleRegistration: "CRLV",
-    eventReport: "Comunicado de Evento",
-    policeReport: "Boletim de Ocorrência",
-    proofOfResidence: "Comprovante de Residência",
-    vehiclePhotos: "Fotos do Veículo",
-    tirePhotos: "Fotos dos Pneus",
+  const documentLabels: { [key: string]: { label: string; description: string } } = {
+    driversLicense: {
+      label: "CNH",
+      description: "Carteira Nacional de Habilitação"
+    },
+    vehicleRegistration: {
+      label: "CRLV",
+      description: "Certificado de Registro e Licenciamento de Veículo"
+    },
+    eventReport: {
+      label: "Comunicado de Evento",
+      description: "Documento descrevendo o evento"
+    },
+    policeReport: {
+      label: "Boletim de Ocorrência",
+      description: "BO registrado na delegacia"
+    },
+    proofOfResidence: {
+      label: "Comprovante de Residência",
+      description: "Documento atualizado"
+    },
+    vehiclePhotos: {
+      label: "Fotos do Veículo",
+      description: "Fotos do veículo de diferentes ângulos"
+    },
+    tirePhotos: {
+      label: "Fotos dos Pneus",
+      description: "Fotos detalhadas dos pneus"
+    },
   };
 
   const handleView = (url: string) => {
@@ -57,6 +80,11 @@ export function DocumentationCard({ documents, onDocumentDelete }: Documentation
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(downloadUrl);
+      
+      toast({
+        title: "Download iniciado",
+        description: `O arquivo ${filename} está sendo baixado.`,
+      });
     } catch (error) {
       toast({
         variant: "destructive",
@@ -77,19 +105,28 @@ export function DocumentationCard({ documents, onDocumentDelete }: Documentation
     }
   };
 
+  const getFileIcon = (type: string) => {
+    if (type.includes('Photos')) {
+      return <FileImage className="h-4 w-4" />;
+    }
+    return <File className="h-4 w-4" />;
+  };
+
   const renderDocumentActions = (url: string, type: string, index?: number) => (
     <div className="flex gap-2">
       <Button
         variant="outline"
         size="sm"
         onClick={() => handleView(url)}
+        className="hover:bg-secondary"
       >
         <Eye className="h-4 w-4" />
       </Button>
       <Button
         variant="outline"
         size="sm"
-        onClick={() => handleDownload(url, `${documentLabels[type]}-${index || 1}.pdf`)}
+        onClick={() => handleDownload(url, `${documentLabels[type].label}-${index || 1}.pdf`)}
+        className="hover:bg-secondary"
       >
         <Download className="h-4 w-4" />
       </Button>
@@ -99,8 +136,9 @@ export function DocumentationCard({ documents, onDocumentDelete }: Documentation
             variant="outline"
             size="sm"
             onClick={() => setSelectedDoc({ type, index })}
+            className="hover:bg-destructive hover:text-destructive-foreground"
           >
-            <Trash2 className="h-4 w-4 text-destructive" />
+            <Trash2 className="h-4 w-4" />
           </Button>
         </AlertDialogTrigger>
         <AlertDialogContent>
@@ -127,36 +165,70 @@ export function DocumentationCard({ documents, onDocumentDelete }: Documentation
           Documentação
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {Object.entries(documents).map(([type, value]) => {
-          if (!value) return null;
+      <CardContent>
+        <ScrollArea className="h-[400px] pr-4">
+          <div className="space-y-6">
+            {Object.entries(documents).map(([type, value]) => {
+              if (!value) return null;
 
-          if (Array.isArray(value)) {
-            return (
-              <div key={type} className="space-y-2">
-                <h4 className="text-sm font-medium">{documentLabels[type]}</h4>
-                {value.map((url, index) => (
-                  <div key={`${type}-${index}`} className="flex items-center justify-between p-2 bg-muted rounded-md">
-                    <span className="text-sm">
-                      {documentLabels[type]} {index + 1}
-                    </span>
-                    {renderDocumentActions(url, type, index)}
+              if (Array.isArray(value)) {
+                return (
+                  <div key={type} className="space-y-3">
+                    <div className="flex items-center gap-2">
+                      {getFileIcon(type)}
+                      <div>
+                        <h4 className="font-medium">{documentLabels[type].label}</h4>
+                        <p className="text-sm text-muted-foreground">
+                          {documentLabels[type].description}
+                        </p>
+                      </div>
+                      <Badge variant="secondary" className="ml-auto">
+                        {value.length} arquivo{value.length !== 1 ? 's' : ''}
+                      </Badge>
+                    </div>
+                    <div className="space-y-2">
+                      {value.map((url, index) => (
+                        <div
+                          key={`${type}-${index}`}
+                          className="flex items-center justify-between p-3 bg-muted rounded-lg hover:bg-secondary/20 transition-colors"
+                        >
+                          <span className="text-sm flex items-center gap-2">
+                            {getFileIcon(type)}
+                            {documentLabels[type].label} {index + 1}
+                          </span>
+                          {renderDocumentActions(url, type, index)}
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                ))}
-              </div>
-            );
-          }
+                );
+              }
 
-          return (
-            <div key={type} className="space-y-2">
-              <h4 className="text-sm font-medium">{documentLabels[type]}</h4>
-              <div className="flex items-center justify-between p-2 bg-muted rounded-md">
-                <span className="text-sm">{documentLabels[type]}</span>
-                {renderDocumentActions(value, type)}
-              </div>
-            </div>
-          );
-        })}
+              return (
+                <div key={type} className="space-y-3">
+                  <div className="flex items-center gap-2">
+                    {getFileIcon(type)}
+                    <div>
+                      <h4 className="font-medium">{documentLabels[type].label}</h4>
+                      <p className="text-sm text-muted-foreground">
+                        {documentLabels[type].description}
+                      </p>
+                    </div>
+                  </div>
+                  <div
+                    className="flex items-center justify-between p-3 bg-muted rounded-lg hover:bg-secondary/20 transition-colors"
+                  >
+                    <span className="text-sm flex items-center gap-2">
+                      {getFileIcon(type)}
+                      {documentLabels[type].label}
+                    </span>
+                    {renderDocumentActions(value, type)}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </ScrollArea>
       </CardContent>
     </Card>
   );
