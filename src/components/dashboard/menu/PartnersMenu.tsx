@@ -6,12 +6,12 @@ import { MenuItems } from "./MenuItems";
 const partnersMenuItems: MenuItem[] = [
   {
     title: "Oficinas",
-    url: "/workshops",
+    url: "/partners/workshops",
     icon: Cog,
   },
   {
     title: "Fornecedores",
-    url: "/suppliers",
+    url: "/partners/suppliers",
     icon: Truck,
   },
 ];
