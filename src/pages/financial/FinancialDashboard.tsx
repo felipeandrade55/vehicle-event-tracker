@@ -1,7 +1,72 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowDown, ArrowUp, DollarSign, Users, AlertTriangle } from "lucide-react";
+import { ArrowDown, ArrowUp, DollarSign, AlertTriangle } from "lucide-react";
+import {
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  ResponsiveContainer,
+  Legend,
+} from "recharts";
 
 const FinancialDashboard = () => {
+  // Dados mockados para exemplo
+  const cashFlowData = [
+    {
+      month: "Jan",
+      receitas: 12450,
+      despesas: 8230,
+    },
+    {
+      month: "Fev",
+      receitas: 14200,
+      despesas: 7800,
+    },
+    {
+      month: "Mar",
+      receitas: 13800,
+      despesas: 8500,
+    },
+    {
+      month: "Abr",
+      receitas: 15300,
+      despesas: 9200,
+    },
+    {
+      month: "Mai",
+      receitas: 14700,
+      despesas: 8900,
+    },
+    {
+      month: "Jun",
+      receitas: 16200,
+      despesas: 9500,
+    },
+  ];
+
+  const chartConfig = {
+    receitas: {
+      label: "Receitas",
+      theme: {
+        light: "#22c55e",
+        dark: "#22c55e",
+      },
+    },
+    despesas: {
+      label: "Despesas",
+      theme: {
+        light: "#ef4444",
+        dark: "#ef4444",
+      },
+    },
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -68,9 +133,44 @@ const FinancialDashboard = () => {
             <CardTitle>Fluxo de Caixa</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-[200px] flex items-center justify-center text-muted-foreground">
-              Gráfico de Fluxo de Caixa
-            </div>
+            <ChartContainer config={chartConfig} className="h-[350px]">
+              <BarChart data={cashFlowData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="month" />
+                <YAxis
+                  tickFormatter={(value) =>
+                    new Intl.NumberFormat("pt-BR", {
+                      style: "currency",
+                      currency: "BRL",
+                      notation: "compact",
+                    }).format(value)
+                  }
+                />
+                <ChartTooltip
+                  content={({ active, payload }) => {
+                    if (!active || !payload) return null;
+                    return (
+                      <ChartTooltipContent
+                        className="w-64"
+                        payload={payload}
+                        formatter={(value, name) => {
+                          return [
+                            new Intl.NumberFormat("pt-BR", {
+                              style: "currency",
+                              currency: "BRL",
+                            }).format(value as number),
+                            name,
+                          ];
+                        }}
+                      />
+                    );
+                  }}
+                />
+                <Legend />
+                <Bar dataKey="receitas" fill="#22c55e" name="Receitas" />
+                <Bar dataKey="despesas" fill="#ef4444" name="Despesas" />
+              </BarChart>
+            </ChartContainer>
           </CardContent>
         </Card>
 
@@ -82,14 +182,18 @@ const FinancialDashboard = () => {
             <div className="space-y-4">
               <div className="flex items-center">
                 <div className="ml-4 space-y-1">
-                  <p className="text-sm font-medium leading-none">Fornecedor XYZ</p>
+                  <p className="text-sm font-medium leading-none">
+                    Fornecedor XYZ
+                  </p>
                   <p className="text-sm text-muted-foreground">Vence em 3 dias</p>
                 </div>
                 <div className="ml-auto font-medium">R$ 1.250,00</div>
               </div>
               <div className="flex items-center">
                 <div className="ml-4 space-y-1">
-                  <p className="text-sm font-medium leading-none">Manutenção Preventiva</p>
+                  <p className="text-sm font-medium leading-none">
+                    Manutenção Preventiva
+                  </p>
                   <p className="text-sm text-muted-foreground">Vence em 5 dias</p>
                 </div>
                 <div className="ml-auto font-medium">R$ 890,00</div>
