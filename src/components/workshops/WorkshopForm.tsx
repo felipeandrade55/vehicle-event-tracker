@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
   FormControl,
@@ -10,60 +10,63 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 
-const workshopSchema = z.object({
-  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
-  cnpj: z.string().min(14, "CNPJ deve ter 14 dígitos"),
-  email: z.string().email("Email inválido"),
-  phone: z.string().min(10, "Telefone deve ter pelo menos 10 dígitos"),
-  address: z.string().min(5, "Endereço deve ter pelo menos 5 caracteres"),
-  specialties: z.string().min(3, "Especialidades são obrigatórias"),
-  hasEmergencyService: z.boolean(),
-  workingHours: z.string().min(3, "Horário de funcionamento é obrigatório"),
-  rating: z.number().min(0).max(5).optional(),
-  notes: z.string().optional(),
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "Nome deve ter pelo menos 2 caracteres.",
+  }),
+  cnpj: z.string().min(14, {
+    message: "CNPJ inválido",
+  }),
+  email: z.string().email({
+    message: "Email inválido",
+  }),
+  phone: z.string().min(10, {
+    message: "Telefone inválido",
+  }),
+  address: z.string().min(1, {
+    message: "Endereço é obrigatório",
+  }),
+  specialties: z.string().min(1, {
+    message: "Especialidades são obrigatórias",
+  }),
+  workingHours: z.string().min(1, {
+    message: "Horário de funcionamento é obrigatório",
+  }),
+  capacity: z.string().min(1, {
+    message: "Capacidade de atendimento é obrigatória",
+  }),
 });
 
-type WorkshopFormData = z.infer<typeof workshopSchema>;
-
-interface WorkshopFormProps {
-  onSubmit: (data: WorkshopFormData) => void;
-  initialData?: WorkshopFormData;
-}
-
-export function WorkshopForm({ onSubmit, initialData }: WorkshopFormProps) {
-  const form = useForm<WorkshopFormData>({
-    resolver: zodResolver(workshopSchema),
-    defaultValues: initialData || {
+export function WorkshopForm() {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
       name: "",
       cnpj: "",
       email: "",
       phone: "",
       address: "",
       specialties: "",
-      hasEmergencyService: false,
       workingHours: "",
-      rating: 0,
-      notes: "",
+      capacity: "",
     },
   });
 
-  const handleSubmit = (data: WorkshopFormData) => {
-    onSubmit(data);
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
     toast({
-      title: "Oficina salva",
-      description: "Os dados da oficina foram salvos com sucesso.",
+      title: "Oficina cadastrada com sucesso!",
+      description: "Os dados da oficina foram salvos.",
     });
-  };
+  }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="name"
@@ -71,7 +74,7 @@ export function WorkshopForm({ onSubmit, initialData }: WorkshopFormProps) {
             <FormItem>
               <FormLabel>Nome da Oficina</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input placeholder="Nome da oficina" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -85,42 +88,40 @@ export function WorkshopForm({ onSubmit, initialData }: WorkshopFormProps) {
             <FormItem>
               <FormLabel>CNPJ</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input placeholder="00.000.000/0000-00" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type="email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="email@oficina.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Telefone</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Telefone</FormLabel>
+              <FormControl>
+                <Input placeholder="(00) 0000-0000" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
@@ -129,7 +130,7 @@ export function WorkshopForm({ onSubmit, initialData }: WorkshopFormProps) {
             <FormItem>
               <FormLabel>Endereço</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input placeholder="Endereço completo" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -143,27 +144,12 @@ export function WorkshopForm({ onSubmit, initialData }: WorkshopFormProps) {
             <FormItem>
               <FormLabel>Especialidades</FormLabel>
               <FormControl>
-                <Textarea {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="hasEmergencyService"
-          render={({ field }) => (
-            <FormItem className="flex flex-row items-start space-x-3 space-y-0">
-              <FormControl>
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
+                <Textarea 
+                  placeholder="Liste as especialidades da oficina"
+                  {...field}
                 />
               </FormControl>
-              <div className="space-y-1 leading-none">
-                <FormLabel>Possui atendimento de emergência</FormLabel>
-              </div>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -175,7 +161,7 @@ export function WorkshopForm({ onSubmit, initialData }: WorkshopFormProps) {
             <FormItem>
               <FormLabel>Horário de Funcionamento</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input placeholder="Ex: Segunda a Sexta, 8h às 18h" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -184,19 +170,19 @@ export function WorkshopForm({ onSubmit, initialData }: WorkshopFormProps) {
 
         <FormField
           control={form.control}
-          name="notes"
+          name="capacity"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Observações</FormLabel>
+              <FormLabel>Capacidade de Atendimento</FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Input placeholder="Ex: 10 veículos simultaneamente" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit">Salvar Oficina</Button>
+        <Button type="submit">Cadastrar Oficina</Button>
       </form>
     </Form>
   );

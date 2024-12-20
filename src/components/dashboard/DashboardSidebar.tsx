@@ -10,7 +10,10 @@ import {
   BarChart,
   Receipt,
   Wallet,
-  CreditCard
+  CreditCard,
+  Tool,
+  Truck,
+  Building
 } from "lucide-react";
 import {
   Sidebar,
@@ -75,6 +78,19 @@ export const DashboardSidebar = () => {
     },
   ];
 
+  const partnersMenuItems = [
+    {
+      title: "Oficinas",
+      url: "/workshops",
+      icon: Tool,
+    },
+    {
+      title: "Fornecedores",
+      url: "/suppliers",
+      icon: Truck,
+    },
+  ];
+
   const settingsMenuItems = [
     {
       title: "Usuários",
@@ -114,6 +130,24 @@ export const DashboardSidebar = () => {
           <SidebarGroupContent>
             <SidebarMenu>
               {financialMenuItems.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton asChild>
+                    <Link to={item.url} className="text-base py-3">
+                      <item.icon className="h-5 w-5" />
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        <SidebarGroup>
+          <SidebarGroupLabel className="text-base font-semibold">Parceiros</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {partnersMenuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <Link to={item.url} className="text-base py-3">

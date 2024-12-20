@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { fetchBrands, fetchModels, fetchYears, fetchVehicleDetails, FipeVehicle } from "@/services/fipeApi";
 import {
   Select,
   SelectContent,
@@ -8,38 +7,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { fetchBrands, fetchModels, fetchYears, fetchVehicleDetails, FipeVehicle } from "@/services/fipeApi";
 
 export function FipeSearch() {
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
-  const [vehicleDetails, setVehicleDetails] = useState<FipeVehicle | null>(null);
 
-  const { data: brands } = useQuery({
+  const { data: brands = [] } = useQuery({
     queryKey: ["fipe", "brands"],
     queryFn: fetchBrands,
   });
 
-  const { data: models } = useQuery({
+  const { data: models = [] } = useQuery({
     queryKey: ["fipe", "models", selectedBrand],
     queryFn: () => fetchModels(selectedBrand),
     enabled: !!selectedBrand,
   });
 
-  const { data: years } = useQuery({
+  const { data: years = [] } = useQuery({
     queryKey: ["fipe", "years", selectedBrand, selectedModel],
     queryFn: () => fetchYears(selectedBrand, selectedModel),
     enabled: !!selectedBrand && !!selectedModel,
   });
 
-  const handleSearch = async () => {
-    if (selectedBrand && selectedModel && selectedYear) {
-      const details = await fetchVehicleDetails(selectedBrand, selectedModel, selectedYear);
-      setVehicleDetails(details);
-    }
-  };
+  const { data: vehicleDetails } = useQuery({
+    queryKey: ["fipe", "details", selectedBrand, selectedModel, selectedYear],
+    queryFn: () => fetchVehicleDetails(selectedBrand, selectedModel, selectedYear),
+    enabled: !!selectedBrand && !!selectedModel && !!selectedYear,
+  });
 
   return (
     <Card>
@@ -53,7 +50,7 @@ export function FipeSearch() {
               <SelectValue placeholder="Selecione a marca" />
             </SelectTrigger>
             <SelectContent>
-              {brands?.map((brand: { codigo: string; nome: string }) => (
+              {brands.map((brand: any) => (
                 <SelectItem key={brand.codigo} value={brand.codigo}>
                   {brand.nome}
                 </SelectItem>
@@ -70,7 +67,7 @@ export function FipeSearch() {
               <SelectValue placeholder="Selecione o modelo" />
             </SelectTrigger>
             <SelectContent>
-              {models?.modelos?.map((model: { codigo: string; nome: string }) => (
+              {models.modelos?.map((model: any) => (
                 <SelectItem key={model.codigo} value={model.codigo}>
                   {model.nome}
                 </SelectItem>
@@ -87,7 +84,7 @@ export function FipeSearch() {
               <SelectValue placeholder="Selecione o ano" />
             </SelectTrigger>
             <SelectContent>
-              {years?.map((year: { codigo: string; nome: string }) => (
+              {years.map((year: any) => (
                 <SelectItem key={year.codigo} value={year.codigo}>
                   {year.nome}
                 </SelectItem>
@@ -96,16 +93,27 @@ export function FipeSearch() {
           </Select>
         </div>
 
-        <Button onClick={handleSearch} disabled={!selectedYear}>
-          Consultar
-        </Button>
-
         {vehicleDetails && (
-          <div className="mt-4 p-4 border rounded-lg">
-            <h3 className="font-semibold">{vehicleDetails.marca} {vehicleDetails.modelo}</h3>
-            <p>Ano: {vehicleDetails.anoModelo}</p>
-            <p>Valor: {vehicleDetails.valor}</p>
-            <p>Combustível: {vehicleDetails.combustivel}</p>
+          <div className="mt-6 p-4 bg-gray-50 rounded-lg">
+            <h3 className="text-lg font-semibold mb-4">Detalhes do Veículo</h3>
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-sm text-gray-500">Marca/Modelo</p>
+                <p className="font-medium">{vehicleDetails.marca} {vehicleDetails.modelo}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Ano</p>
+                <p className="font-medium">{vehicleDetails.anoModelo}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Valor</p>
+                <p className="font-medium text-green-600">{vehicleDetails.valor}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Combustível</p>
+                <p className="font-medium">{vehicleDetails.combustivel}</p>
+              </div>
+            </div>
           </div>
         )}
       </CardContent>

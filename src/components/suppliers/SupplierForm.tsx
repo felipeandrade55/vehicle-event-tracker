@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Form,
   FormControl,
@@ -10,53 +10,54 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 
-const supplierSchema = z.object({
-  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
-  cnpj: z.string().min(14, "CNPJ deve ter 14 dígitos"),
-  email: z.string().email("Email inválido"),
-  phone: z.string().min(10, "Telefone deve ter pelo menos 10 dígitos"),
-  address: z.string().min(5, "Endereço deve ter pelo menos 5 caracteres"),
-  services: z.string().min(3, "Descrição dos serviços é obrigatória"),
-  notes: z.string().optional(),
+const formSchema = z.object({
+  name: z.string().min(2, {
+    message: "Nome deve ter pelo menos 2 caracteres.",
+  }),
+  cnpj: z.string().min(14, {
+    message: "CNPJ inválido",
+  }),
+  email: z.string().email({
+    message: "Email inválido",
+  }),
+  phone: z.string().min(10, {
+    message: "Telefone inválido",
+  }),
+  address: z.string().min(1, {
+    message: "Endereço é obrigatório",
+  }),
+  category: z.string().min(1, {
+    message: "Categoria é obrigatória",
+  }),
 });
 
-type SupplierFormData = z.infer<typeof supplierSchema>;
-
-interface SupplierFormProps {
-  onSubmit: (data: SupplierFormData) => void;
-  initialData?: SupplierFormData;
-}
-
-export function SupplierForm({ onSubmit, initialData }: SupplierFormProps) {
-  const form = useForm<SupplierFormData>({
-    resolver: zodResolver(supplierSchema),
-    defaultValues: initialData || {
+export function SupplierForm() {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
       name: "",
       cnpj: "",
       email: "",
       phone: "",
       address: "",
-      services: "",
-      notes: "",
+      category: "",
     },
   });
 
-  const handleSubmit = (data: SupplierFormData) => {
-    onSubmit(data);
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log(values);
     toast({
-      title: "Fornecedor salvo",
-      description: "Os dados do fornecedor foram salvos com sucesso.",
+      title: "Fornecedor cadastrado com sucesso!",
+      description: "Os dados do fornecedor foram salvos.",
     });
-  };
+  }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="name"
@@ -64,7 +65,7 @@ export function SupplierForm({ onSubmit, initialData }: SupplierFormProps) {
             <FormItem>
               <FormLabel>Nome da Empresa</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input placeholder="Nome da empresa" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -78,42 +79,40 @@ export function SupplierForm({ onSubmit, initialData }: SupplierFormProps) {
             <FormItem>
               <FormLabel>CNPJ</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input placeholder="00.000.000/0000-00" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input type="email" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="email@empresa.com" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Telefone</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        <FormField
+          control={form.control}
+          name="phone"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Telefone</FormLabel>
+              <FormControl>
+                <Input placeholder="(00) 0000-0000" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <FormField
           control={form.control}
@@ -122,7 +121,7 @@ export function SupplierForm({ onSubmit, initialData }: SupplierFormProps) {
             <FormItem>
               <FormLabel>Endereço</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input placeholder="Endereço completo" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -131,33 +130,19 @@ export function SupplierForm({ onSubmit, initialData }: SupplierFormProps) {
 
         <FormField
           control={form.control}
-          name="services"
+          name="category"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Serviços Oferecidos</FormLabel>
+              <FormLabel>Categoria</FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Input placeholder="Categoria do fornecedor" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="notes"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Observações</FormLabel>
-              <FormControl>
-                <Textarea {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Button type="submit">Salvar Fornecedor</Button>
+        <Button type="submit">Cadastrar Fornecedor</Button>
       </form>
     </Form>
   );

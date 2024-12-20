@@ -1,4 +1,4 @@
-const FIPE_BASE_URL = 'https://parallelum.com.br/fipe/api/v1';
+const FIPE_BASE_URL = "https://parallelum.com.br/fipe/api/v1";
 
 export interface FipeVehicle {
   codigo: string;
@@ -8,6 +8,10 @@ export interface FipeVehicle {
   modelo: string;
   anoModelo: number;
   combustivel: string;
+  codigoFipe: string;
+  mesReferencia: string;
+  tipoVeiculo: number;
+  siglaCombustivel: string;
 }
 
 export const fetchBrands = async () => {
@@ -21,11 +25,19 @@ export const fetchModels = async (brandId: string) => {
 };
 
 export const fetchYears = async (brandId: string, modelId: string) => {
-  const response = await fetch(`${FIPE_BASE_URL}/carros/marcas/${brandId}/modelos/${modelId}/anos`);
+  const response = await fetch(
+    `${FIPE_BASE_URL}/carros/marcas/${brandId}/modelos/${modelId}/anos`
+  );
   return response.json();
 };
 
-export const fetchVehicleDetails = async (brandId: string, modelId: string, yearId: string): Promise<FipeVehicle> => {
-  const response = await fetch(`${FIPE_BASE_URL}/carros/marcas/${brandId}/modelos/${modelId}/anos/${yearId}`);
+export const fetchVehicleDetails = async (
+  brandId: string,
+  modelId: string,
+  yearId: string
+): Promise<FipeVehicle> => {
+  const response = await fetch(
+    `${FIPE_BASE_URL}/carros/marcas/${brandId}/modelos/${modelId}/anos/${yearId}`
+  );
   return response.json();
 };
