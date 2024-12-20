@@ -16,6 +16,20 @@ interface AuditAction {
   action: string;
   status: string;
   details?: string;
+  occurrenceId: string;
+  steps: {
+    id: string;
+    title: string;
+    status: "completed" | "processing";
+    result?: {
+      status: "positive" | "negative" | "partial";
+      message: string;
+    };
+  }[];
+  score: {
+    total: number;
+    breakdown: { category: string; score: number; maxScore: number; }[];
+  };
 }
 
 const defaultSteps: AuditStepConfiguration[] = [
@@ -194,7 +208,15 @@ export function AIAudit() {
             action: `Auditoria do acionamento ${formattedId}`,
             status: finalResult.status === "positive" ? "Aprovado" : 
                    finalResult.status === "partial" ? "Pendente" : "Reprovado",
-            details: finalResult.message
+            details: finalResult.message,
+            occurrenceId: formattedId,
+            steps: steps.map(step => ({
+              id: step.id,
+              title: step.title,
+              status: step.status,
+              result: step.result
+            })),
+            score: currentScore
           };
           setAuditHistory(prev => [historyEntry, ...prev]);
         }
@@ -204,6 +226,24 @@ export function AIAudit() {
     }
     
     setIsAuditing(false);
+  };
+
+  const handleHistoryItemClick = (action: AuditAction) => {
+    setOccurrenceId(action.occurrenceId);
+    setSteps(prev => 
+      prev.map(step => {
+        const historyStep = action.steps.find(hs => hs.id === step.id);
+        if (historyStep) {
+          return {
+            ...step,
+            status: historyStep.status,
+            result: historyStep.result
+          };
+        }
+        return step;
+      })
+    );
+    setCurrentScore(action.score);
   };
 
   const handleConfigSave = (newConfig: AuditStepConfiguration[]) => {
@@ -262,7 +302,10 @@ export function AIAudit() {
         <div className="mt-8">
           <AuditHistoryFilters onFilterChange={handleFilterChange} />
           <div className="mt-4">
-            <AuditHistory actions={filteredHistory} />
+            <AuditHistory 
+              actions={filteredHistory} 
+              onItemClick={handleHistoryItemClick}
+            />
           </div>
         </div>
       )}

@@ -1,8 +1,10 @@
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { RotateCw } from "lucide-react";
 
 interface AuditAction {
   id: string;
@@ -11,14 +13,28 @@ interface AuditAction {
   action: string;
   status: string;
   details?: string;
-  rerun?: React.ReactNode;
+  occurrenceId: string;
+  steps: {
+    id: string;
+    title: string;
+    status: "completed" | "processing";
+    result?: {
+      status: "positive" | "negative" | "partial";
+      message: string;
+    };
+  }[];
+  score: {
+    total: number;
+    breakdown: { category: string; score: number; maxScore: number; }[];
+  };
 }
 
 interface AuditHistoryProps {
   actions: AuditAction[];
+  onItemClick: (action: AuditAction) => void;
 }
 
-export function AuditHistory({ actions }: AuditHistoryProps) {
+export function AuditHistory({ actions, onItemClick }: AuditHistoryProps) {
   const getStatusBadge = (status: string) => {
     switch (status.toLowerCase()) {
       case "aprovado":
@@ -43,7 +59,8 @@ export function AuditHistory({ actions }: AuditHistoryProps) {
             {actions.map((action) => (
               <div
                 key={action.id}
-                className="flex flex-col space-y-2 pb-4 border-b border-gray-100 last:border-0"
+                onClick={() => onItemClick(action)}
+                className="flex flex-col space-y-2 pb-4 border-b border-gray-100 last:border-0 cursor-pointer hover:bg-gray-50 rounded-lg p-3 transition-colors"
               >
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium">{action.user}</span>
@@ -56,7 +73,17 @@ export function AuditHistory({ actions }: AuditHistoryProps) {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <span className="text-sm">{action.action}</span>
-                    {action.rerun}
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-6 w-6"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onItemClick(action);
+                      }}
+                    >
+                      <RotateCw className="h-4 w-4" />
+                    </Button>
                   </div>
                   {getStatusBadge(action.status)}
                 </div>
