@@ -1,5 +1,6 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import DashboardLayout from "./components/DashboardLayout";
+import Index from "./pages/Index";
 import OccurrenceList from "./pages/OccurrenceList";
 import OccurrenceDetails from "./pages/OccurrenceDetails";
 import { OccurrenceForm } from "./components/occurrences/OccurrenceForm";
@@ -12,7 +13,7 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<DashboardLayout />}>
-        <Route index element={<Navigate to="/occurrences" replace />} />
+        <Route index element={<Index />} />
         <Route path="/occurrences" element={<OccurrenceList />} />
         <Route path="/occurrences/new" element={<OccurrenceForm />} />
         <Route path="/occurrences/:id" element={<OccurrenceDetails />} />
