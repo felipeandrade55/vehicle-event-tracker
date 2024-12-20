@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface OccurrenceHeaderProps {
   id: string;
@@ -21,10 +22,12 @@ const getStatusColor = (status: string) => {
 };
 
 export function OccurrenceHeader({ id, status }: OccurrenceHeaderProps) {
+  const isMobile = useIsMobile();
+
   return (
-    <div className="flex justify-between items-center">
+    <div className={`flex ${isMobile ? 'flex-col gap-2' : 'justify-between'} items-start md:items-center`}>
       <div>
-        <h1 className="text-2xl font-bold">Detalhes do Acionamento</h1>
+        <h1 className="text-xl md:text-2xl font-bold">Detalhes do Acionamento</h1>
         <p className="text-muted-foreground">ID: {id}</p>
       </div>
       <Badge 

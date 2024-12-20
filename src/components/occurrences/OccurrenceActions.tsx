@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, RefreshCw, FileText, Pencil, Trash } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface OccurrenceActionsProps {
   id: string;
@@ -12,11 +13,10 @@ interface OccurrenceActionsProps {
 export function OccurrenceActions({ id, onEdit, onRefresh }: OccurrenceActionsProps) {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   const handleDelete = async () => {
-    // In a real application, this would make an API call
     try {
-      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       toast({
@@ -33,6 +33,56 @@ export function OccurrenceActions({ id, onEdit, onRefresh }: OccurrenceActionsPr
       });
     }
   };
+
+  if (isMobile) {
+    return (
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <Button 
+            variant="outline" 
+            onClick={() => navigate("/occurrences")}
+            className="flex items-center gap-2"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Voltar
+          </Button>
+          <Button 
+            variant="outline" 
+            onClick={onRefresh}
+            className="flex items-center gap-2"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Atualizar
+          </Button>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <Button 
+            variant="outline" 
+            className="flex items-center justify-center gap-2"
+          >
+            <FileText className="h-4 w-4" />
+            PDF
+          </Button>
+          <Button
+            variant="outline"
+            onClick={onEdit}
+            className="flex items-center justify-center gap-2"
+          >
+            <Pencil className="h-4 w-4" />
+            Editar
+          </Button>
+          <Button
+            variant="destructive"
+            onClick={handleDelete}
+            className="col-span-2 flex items-center justify-center gap-2"
+          >
+            <Trash className="h-4 w-4" />
+            Excluir
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-between items-center">
