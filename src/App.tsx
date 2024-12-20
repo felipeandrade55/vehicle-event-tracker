@@ -9,6 +9,20 @@ import OccurrenceList from "@/pages/OccurrenceList";
 import OccurrenceDetails from "@/pages/OccurrenceDetails";
 import AuditActionPage from "@/pages/audit/AuditActionPage";
 import AiAuditPage from "@/pages/audit/AiAuditPage";
+import FinancialDashboard from "@/pages/financial/FinancialDashboard";
+import Revenues from "@/pages/financial/Revenues";
+import Expenses from "@/pages/financial/Expenses";
+import MonthlyPayments from "@/pages/financial/MonthlyPayments";
+import CashFlow from "@/pages/financial/CashFlow";
+import ContractManagement from "@/pages/financial/contracts/ContractManagement";
+import CostControl from "@/pages/financial/costs/CostControl";
+import DepartmentCosts from "@/pages/financial/costs/DepartmentCosts";
+import ExpenseAllocation from "@/pages/financial/costs/ExpenseAllocation";
+import AssociateCosts from "@/pages/financial/costs/AssociateCosts";
+import Suppliers from "@/pages/partners/Suppliers";
+import Workshops from "@/pages/partners/Workshops";
+import UserManagement from "@/pages/settings/UserManagement";
+import RoleManagement from "@/pages/settings/RoleManagement";
 
 function App() {
   return (
@@ -23,6 +37,28 @@ function App() {
           <Route path="occurrences/:id" element={<OccurrenceDetails />} />
           <Route path="audit/action/:id" element={<AuditActionPage />} />
           <Route path="audit/ai" element={<AiAuditPage />} />
+          
+          {/* Financial Routes */}
+          <Route path="financial" element={<FinancialDashboard />} />
+          <Route path="financial/revenues" element={<Revenues />} />
+          <Route path="financial/expenses" element={<Expenses />} />
+          <Route path="financial/monthly-payments" element={<MonthlyPayments />} />
+          <Route path="financial/cash-flow" element={<CashFlow />} />
+          <Route path="financial/contracts" element={<ContractManagement />} />
+          
+          {/* Cost Control Routes */}
+          <Route path="financial/costs" element={<CostControl />} />
+          <Route path="financial/costs/departments" element={<DepartmentCosts />} />
+          <Route path="financial/costs/allocation" element={<ExpenseAllocation />} />
+          <Route path="financial/costs/associates" element={<AssociateCosts />} />
+          
+          {/* Partners Routes */}
+          <Route path="partners/suppliers" element={<Suppliers />} />
+          <Route path="partners/workshops" element={<Workshops />} />
+          
+          {/* Settings Routes */}
+          <Route path="settings/users" element={<UserManagement />} />
+          <Route path="settings/roles" element={<RoleManagement />} />
         </Route>
       </Routes>
       <Toaster />
