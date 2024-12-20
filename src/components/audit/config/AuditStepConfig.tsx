@@ -57,7 +57,7 @@ export function AuditStepConfig({ steps, onSaveConfig }: AuditStepConfigProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Configuração das Etapas</CardTitle>
+        <CardTitle>Peso das Etapas</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
