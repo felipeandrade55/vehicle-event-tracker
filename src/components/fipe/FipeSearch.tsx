@@ -8,35 +8,47 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { fetchBrands, fetchModels, fetchYears, fetchVehicleDetails, FipeVehicle } from "@/services/fipeApi";
+import { Loader2 } from "lucide-react";
+import { fetchBrands, fetchModels, fetchYears, fetchVehicleDetails } from "@/services/fipeApi";
 
 export function FipeSearch() {
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
   const [selectedYear, setSelectedYear] = useState("");
 
-  const { data: brands = [] } = useQuery({
+  const { data: brands = [], isLoading: isLoadingBrands } = useQuery({
     queryKey: ["fipe", "brands"],
     queryFn: fetchBrands,
   });
 
-  const { data: models = [] } = useQuery({
+  const { data: modelsData, isLoading: isLoadingModels } = useQuery({
     queryKey: ["fipe", "models", selectedBrand],
     queryFn: () => fetchModels(selectedBrand),
     enabled: !!selectedBrand,
   });
 
-  const { data: years = [] } = useQuery({
+  const { data: years = [], isLoading: isLoadingYears } = useQuery({
     queryKey: ["fipe", "years", selectedBrand, selectedModel],
     queryFn: () => fetchYears(selectedBrand, selectedModel),
     enabled: !!selectedBrand && !!selectedModel,
   });
 
-  const { data: vehicleDetails } = useQuery({
+  const { data: vehicleDetails, isLoading: isLoadingDetails } = useQuery({
     queryKey: ["fipe", "details", selectedBrand, selectedModel, selectedYear],
     queryFn: () => fetchVehicleDetails(selectedBrand, selectedModel, selectedYear),
     enabled: !!selectedBrand && !!selectedModel && !!selectedYear,
   });
+
+  const handleBrandChange = (value: string) => {
+    setSelectedBrand(value);
+    setSelectedModel("");
+    setSelectedYear("");
+  };
+
+  const handleModelChange = (value: string) => {
+    setSelectedModel(value);
+    setSelectedYear("");
+  };
 
   return (
     <Card>
@@ -45,9 +57,13 @@ export function FipeSearch() {
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <Select value={selectedBrand} onValueChange={setSelectedBrand}>
+          <Select value={selectedBrand} onValueChange={handleBrandChange}>
             <SelectTrigger>
-              <SelectValue placeholder="Selecione a marca" />
+              {isLoadingBrands ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <SelectValue placeholder="Selecione a marca" />
+              )}
             </SelectTrigger>
             <SelectContent>
               {brands.map((brand: any) => (
@@ -60,14 +76,18 @@ export function FipeSearch() {
 
           <Select
             value={selectedModel}
-            onValueChange={setSelectedModel}
-            disabled={!selectedBrand}
+            onValueChange={handleModelChange}
+            disabled={!selectedBrand || isLoadingModels}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Selecione o modelo" />
+              {isLoadingModels ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <SelectValue placeholder="Selecione o modelo" />
+              )}
             </SelectTrigger>
             <SelectContent>
-              {models.modelos?.map((model: any) => (
+              {modelsData?.modelos?.map((model: any) => (
                 <SelectItem key={model.codigo} value={model.codigo}>
                   {model.nome}
                 </SelectItem>
@@ -78,10 +98,14 @@ export function FipeSearch() {
           <Select
             value={selectedYear}
             onValueChange={setSelectedYear}
-            disabled={!selectedModel}
+            disabled={!selectedModel || isLoadingYears}
           >
             <SelectTrigger>
-              <SelectValue placeholder="Selecione o ano" />
+              {isLoadingYears ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <SelectValue placeholder="Selecione o ano" />
+              )}
             </SelectTrigger>
             <SelectContent>
               {years.map((year: any) => (
@@ -93,7 +117,11 @@ export function FipeSearch() {
           </Select>
         </div>
 
-        {vehicleDetails && (
+        {isLoadingDetails ? (
+          <div className="flex justify-center p-4">
+            <Loader2 className="h-6 w-6 animate-spin" />
+          </div>
+        ) : vehicleDetails && (
           <div className="mt-6 p-4 bg-gray-50 rounded-lg">
             <h3 className="text-lg font-semibold mb-4">Detalhes do Veículo</h3>
             <div className="grid grid-cols-2 gap-4">
