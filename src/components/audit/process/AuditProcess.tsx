@@ -27,6 +27,9 @@ export function AuditProcess({
   onStartAudit,
   setOccurrenceId
 }: AuditProcessProps) {
+  const completedSteps = steps.filter(step => step.result);
+  const showFinalScore = completedSteps.length > 0 && completedSteps.length === steps.filter(s => s.enabled).length;
+
   return (
     <div className="space-y-6">
       <Card>
@@ -70,12 +73,22 @@ export function AuditProcess({
                     }`}>
                       {step.result.message}
                     </p>
-                    <AuditScoring score={currentScore} />
                   </div>
                 </CardContent>
               </Card>
             )
           ))}
+          
+          {showFinalScore && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Resultado Final da Auditoria</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <AuditScoring score={currentScore} />
+              </CardContent>
+            </Card>
+          )}
         </div>
       )}
     </div>
