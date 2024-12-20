@@ -4,7 +4,7 @@ import * as z from "zod";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { OccurrenceFormData } from "./types";
-import { AssociateSelector } from "./form/AssociateSelector";
+import { AssociateSelector } from "./AssociateSelector";
 import { OccurrenceTypeSelector } from "./OccurrenceTypeSelector";
 import { EventDetailsForm } from "./EventDetailsForm";
 import { VehicleInfoForm } from "./VehicleInfoForm";
