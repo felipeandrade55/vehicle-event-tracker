@@ -65,9 +65,9 @@ export function TimelineStepModal({ step, isOpen, onOpenChange }: TimelineStepMo
             <h4 className="text-sm font-medium text-gray-500">Status</h4>
             <Badge 
               variant={
-                step.status === "completed" ? "success" :
-                step.status === "in-progress" ? "default" :
-                "secondary"
+                step.status === "completed" ? "default" :
+                step.status === "in-progress" ? "secondary" :
+                "outline"
               }
               className="mt-2"
             >

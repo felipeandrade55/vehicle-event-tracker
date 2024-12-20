@@ -11,7 +11,7 @@ import { ProcessTimeline } from "./details/ProcessTimeline";
 import { EventDetailsCard } from "./details/EventDetailsCard";
 import { EditOccurrenceDialog } from "./details/EditOccurrenceDialog";
 import { OccurrenceFormData, OccurrenceType } from "./types";
-import type { StepStatus } from "./details/ProcessTimeline";
+import type { StepStatus } from "./details/timeline/types";
 import type { OccurrenceDetailsProps } from "./types";
 
 export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
