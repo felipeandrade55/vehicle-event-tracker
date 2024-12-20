@@ -9,6 +9,7 @@ import OccurrenceList from "@/pages/OccurrenceList";
 import OccurrenceDetails from "@/pages/OccurrenceDetails";
 import AuditActionPage from "@/pages/audit/AuditActionPage";
 import AiAuditPage from "@/pages/audit/AiAuditPage";
+import AuditPage from "@/pages/audit/index";
 import FinancialDashboard from "@/pages/financial/FinancialDashboard";
 import Revenues from "@/pages/financial/Revenues";
 import Expenses from "@/pages/financial/Expenses";
@@ -35,6 +36,7 @@ function App() {
           <Route path="plan" element={<Plan />} />
           <Route path="occurrences" element={<OccurrenceList />} />
           <Route path="occurrences/:id" element={<OccurrenceDetails />} />
+          <Route path="audit" element={<AuditPage />} />
           <Route path="audit/action/:id" element={<AuditActionPage />} />
           <Route path="audit/ai" element={<AiAuditPage />} />
           
