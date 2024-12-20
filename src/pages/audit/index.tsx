@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AuditList } from "@/components/audit/AuditList";
 import { Badge } from "@/components/ui/badge";
-import { AuditListFilters } from "@/components/audit/AuditListFilters";
+import { mockOccurrences } from "@/data/occurrenceData";
 
 export default function AuditPage() {
   const [activeTab, setActiveTab] = useState("pending");
@@ -21,25 +21,16 @@ export default function AuditPage() {
     setSelectedPriority("Todos");
   };
 
+  // Count occurrences for each status
+  const pendingCount = mockOccurrences.filter(o => o.status === "Pendente").length;
+  const inProgressCount = mockOccurrences.filter(o => o.status === "Em Análise").length;
+  const completedCount = mockOccurrences.filter(o => o.status === "Concluído").length;
+
   return (
     <div className="space-y-4 p-8">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold tracking-tight">Auditoria de Acionamentos</h1>
       </div>
-
-      <AuditListFilters
-        searchQuery={searchQuery}
-        setSearchQuery={setSearchQuery}
-        date={date}
-        setDate={setDate}
-        selectedAuditor={selectedAuditor}
-        setSelectedAuditor={setSelectedAuditor}
-        selectedStatus={selectedStatus}
-        setSelectedStatus={setSelectedStatus}
-        selectedPriority={selectedPriority}
-        setSelectedPriority={setSelectedPriority}
-        handleClearFilters={handleClearFilters}
-      />
 
       <Card>
         <CardHeader>
@@ -50,15 +41,15 @@ export default function AuditPage() {
             <TabsList>
               <TabsTrigger value="pending">
                 Pendentes
-                <Badge variant="secondary" className="ml-2">3</Badge>
+                <Badge variant="secondary" className="ml-2">{pendingCount}</Badge>
               </TabsTrigger>
               <TabsTrigger value="in-progress">
                 Em Análise
-                <Badge variant="secondary" className="ml-2">2</Badge>
+                <Badge variant="secondary" className="ml-2">{inProgressCount}</Badge>
               </TabsTrigger>
               <TabsTrigger value="completed">
                 Concluídos
-                <Badge variant="secondary" className="ml-2">5</Badge>
+                <Badge variant="secondary" className="ml-2">{completedCount}</Badge>
               </TabsTrigger>
             </TabsList>
             <TabsContent value="pending">
