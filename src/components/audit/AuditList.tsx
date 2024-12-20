@@ -10,7 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ClipboardList } from "lucide-react";
-import { mockOccurrences } from "@/data/occurrenceData";
+import { mockOccurrences, Occurrence } from "@/data/occurrenceData";
 
 interface AuditListProps {
   status: "pending" | "in-progress" | "completed";
@@ -19,18 +19,41 @@ interface AuditListProps {
 export function AuditList({ status }: AuditListProps) {
   const navigate = useNavigate();
 
-  const getStatusBadge = (auditStatus: string) => {
-    switch (auditStatus) {
-      case "Aprovado":
-        return <Badge className="bg-green-100 text-green-800">Aprovado</Badge>;
-      case "Recusado":
-        return <Badge className="bg-red-100 text-red-800">Recusado</Badge>;
-      case "Pendente":
-        return <Badge className="bg-yellow-100 text-yellow-800">Pendente</Badge>;
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "Em Análise":
+        return <Badge className="bg-yellow-100 text-yellow-800">Em Análise</Badge>;
+      case "Em Atendimento":
+        return <Badge className="bg-blue-100 text-blue-800">Em Atendimento</Badge>;
+      case "Concluído":
+        return <Badge className="bg-green-100 text-green-800">Concluído</Badge>;
+      case "Cancelado":
+        return <Badge className="bg-red-100 text-red-800">Cancelado</Badge>;
+      case "Aguardando Documentação":
+        return <Badge className="bg-purple-100 text-purple-800">Aguardando Docs</Badge>;
       default:
-        return <Badge variant="secondary">{auditStatus}</Badge>;
+        return <Badge variant="secondary">{status}</Badge>;
     }
   };
+
+  const filterOccurrencesByAuditStatus = (occurrences: Occurrence[]) => {
+    switch (status) {
+      case "pending":
+        return occurrences.filter(
+          (occ) => occ.status === "Em Análise" || occ.status === "Aguardando Documentação"
+        );
+      case "in-progress":
+        return occurrences.filter((occ) => occ.status === "Em Atendimento");
+      case "completed":
+        return occurrences.filter(
+          (occ) => occ.status === "Concluído" || occ.status === "Cancelado"
+        );
+      default:
+        return occurrences;
+    }
+  };
+
+  const filteredOccurrences = filterOccurrencesByAuditStatus(mockOccurrences);
 
   return (
     <Table>
@@ -45,7 +68,7 @@ export function AuditList({ status }: AuditListProps) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {mockOccurrences.map((occurrence) => (
+        {filteredOccurrences.map((occurrence) => (
           <TableRow key={occurrence.id}>
             <TableCell>{occurrence.id}</TableCell>
             <TableCell>{occurrence.date}</TableCell>
