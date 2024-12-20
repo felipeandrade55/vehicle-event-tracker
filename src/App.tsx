@@ -22,6 +22,8 @@ import Plan from "@/pages/Plan";
 import OccurrenceList from "@/pages/OccurrenceList";
 import OccurrenceDetails from "@/pages/OccurrenceDetails";
 import MonthlyPayments from "@/pages/financial/MonthlyPayments";
+import Workshops from "@/pages/partners/Workshops";
+import Suppliers from "@/pages/partners/Suppliers";
 
 function App() {
   return (
@@ -56,6 +58,10 @@ function App() {
         <Route path="/financial/costs/departments" element={<DepartmentCosts />} />
         <Route path="/financial/costs/allocation" element={<ExpenseAllocation />} />
         <Route path="/financial/costs/associates" element={<AssociateCosts />} />
+
+        {/* Rotas de Parceiros */}
+        <Route path="/workshops" element={<Workshops />} />
+        <Route path="/suppliers" element={<Suppliers />} />
       </Route>
     </Routes>
   );
