@@ -1,16 +1,13 @@
 import { useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { Brain } from "lucide-react";
 import { mockOccurrences } from "@/data/occurrenceData";
 import { AuditHistory } from "./AuditHistory";
-import { AuditStepConfig, AuditStepConfiguration } from "./config/AuditStepConfig";
-import { AuditScoring } from "./scoring/AuditScoring";
+import { AuditStepConfiguration } from "./config/AuditStepConfig";
 import { AuditHistoryFilters, AuditHistoryFilters as FilterType } from "./history/AuditHistoryFilters";
 import { AuditLegend } from "./legend/AuditLegend";
-import { AuditProgress } from "./progress/AuditProgress";
+import { AuditProcess } from "./process/AuditProcess";
+import { AuditStepConfigDialog } from "./config/AuditStepConfigDialog";
 
 interface AuditAction {
   id: string;
@@ -240,49 +237,26 @@ export function AIAudit() {
 
   return (
     <div className="space-y-6 p-6">
-      <div className="flex items-center gap-3">
-        <Brain className="h-8 w-8 text-primary" />
-        <h2 className="text-2xl font-bold text-gray-900">Auditoria I.A.</h2>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Brain className="h-8 w-8 text-primary" />
+          <h2 className="text-2xl font-bold text-gray-900">Auditoria I.A.</h2>
+        </div>
+        <div className="flex gap-2">
+          <AuditLegend />
+          <AuditStepConfigDialog steps={steps} onSaveConfig={handleConfigSave} />
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Nova Auditoria</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex gap-4">
-              <Input
-                placeholder="Digite o número do acionamento"
-                value={occurrenceId}
-                onChange={(e) => setOccurrenceId(e.target.value)}
-                disabled={isAuditing}
-              />
-              <Button onClick={startAudit} disabled={!occurrenceId || isAuditing}>
-                Iniciar Auditoria
-              </Button>
-            </div>
-
-            <AuditProgress 
-              isAuditing={isAuditing} 
-              progress={progress}
-            />
-          </CardContent>
-        </Card>
-
-        <AuditLegend />
-
-        <AuditStepConfig
-          steps={steps}
-          onSaveConfig={handleConfigSave}
-        />
-
-        {steps.some(step => step.result) && (
-          <AuditScoring
-            score={currentScore}
-          />
-        )}
-      </div>
+      <AuditProcess
+        occurrenceId={occurrenceId}
+        isAuditing={isAuditing}
+        progress={progress}
+        currentScore={currentScore}
+        steps={steps}
+        onStartAudit={startAudit}
+        setOccurrenceId={setOccurrenceId}
+      />
 
       {auditHistory.length > 0 && (
         <div className="mt-8">
