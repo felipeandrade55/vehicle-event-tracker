@@ -11,6 +11,7 @@ interface AuditAction {
   action: string;
   status: string;
   details?: string;
+  rerun?: React.ReactNode;
 }
 
 interface AuditHistoryProps {
@@ -53,7 +54,10 @@ export function AuditHistory({ actions }: AuditHistoryProps) {
                   </span>
                 </div>
                 <div className="flex items-center justify-between">
-                  <span className="text-sm">{action.action}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm">{action.action}</span>
+                    {action.rerun}
+                  </div>
                   {getStatusBadge(action.status)}
                 </div>
                 {action.details && (

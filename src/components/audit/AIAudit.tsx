@@ -4,8 +4,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Brain, CheckCircle2, XCircle, AlertCircle } from "lucide-react";
+import { Brain, CheckCircle2, XCircle, AlertCircle, RotateCcw } from "lucide-react";
 import { mockOccurrences } from "@/data/occurrenceData";
+import { AuditHistory } from "./AuditHistory";
 
 interface AuditStep {
   id: string;
@@ -17,10 +18,20 @@ interface AuditStep {
   };
 }
 
+interface AuditAction {
+  id: string;
+  date: string;
+  user: string;
+  action: string;
+  status: string;
+  details?: string;
+}
+
 export function AIAudit() {
   const [occurrenceId, setOccurrenceId] = useState("");
   const [isAuditing, setIsAuditing] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
+  const [auditHistory, setAuditHistory] = useState<AuditAction[]>([]);
   const [steps, setSteps] = useState<AuditStep[]>([
     {
       id: "plan",
@@ -45,6 +56,28 @@ export function AIAudit() {
   ]);
   
   const { toast } = useToast();
+
+  const generateFinalAnalysis = (steps: AuditStep[]) => {
+    const positiveCount = steps.filter(s => s.result?.status === "positive").length;
+    const partialCount = steps.filter(s => s.result?.status === "partial").length;
+    
+    if (positiveCount === steps.length - 1) { // All positive except final step
+      return {
+        status: "positive" as const,
+        message: "Auditoria concluída com sucesso. Todos os critérios foram atendidos. Recomendação: Aprovação imediata do processo."
+      };
+    } else if (partialCount > 0) {
+      return {
+        status: "partial" as const,
+        message: "Auditoria concluída com ressalvas. Foram identificados pontos de atenção que precisam ser revisados, mas não impeditivos."
+      };
+    } else {
+      return {
+        status: "negative" as const,
+        message: "Auditoria concluída com restrições. Foram identificados pontos críticos que precisam ser resolvidos antes de prosseguir."
+      };
+    }
+  };
 
   const startAudit = async () => {
     // Format the occurrence ID to include the "#" symbol if not present
@@ -75,44 +108,60 @@ export function AIAudit() {
       await new Promise(resolve => setTimeout(resolve, 3000));
       
       // Update step with result
-      setSteps(prev => prev.map((step, idx) => {
-        if (idx === i) {
-          let result;
-          switch (step.id) {
-            case "plan":
-              result = {
-                status: "positive",
-                message: "Plano válido e cobertura confirmada"
-              };
-              break;
-            case "contract":
-              result = {
-                status: "positive",
-                message: "Contrato ativo e dentro da vigência"
-              };
-              break;
-            case "financial":
-              result = {
-                status: "partial",
-                message: "Pagamento com atraso de 5 dias"
-              };
-              break;
-            case "final":
-              result = {
-                status: "positive",
-                message: "Auditoria concluída com sucesso"
-              };
-              break;
-            default:
-              result = {
-                status: "negative",
-                message: "Erro na análise"
-              };
+      setSteps(prev => {
+        const newSteps = prev.map((step, idx) => {
+          if (idx === i) {
+            let result;
+            switch (step.id) {
+              case "plan":
+                result = {
+                  status: "positive",
+                  message: "Plano válido e cobertura confirmada"
+                };
+                break;
+              case "contract":
+                result = {
+                  status: "positive",
+                  message: "Contrato ativo e dentro da vigência"
+                };
+                break;
+              case "financial":
+                result = {
+                  status: "partial",
+                  message: "Pagamento com atraso de 5 dias"
+                };
+                break;
+              case "final":
+                result = generateFinalAnalysis(prev);
+                break;
+              default:
+                result = {
+                  status: "negative",
+                  message: "Erro na análise"
+                };
+            }
+            return { ...step, status: "completed", result };
           }
-          return { ...step, status: "completed", result };
+          return step;
+        });
+
+        // If this is the last step, add to history
+        if (i === steps.length - 1) {
+          const finalResult = generateFinalAnalysis(newSteps);
+          const historyEntry: AuditAction = {
+            id: crypto.randomUUID(),
+            date: new Date().toISOString(),
+            user: "Sistema",
+            action: `Auditoria do acionamento ${formattedId}`,
+            status: finalResult.status === "positive" ? "Aprovado" : 
+                   finalResult.status === "partial" ? "Pendente" : "Reprovado",
+            details: finalResult.message
+          };
+          setAuditHistory(prev => [historyEntry, ...prev]);
         }
-        return step;
-      }));
+
+        return newSteps;
+      });
     }
     
     setIsAuditing(false);
@@ -126,6 +175,15 @@ export function AIAudit() {
         return <XCircle className="h-5 w-5 text-red-500" />;
       case "partial":
         return <AlertCircle className="h-5 w-5 text-yellow-500" />;
+    }
+  };
+
+  const rerunAudit = (actionId: string) => {
+    const historyItem = auditHistory.find(h => h.id === actionId);
+    if (historyItem) {
+      const occurrenceNumber = historyItem.action.split(" ").pop(); // Get the occurrence number from action
+      setOccurrenceId(occurrenceNumber || "");
+      startAudit();
     }
   };
 
@@ -192,6 +250,27 @@ export function AIAudit() {
           </div>
         </CardContent>
       </Card>
+
+      {auditHistory.length > 0 && (
+        <div className="mt-8">
+          <AuditHistory 
+            actions={auditHistory.map(action => ({
+              ...action,
+              rerun: (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => rerunAudit(action.id)}
+                  className="ml-2"
+                >
+                  <RotateCcw className="h-4 w-4 mr-1" />
+                  Refazer
+                </Button>
+              )
+            }))}
+          />
+        </div>
+      )}
     </div>
   );
 }
