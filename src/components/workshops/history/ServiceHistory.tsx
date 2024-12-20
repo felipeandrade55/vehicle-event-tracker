@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 
 // Dados mockados para demonstração
-const MOCK_HISTORY: ServiceHistory[] = [
+const MOCK_HISTORY: ServiceHistoryType[] = [
   {
     id: "1",
     workshopId: "1",
