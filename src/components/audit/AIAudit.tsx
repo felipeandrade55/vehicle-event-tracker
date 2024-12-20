@@ -10,6 +10,7 @@ import { AuditHistory } from "./AuditHistory";
 import { AuditStepConfig, AuditStepConfiguration } from "./config/AuditStepConfig";
 import { AuditScoring } from "./scoring/AuditScoring";
 import { AuditHistoryFilters, AuditHistoryFilters as FilterType } from "./history/AuditHistoryFilters";
+import { AuditLegend } from "./legend/AuditLegend";
 
 interface AuditAction {
   id: string;
@@ -247,6 +248,8 @@ export function AIAudit() {
             )}
           </CardContent>
         </Card>
+
+        <AuditLegend />
 
         <AuditStepConfig
           steps={steps}
