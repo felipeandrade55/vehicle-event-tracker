@@ -27,6 +27,8 @@ import Suppliers from "@/pages/partners/Suppliers";
 import AuditPage from "@/pages/audit";
 import AuditDetailsPage from "@/pages/audit/[id]";
 
+import AuditActionPage from "./pages/audit/AuditActionPage";
+
 function App() {
   return (
     <Routes>
@@ -43,6 +45,7 @@ function App() {
         
         {/* Rotas de Auditoria */}
         <Route path="/audit" element={<AuditPage />} />
+      <Route path="/audit/action/:id" element={<AuditActionPage />} />
         <Route path="/audit/:id" element={<AuditDetailsPage />} />
         
         {/* Rotas Financeiras */}
