@@ -8,6 +8,34 @@ import { Check, X, AlertCircle, ArrowLeft } from "lucide-react";
 import { mockOccurrences } from "@/data/occurrenceData";
 import { useNavigate } from "react-router-dom";
 import { AuditChecklist } from "@/components/audit/AuditChecklist";
+import { AuditHistory } from "@/components/audit/AuditHistory";
+
+// Mock data for audit history
+const mockAuditHistory = [
+  {
+    id: "1",
+    date: "2024-03-20T10:00:00",
+    user: "João Silva",
+    action: "Iniciou a auditoria",
+    status: "Pendente",
+  },
+  {
+    id: "2",
+    date: "2024-03-20T10:30:00",
+    user: "João Silva",
+    action: "Solicitou documentação adicional",
+    status: "Pendente",
+    details: "Necessário enviar fotos adicionais do veículo",
+  },
+  {
+    id: "3",
+    date: "2024-03-20T14:15:00",
+    user: "Maria Santos",
+    action: "Anexou documentos",
+    status: "Pendente",
+    details: "Fotos do veículo anexadas ao processo",
+  },
+];
 
 export default function AuditDetailsPage() {
   const { id } = useParams();
@@ -31,14 +59,14 @@ export default function AuditDetailsPage() {
       return;
     }
 
-    // Here you would typically make an API call to update the audit status
+    const status = 
+      decision === "approved" ? "Aprovado" :
+      decision === "rejected" ? "Recusado" : 
+      "Pendente de Informações";
+
     toast({
       title: "Auditoria finalizada",
-      description: `O acionamento foi ${
-        decision === "approved" ? "aprovado" : 
-        decision === "rejected" ? "recusado" : 
-        "marcado como pendente de informações"
-      } com sucesso.`,
+      description: `O acionamento foi ${status.toLowerCase()} com sucesso.`,
     });
 
     navigate("/audit");
@@ -91,11 +119,10 @@ export default function AuditDetailsPage() {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Checklist de Auditoria</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <AuditHistory actions={mockAuditHistory} />
+
+        <Card className="md:col-span-2">
+          <CardContent className="p-6">
             <AuditChecklist />
           </CardContent>
         </Card>
