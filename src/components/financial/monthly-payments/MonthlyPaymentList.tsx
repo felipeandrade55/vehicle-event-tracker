@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MonthlyPaymentTable } from "./MonthlyPaymentTable";
 import { MonthlyPaymentFilters } from "./MonthlyPaymentFilters";
 import { MonthlyPaymentSummary } from "./MonthlyPaymentSummary";
+import { GenerateMonthlyPayments } from "./GenerateMonthlyPayments";
 
 // Dados mockados para exemplo
 const mockMonthlyPayments: MonthlyPayment[] = [
@@ -53,7 +54,10 @@ export const MonthlyPaymentList = () => {
 
   return (
     <div className="space-y-6">
-      <MonthlyPaymentSummary payments={payments} />
+      <div className="flex justify-between items-center">
+        <MonthlyPaymentSummary payments={payments} />
+        <GenerateMonthlyPayments />
+      </div>
       
       <Card>
         <CardHeader>
