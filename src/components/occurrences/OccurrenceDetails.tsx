@@ -19,6 +19,7 @@ import { AssociateCard } from "./details/AssociateCard";
 import { VehicleCard } from "./details/VehicleCard";
 import { TeamCard } from "./details/TeamCard";
 import { DocumentationCard } from "./details/DocumentationCard";
+import { ProcessTimeline } from "./details/ProcessTimeline";
 import { OccurrenceForm } from "./OccurrenceForm";
 import { OccurrenceFormData, OccurrenceType } from "./types";
 
@@ -77,6 +78,40 @@ export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
   const formattedDate = format(new Date(occurrence.date), "dd/MM/yyyy 'às' HH:mm", {
     locale: ptBR,
   });
+
+  // Mapear os eventos da timeline para as etapas do processo
+  const processSteps = [
+    {
+      id: 1,
+      title: "Registro do evento",
+      status: "completed" as const,
+      date: occurrence.date,
+      description: occurrence.description,
+    },
+    {
+      id: 2,
+      title: "Documentação recebida",
+      status: occurrence.documents ? "completed" : "pending" as const,
+      date: occurrence.timeline?.find(t => t.action.includes("documentação"))?.date,
+    },
+    {
+      id: 3,
+      title: "Análise jurídica",
+      status: "in-progress" as const,
+      date: occurrence.timeline?.find(t => t.action.includes("jurídica"))?.date,
+      agent: occurrence.timeline?.find(t => t.action.includes("jurídica"))?.agent,
+    },
+    {
+      id: 4,
+      title: "Aprovação para reparo",
+      status: "pending" as const,
+    },
+    {
+      id: 5,
+      title: "Finalização do processo",
+      status: "pending" as const,
+    },
+  ];
 
   const handleRefresh = () => {
     toast({
@@ -169,35 +204,17 @@ export function OccurrenceDetails({ occurrence }: OccurrenceDetailsProps) {
           </CardContent>
         </Card>
 
-        {occurrence.timeline && (
-          <Card className="md:col-span-2">
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <History className="h-5 w-5" />
-                Linha do Tempo
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <ScrollArea className="h-[200px] pr-4">
-                <div className="space-y-4">
-                  {occurrence.timeline.map((event, index) => (
-                    <div key={index} className="flex gap-4">
-                      <div className="w-24 flex-shrink-0 text-sm text-muted-foreground">
-                        {format(new Date(event.date), "HH:mm")}
-                      </div>
-                      <div>
-                        <p className="text-sm">{event.action}</p>
-                        {event.agent && (
-                          <p className="text-sm text-muted-foreground">por {event.agent}</p>
-                        )}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </ScrollArea>
-            </CardContent>
-          </Card>
-        )}
+        <Card className="md:col-span-2">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <History className="h-5 w-5" />
+              Etapas do Processo
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ProcessTimeline steps={processSteps} />
+          </CardContent>
+        </Card>
 
         <TeamCard 
           team={occurrence.team}
