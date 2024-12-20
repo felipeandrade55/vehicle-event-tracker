@@ -6,8 +6,8 @@ import { SettingsMenu } from "./menu/SettingsMenu";
 
 export const DashboardSidebar = () => {
   return (
-    <Sidebar>
-      <SidebarContent>
+    <Sidebar className="h-screen overflow-y-auto">
+      <SidebarContent className="py-4">
         <MainMenu />
         <FinancialMenu />
         <PartnersMenu />
