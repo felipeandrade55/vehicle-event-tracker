@@ -4,19 +4,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { Brain, CheckCircle2, XCircle, AlertCircle, RotateCcw } from "lucide-react";
+import { Brain } from "lucide-react";
 import { mockOccurrences } from "@/data/occurrenceData";
 import { AuditHistory } from "./AuditHistory";
-
-interface AuditStep {
-  id: string;
-  title: string;
-  status: "pending" | "processing" | "completed" | "error";
-  result?: {
-    status: "positive" | "negative" | "partial";
-    message: string;
-  };
-}
+import { AuditStepConfig, AuditStepConfiguration } from "./config/AuditStepConfig";
+import { AuditScoring } from "./scoring/AuditScoring";
+import { AuditHistoryFilters, AuditHistoryFilters as FilterType } from "./history/AuditHistoryFilters";
 
 interface AuditAction {
   id: string;
@@ -27,101 +20,74 @@ interface AuditAction {
   details?: string;
 }
 
+const defaultSteps: AuditStepConfiguration[] = [
+  {
+    id: "plan",
+    title: "Validação do Plano",
+    enabled: true,
+    weight: 1.0
+  },
+  {
+    id: "contract",
+    title: "Verificação do Contrato",
+    enabled: true,
+    weight: 1.0
+  },
+  {
+    id: "legal",
+    title: "Análise Jurídica",
+    enabled: true,
+    weight: 1.5
+  },
+  {
+    id: "technical",
+    title: "Análise Técnica",
+    enabled: true,
+    weight: 1.5
+  },
+  {
+    id: "financial",
+    title: "Análise Financeira",
+    enabled: true,
+    weight: 1.0
+  }
+];
+
 export function AIAudit() {
   const [occurrenceId, setOccurrenceId] = useState("");
   const [isAuditing, setIsAuditing] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [auditHistory, setAuditHistory] = useState<AuditAction[]>([]);
-  const [steps, setSteps] = useState<AuditStep[]>([
-    {
-      id: "plan",
-      title: "Validação do Plano",
-      status: "pending"
-    },
-    {
-      id: "contract",
-      title: "Verificação do Contrato",
-      status: "pending"
-    },
-    {
-      id: "legal",
-      title: "Análise Jurídica",
-      status: "pending"
-    },
-    {
-      id: "technical",
-      title: "Análise Técnica",
-      status: "pending"
-    },
-    {
-      id: "financial",
-      title: "Análise Financeira",
-      status: "pending"
-    },
-    {
-      id: "final",
-      title: "Análise Final",
-      status: "pending"
-    }
-  ]);
-  
+  const [steps, setSteps] = useState<AuditStepConfiguration[]>(defaultSteps);
+  const [filters, setFilters] = useState<FilterType>({
+    search: "",
+    status: "",
+    dateRange: { start: null, end: null }
+  });
   const { toast } = useToast();
 
-  const generateLegalAnalysis = () => {
-    // Simulando análise de dados do acionamento
-    const isSpeedingViolation = Math.random() < 0.3;
-    const isDrunkDriving = Math.random() < 0.2;
-
-    if (isSpeedingViolation || isDrunkDriving) {
-      return {
-        status: "negative" as const,
-        message: `Irregularidades identificadas: ${isSpeedingViolation ? 'Excesso de velocidade. ' : ''}${isDrunkDriving ? 'Condução sob efeito de álcool. ' : ''}`
-      };
-    }
-    return {
-      status: "positive" as const,
-      message: "Nenhuma irregularidade legal identificada. Condutor seguia as normas de trânsito."
-    };
-  };
-
-  const generateTechnicalAnalysis = () => {
-    // Simulando análise técnica do veículo
-    const tireCondition = Math.random() < 0.7 ? "bom" : "ruim";
-    const brakesCondition = Math.random() < 0.8 ? "bom" : "ruim";
+  const calculateRiskScore = (stepResults: any[]) => {
+    const enabledSteps = steps.filter(s => s.enabled);
+    const totalWeight = enabledSteps.reduce((acc, step) => acc + step.weight, 0);
     
-    if (tireCondition === "ruim" || brakesCondition === "ruim") {
+    const breakdown = enabledSteps.map(step => {
+      const result = stepResults.find(r => r.id === step.id);
+      const score = result?.result?.status === "positive" ? step.weight :
+                   result?.result?.status === "partial" ? step.weight * 0.5 : 0;
+      
       return {
-        status: "negative" as const,
-        message: `Problemas técnicos identificados: ${tireCondition === "ruim" ? 'Pneus em condição inadequada. ' : ''}${brakesCondition === "ruim" ? 'Sistema de freios comprometido. ' : ''}`
+        category: step.title,
+        score,
+        maxScore: step.weight
       };
-    }
-    return {
-      status: "positive" as const,
-      message: "Veículo em boas condições técnicas. Pneus e freios em estado adequado."
-    };
-  };
+    });
 
-  const generateFinalAnalysis = (steps: AuditStep[]) => {
-    const positiveCount = steps.filter(s => s.result?.status === "positive").length;
-    const partialCount = steps.filter(s => s.result?.status === "partial").length;
-    const negativeCount = steps.filter(s => s.result?.status === "negative").length;
-    
-    if (negativeCount > 0) {
-      return {
-        status: "negative" as const,
-        message: "Auditoria concluída com restrições críticas. Foram identificados pontos que impedem o prosseguimento do processo. Recomendação: Revisar documentação e condições identificadas antes de prosseguir."
-      };
-    } else if (partialCount > 0) {
-      return {
-        status: "partial" as const,
-        message: "Auditoria concluída com ressalvas. Existem pontos de atenção que precisam ser revisados, mas não são impeditivos. Recomendação: Acompanhar os pontos identificados."
-      };
-    } else {
-      return {
-        status: "positive" as const,
-        message: "Auditoria concluída com sucesso. Todos os critérios foram atendidos satisfatoriamente. Recomendação: Processo pode prosseguir para aprovação."
-      };
-    }
+    const totalScore = (breakdown.reduce((acc, item) => acc + item.score, 0) / totalWeight) * 100;
+
+    return {
+      total: Math.round(totalScore),
+      breakdown
+    };
   };
 
   const startAudit = async () => {
@@ -139,7 +105,9 @@ export function AIAudit() {
 
     setIsAuditing(true);
     
-    for (let i = 0; i < steps.length; i++) {
+    const enabledSteps = steps.filter(s => s.enabled);
+    
+    for (let i = 0; i < enabledSteps.length; i++) {
       setCurrentStep(i);
       
       setSteps(prev => prev.map((step, idx) => 
@@ -166,19 +134,22 @@ export function AIAudit() {
                 };
                 break;
               case "legal":
-                result = generateLegalAnalysis();
+                result = {
+                  status: "negative" as const,
+                  message: "Irregularidades identificadas: Excesso de velocidade."
+                };
                 break;
               case "technical":
-                result = generateTechnicalAnalysis();
+                result = {
+                  status: "positive" as const,
+                  message: "Veículo em boas condições técnicas. Pneus e freios em estado adequado."
+                };
                 break;
               case "financial":
                 result = {
                   status: "partial" as const,
                   message: "Pagamento com atraso de 5 dias"
                 };
-                break;
-              case "final":
-                result = generateFinalAnalysis(prev);
                 break;
               default:
                 result = {
@@ -192,7 +163,10 @@ export function AIAudit() {
         });
 
         if (i === steps.length - 1) {
-          const finalResult = generateFinalAnalysis(newSteps);
+          const finalResult = {
+            status: "positive" as const,
+            message: "Auditoria concluída com sucesso. Todos os critérios foram atendidos satisfatoriamente."
+          };
           const historyEntry: AuditAction = {
             id: crypto.randomUUID(),
             date: new Date().toISOString(),
@@ -209,28 +183,37 @@ export function AIAudit() {
       });
     }
     
+    const riskScore = calculateRiskScore(steps);
+    
     setIsAuditing(false);
   };
 
-  const getStatusIcon = (status: "positive" | "negative" | "partial") => {
-    switch (status) {
-      case "positive":
-        return <CheckCircle2 className="h-5 w-5 text-green-500" />;
-      case "negative":
-        return <XCircle className="h-5 w-5 text-red-500" />;
-      case "partial":
-        return <AlertCircle className="h-5 w-5 text-yellow-500" />;
-    }
+  const handleConfigSave = (newConfig: AuditStepConfiguration[]) => {
+    setSteps(newConfig);
   };
 
-  const rerunAudit = (actionId: string) => {
-    const historyItem = auditHistory.find(h => h.id === actionId);
-    if (historyItem) {
-      const occurrenceNumber = historyItem.action.split(" ").pop(); // Get the occurrence number from action
-      setOccurrenceId(occurrenceNumber || "");
-      startAudit();
-    }
+  const handleFilterChange = (newFilters: FilterType) => {
+    setFilters(newFilters);
   };
+
+  const filteredHistory = auditHistory.filter(item => {
+    if (filters.search && !item.action.toLowerCase().includes(filters.search.toLowerCase())) {
+      return false;
+    }
+    if (filters.status && item.status.toLowerCase() !== filters.status.toLowerCase()) {
+      return false;
+    }
+    if (filters.dateRange.start || filters.dateRange.end) {
+      const itemDate = new Date(item.date);
+      if (filters.dateRange.start && itemDate < filters.dateRange.start) {
+        return false;
+      }
+      if (filters.dateRange.end && itemDate > filters.dateRange.end) {
+        return false;
+      }
+    }
+    return true;
+  });
 
   const progress = (currentStep / steps.length) * 100;
 
@@ -241,79 +224,48 @@ export function AIAudit() {
         <h2 className="text-2xl font-bold text-gray-900">Auditoria I.A.</h2>
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Iniciar Nova Auditoria</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex gap-4">
-            <Input
-              placeholder="Digite o número do acionamento (ex: 2024-001)"
-              value={occurrenceId}
-              onChange={(e) => setOccurrenceId(e.target.value)}
-              disabled={isAuditing}
-            />
-            <Button onClick={startAudit} disabled={!occurrenceId || isAuditing}>
-              Iniciar Auditoria
-            </Button>
-          </div>
-
-          {isAuditing && (
-            <div className="space-y-4 mt-6">
-              <Progress value={progress} className="h-2" />
-              <p className="text-sm text-gray-500 text-center">
-                Analisando... {Math.round(progress)}%
-              </p>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Nova Auditoria</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex gap-4">
+              <Input
+                placeholder="Digite o número do acionamento"
+                value={occurrenceId}
+                onChange={(e) => setOccurrenceId(e.target.value)}
+                disabled={isAuditing}
+              />
+              <Button onClick={startAudit} disabled={!occurrenceId || isAuditing}>
+                Iniciar Auditoria
+              </Button>
             </div>
-          )}
 
-          <div className="space-y-4 mt-6">
-            {steps.map((step, index) => (
-              <div
-                key={step.id}
-                className={`p-4 rounded-lg border transition-all duration-300 ${
-                  step.status === "processing"
-                    ? "border-primary bg-primary/5 animate-pulse"
-                    : "border-gray-200"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm font-medium">{step.title}</span>
-                  </div>
-                  {step.result && (
-                    <div className="flex items-center gap-2">
-                      {getStatusIcon(step.result.status)}
-                      <span className="text-sm text-gray-600">
-                        {step.result.message}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+            {isAuditing && (
+              <Progress value={progress} className="h-2" />
+            )}
+          </CardContent>
+        </Card>
+
+        <AuditStepConfig
+          steps={steps}
+          onSaveConfig={handleConfigSave}
+        />
+
+        {steps.some(step => step.result) && (
+          <AuditScoring
+            score={calculateRiskScore(steps)}
+          />
+        )}
+      </div>
 
       {auditHistory.length > 0 && (
         <div className="mt-8">
-          <AuditHistory 
-            actions={auditHistory.map(action => ({
-              ...action,
-              rerun: (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => rerunAudit(action.id)}
-                  className="ml-2"
-                >
-                  <RotateCcw className="h-4 w-4 mr-1" />
-                  Refazer
-                </Button>
-              )
-            }))}
-          />
+          <AuditHistoryFilters onFilterChange={handleFilterChange} />
+          <div className="mt-4">
+            <AuditHistory actions={filteredHistory} />
+          </div>
         </div>
       )}
     </div>
